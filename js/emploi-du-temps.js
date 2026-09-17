@@ -24,7 +24,7 @@ const emploiDuTemps = {
                 fin: "11:10",
                 matiere: "Français / Histoire-Géo / EMC",
                 professeur: "FREVILLE C.",
-                salle: "173 LP FCS HG"
+                salle: "I173 LP FCS HG"
             },
             {
                 debut: "11:10",
@@ -89,7 +89,7 @@ const emploiDuTemps = {
 
         mercredi: [
             {
-                debut: "08:00",
+                debut: "08:30",
                 fin: "08:55",
                 matiere: "Éducation physique & sportive",
                 professeur: "HAMON F.",
@@ -104,7 +104,7 @@ const emploiDuTemps = {
             },
             {
                 debut: "10:10",
-                fin: "11:10",
+                fin: "11:05",
                 matiere: "Anglais LV1",
                 professeur: "COLOMBEL S.",
                 salle: "I366"
@@ -152,21 +152,21 @@ const emploiDuTemps = {
                 fin: "15:30",
                 matiere: "Pratique professionnelle",
                 professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
+                salle: "S.29 AEPA"
             },
             {
                 debut: "15:45",
                 fin: "16:40",
                 matiere: "Pratique professionnelle",
                 professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
+                salle: "S.29 AEPA"
             },
             {
                 debut: "16:40",
                 fin: "17:40",
                 matiere: "Pratique professionnelle",
                 professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
+                salle: "S.29 AEPA"
             }
         ],
 
@@ -176,35 +176,28 @@ const emploiDuTemps = {
                 fin: "08:55",
                 matiere: "Pratique professionnelle",
                 professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
+                salle: "S.29 AEPA"
             },
             {
                 debut: "08:55",
                 fin: "09:50",
                 matiere: "Pratique professionnelle",
                 professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
+                salle: "S.29 AEPA"
             },
             {
                 debut: "10:10",
                 fin: "11:10",
                 matiere: "Pratique professionnelle",
                 professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
+                salle: "S.29 AEPA"
             },
             {
                 debut: "11:10",
                 fin: "12:00",
                 matiere: "Pratique professionnelle",
                 professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
-            },
-            {
-                debut: "13:40",
-                fin: "14:35",
-                matiere: "Anglais LV1",
-                professeur: "COLOMBEL S.",
-                salle: "I366"
+                salle: "S.29 AEPA"
             },
             {
                 debut: "14:40",
@@ -222,7 +215,7 @@ const emploiDuTemps = {
             },
             {
                 debut: "16:40",
-                fin: "17:40",
+                fin: "17:25",
                 matiere: "Éducation physique & sportive",
                 professeur: "HAMON F.",
                 salle: ""
@@ -250,7 +243,7 @@ const emploiDuTemps = {
                 fin: "12:00",
                 matiere: "Prévention-Santé-Environnement",
                 professeur: "BASSO K.",
-                salle: "E014 (PSE) (HP)"
+                salle: "E014"
             },
             {
                 debut: "13:40",
@@ -288,7 +281,7 @@ const emploiDuTemps = {
                 fin: "14:35",
                 matiere: "Mathématiques",
                 professeur: "MESLARD S.",
-                salle: ""
+                salle: "E218 ou E214"
             }
         ],
 
@@ -305,14 +298,14 @@ const emploiDuTemps = {
                 fin: "11:10",
                 matiere: "Anglais LV1",
                 professeur: "COLOMBEL S.",
-                salle: ""
+                salle: "I358"
             },
             {
                 debut: "11:10",
                 fin: "12:00",
                 matiere: "Mathématiques",
                 professeur: "MESLARD S.",
-                salle: ""
+                salle: "E218"
             }
         ],
 
@@ -353,7 +346,7 @@ const emploiDuTemps = {
                 fin: "15:40",
                 matiere: "Anglais LV1",
                 professeur: "COLOMBEL S.",
-                salle: ""
+                salle: "I366"
             },
             {
                 debut: "15:40",
