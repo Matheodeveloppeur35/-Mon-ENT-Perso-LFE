@@ -172,7 +172,13 @@ const emploiDuTemps = {
                 professeur: "MESLARD S.",
                 salle: "E224"
             },
-
+            {
+                debut: "13:40",
+                fin: "14:35",
+                matiere: "Pratique professionnelle",
+                professeur: "LUCIEN E.",
+                salle: "S.29 AEP"
+            },
             {
                 debut: "14:40",
                 fin: "15:30",
