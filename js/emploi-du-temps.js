@@ -1,17 +1,19 @@
 // ==========================================
 // MON ENT PERSO LFE
-// DONNÉES DE L'EMPLOI DU TEMPS
+// EMPLOI DU TEMPS
 // ==========================================
+
 
 const emploiDuTemps = {
 
+    // ==========================================
+    // Q1
+    // ==========================================
+
     Q1: {
 
-        // ==============================
-        // LUNDI
-        // ==============================
-
         lundi: [
+
             {
                 debut: "08:55",
                 fin: "09:50",
@@ -19,6 +21,7 @@ const emploiDuTemps = {
                 professeur: "LE PAPE D.",
                 salle: "S.32 info"
             },
+
             {
                 debut: "10:10",
                 fin: "11:10",
@@ -26,6 +29,7 @@ const emploiDuTemps = {
                 professeur: "FREVILLE C.",
                 salle: "173 LP FCS HG"
             },
+
             {
                 debut: "11:10",
                 fin: "12:00",
@@ -33,6 +37,7 @@ const emploiDuTemps = {
                 professeur: "BASSO K.",
                 salle: "E014 HP"
             },
+
             {
                 debut: "13:40",
                 fin: "14:35",
@@ -40,6 +45,7 @@ const emploiDuTemps = {
                 professeur: "LINDAUER A.",
                 salle: "I460"
             },
+
             {
                 debut: "14:35",
                 fin: "15:30",
@@ -47,14 +53,12 @@ const emploiDuTemps = {
                 professeur: "LE PAPE D.",
                 salle: "S.31 info"
             }
+
         ],
 
 
-        // ==============================
-        // MARDI
-        // ==============================
-
         mardi: [
+
             {
                 debut: "08:55",
                 fin: "09:50",
@@ -62,6 +66,7 @@ const emploiDuTemps = {
                 professeur: "LUCIEN E.",
                 salle: "S.31 info"
             },
+
             {
                 debut: "10:10",
                 fin: "11:10",
@@ -69,6 +74,7 @@ const emploiDuTemps = {
                 professeur: "LE PAPE D. / MESLARD S.",
                 salle: "E220"
             },
+
             {
                 debut: "11:10",
                 fin: "12:00",
@@ -76,6 +82,7 @@ const emploiDuTemps = {
                 professeur: "MESLARD S.",
                 salle: "E218 (MECA)"
             },
+
             {
                 debut: "13:40",
                 fin: "14:35",
@@ -83,6 +90,7 @@ const emploiDuTemps = {
                 professeur: "NIEDERGANG L.",
                 salle: "E205 LP"
             },
+
             {
                 debut: "14:40",
                 fin: "15:30",
@@ -90,26 +98,28 @@ const emploiDuTemps = {
                 professeur: "NIEDERGANG L.",
                 salle: "E205 LP"
             }
+
         ],
 
-
-        // ==============================
-        // MERCREDI
-        // ==============================
 
         mercredi: [
+
             {
                 debut: "08:00",
                 fin: "08:55",
                 matiere: "Éducation physique & sportive",
-                professeur: "HAMON F."
+                professeur: "HAMON F.",
+                salle: "Salle non renseignée"
             },
+
             {
                 debut: "08:55",
                 fin: "09:50",
                 matiere: "Éducation physique & sportive",
-                professeur: "HAMON F."
+                professeur: "HAMON F.",
+                salle: "Salle non renseignée"
             },
+
             {
                 debut: "10:10",
                 fin: "11:10",
@@ -117,6 +127,7 @@ const emploiDuTemps = {
                 professeur: "COLOMBEL S.",
                 salle: "I366"
             },
+
             {
                 debut: "11:10",
                 fin: "12:00",
@@ -124,14 +135,12 @@ const emploiDuTemps = {
                 professeur: "MESLARD S.",
                 salle: "E218 (MECA)"
             }
+
         ],
 
-
-        // ==============================
-        // JEUDI
-        // ==============================
 
         jeudi: [
+
             {
                 debut: "08:00",
                 fin: "08:55",
@@ -139,6 +148,7 @@ const emploiDuTemps = {
                 professeur: "FREVILLE C.",
                 salle: "173 LP FCS HG"
             },
+
             {
                 debut: "08:55",
                 fin: "09:50",
@@ -146,6 +156,7 @@ const emploiDuTemps = {
                 professeur: "FREVILLE C.",
                 salle: "173 LP FCS HG"
             },
+
             {
                 debut: "10:10",
                 fin: "11:10",
@@ -153,6 +164,7 @@ const emploiDuTemps = {
                 professeur: "MESLARD S.",
                 salle: "E224"
             },
+
             {
                 debut: "11:10",
                 fin: "12:00",
@@ -160,13 +172,7 @@ const emploiDuTemps = {
                 professeur: "MESLARD S.",
                 salle: "E224"
             },
-            {
-                debut: "13:40",
-                fin: "14:35",
-                matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
-            },
+
             {
                 debut: "14:40",
                 fin: "15:30",
@@ -174,6 +180,7 @@ const emploiDuTemps = {
                 professeur: "LUCIEN E.",
                 salle: "S.29 AEP"
             },
+
             {
                 debut: "15:45",
                 fin: "16:40",
@@ -181,6 +188,7 @@ const emploiDuTemps = {
                 professeur: "LUCIEN E.",
                 salle: "S.29 AEP"
             },
+
             {
                 debut: "16:40",
                 fin: "17:40",
@@ -188,14 +196,12 @@ const emploiDuTemps = {
                 professeur: "LUCIEN E.",
                 salle: "S.29 AEP"
             }
+
         ],
 
 
-        // ==============================
-        // VENDREDI
-        // ==============================
-
         vendredi: [
+
             {
                 debut: "08:00",
                 fin: "08:55",
@@ -203,6 +209,7 @@ const emploiDuTemps = {
                 professeur: "LETTELIER J.",
                 salle: "S.29 AEP"
             },
+
             {
                 debut: "08:55",
                 fin: "09:50",
@@ -210,6 +217,7 @@ const emploiDuTemps = {
                 professeur: "LETTELIER J.",
                 salle: "S.29 AEP"
             },
+
             {
                 debut: "10:10",
                 fin: "11:10",
@@ -217,6 +225,7 @@ const emploiDuTemps = {
                 professeur: "LETTELIER J.",
                 salle: "S.29 AEP"
             },
+
             {
                 debut: "11:10",
                 fin: "12:00",
@@ -224,6 +233,7 @@ const emploiDuTemps = {
                 professeur: "LETTELIER J.",
                 salle: "S.29 AEP"
             },
+
             {
                 debut: "13:40",
                 fin: "14:35",
@@ -231,6 +241,7 @@ const emploiDuTemps = {
                 professeur: "COLOMBEL S.",
                 salle: "I366"
             },
+
             {
                 debut: "14:40",
                 fin: "15:30",
@@ -238,18 +249,23 @@ const emploiDuTemps = {
                 professeur: "COLOMBEL S.",
                 salle: "I366"
             },
+
             {
                 debut: "15:45",
                 fin: "16:40",
                 matiere: "Éducation physique & sportive",
-                professeur: "HAMON F."
+                professeur: "HAMON F.",
+                salle: "Salle non renseignée"
             },
+
             {
                 debut: "16:40",
                 fin: "17:40",
                 matiere: "Éducation physique & sportive",
-                professeur: "HAMON F."
+                professeur: "HAMON F.",
+                salle: "Salle non renseignée"
             }
+
         ]
 
     },
@@ -320,12 +336,13 @@ const jours = [
 
 
 // ==========================================
-// AFFICHAGE DE L'EMPLOI DU TEMPS
+// AFFICHER L'EMPLOI DU TEMPS
 // ==========================================
 
-function afficherEmploiDuTemps(periode = "Q1") {
+function afficherEmploiDuTemps(periode) {
 
     const tableau = document.querySelector("#schedule-body");
+    const titre = document.querySelector("#schedule-title");
 
     if (!tableau) {
         return;
@@ -333,15 +350,19 @@ function afficherEmploiDuTemps(periode = "Q1") {
 
     tableau.innerHTML = "";
 
+    if (titre) {
+        titre.textContent = `Emploi du temps — ${periode}`;
+    }
 
-    // Parcours des horaires
+
     horaires.forEach(horaire => {
 
         const ligne = document.createElement("tr");
 
-        // ==============================
-        // COLONNE HORAIRE
-        // ==============================
+
+        // ==========================================
+        // HORAIRE
+        // ==========================================
 
         const celluleHoraire = document.createElement("td");
 
@@ -354,35 +375,58 @@ function afficherEmploiDuTemps(periode = "Q1") {
         ligne.appendChild(celluleHoraire);
 
 
-        // ==============================
-        // COLONNES DES JOURS
-        // ==============================
+        // ==========================================
+        // JOURS
+        // ==========================================
 
         jours.forEach(jour => {
 
             const cellule = document.createElement("td");
 
+
             // Récréation
-            if (horaire[0] === "09:50" && horaire[1] === "10:10") {
+
+            if (
+                horaire[0] === "09:50" &&
+                horaire[1] === "10:10"
+            ) {
 
                 cellule.innerHTML = "🔔 Récréation";
                 cellule.classList.add("break-cell");
 
             }
 
+
             // Pause déjeuner
-            else if (horaire[0] === "12:00" && horaire[1] === "13:00") {
+
+            else if (
+                horaire[0] === "12:00" &&
+                horaire[1] === "13:00"
+            ) {
 
                 cellule.innerHTML = "🍽️ Pause déjeuner";
                 cellule.classList.add("lunch-cell");
 
             }
 
-            // Petite pause
+
+            // Petites pauses
+
             else if (
-                (horaire[0] === "13:35" && horaire[1] === "13:40") ||
-                (horaire[0] === "14:35" && horaire[1] === "14:40") ||
-                (horaire[0] === "15:30" && horaire[1] === "15:45")
+
+                (horaire[0] === "13:35" &&
+                 horaire[1] === "13:40")
+
+                ||
+
+                (horaire[0] === "14:35" &&
+                 horaire[1] === "14:40")
+
+                ||
+
+                (horaire[0] === "15:30" &&
+                 horaire[1] === "15:45")
+
             ) {
 
                 cellule.innerHTML = "⏸️ Pause";
@@ -390,7 +434,9 @@ function afficherEmploiDuTemps(periode = "Q1") {
 
             }
 
+
             // Fin de journée
+
             else if (horaire[0] === "17:40") {
 
                 cellule.innerHTML = "🏁 Fin";
@@ -398,7 +444,9 @@ function afficherEmploiDuTemps(periode = "Q1") {
 
             }
 
-            // Recherche du cours
+
+            // Cours
+
             else {
 
                 const cours = emploiDuTemps[periode][jour]?.find(
@@ -411,6 +459,7 @@ function afficherEmploiDuTemps(periode = "Q1") {
                 if (cours) {
 
                     cellule.innerHTML = `
+
                         <div class="course">
 
                             <strong>
@@ -426,11 +475,13 @@ function afficherEmploiDuTemps(periode = "Q1") {
                             </small>
 
                         </div>
+
                     `;
 
                 }
 
             }
+
 
             ligne.appendChild(cellule);
 
@@ -445,11 +496,55 @@ function afficherEmploiDuTemps(periode = "Q1") {
 
 
 // ==========================================
-// LANCEMENT
+// BOUTONS Q1 / Q2
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    const boutonQ1 = document.querySelector("#q1-button");
+    const boutonQ2 = document.querySelector("#q2-button");
+
+
+    // Affichage initial
+
     afficherEmploiDuTemps("Q1");
+
+
+    // Q1
+
+    if (boutonQ1) {
+
+        boutonQ1.addEventListener("click", () => {
+
+            afficherEmploiDuTemps("Q1");
+
+            boutonQ1.classList.add("selected");
+
+            if (boutonQ2) {
+                boutonQ2.classList.remove("selected");
+            }
+
+        });
+
+    }
+
+
+    // Q2
+
+    if (boutonQ2) {
+
+        boutonQ2.addEventListener("click", () => {
+
+            afficherEmploiDuTemps("Q2");
+
+            boutonQ2.classList.add("selected");
+
+            if (boutonQ1) {
+                boutonQ1.classList.remove("selected");
+            }
+
+        });
+
+    }
 
 });
