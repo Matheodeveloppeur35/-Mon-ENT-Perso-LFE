@@ -47,8 +47,8 @@ const emploiDuTemps = {
             },
 
             {
-                debut: "14:35",
-                fin: "15:30",
+                debut: "14:40",
+                fin: "16:10",
                 matiere: "Réalisation projet",
                 professeur: "LE PAPE D.",
                 salle: "S.31 info"
