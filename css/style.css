@@ -127,3 +127,57 @@ header p {
     color: #6b7280;
     line-height: 1.6;
 }
+/* =========================
+   EMPLOI DU TEMPS
+========================= */
+
+.period-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.period-buttons button {
+    border: none;
+    background: #e8f0ff;
+    color: #2563eb;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.period-buttons button:hover {
+    background: #2563eb;
+    color: white;
+}
+
+.schedule-card {
+    background: white;
+    margin-top: 25px;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #e5e7eb;
+}
+
+.schedule-card h2 {
+    margin-bottom: 20px;
+}
+
+.schedule-placeholder {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 50px 20px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.schedule-placeholder:first-line {
+    font-size: 35px;
+}
+
+.schedule-placeholder h3 {
+    color: #1f2937;
+    margin: 12px 0 8px;
+}
