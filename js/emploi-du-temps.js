@@ -198,3 +198,51 @@ const jours = [
     "jeudi",
     "vendredi"
 ];
+// ==========================================
+// AFFICHAGE DE L'EMPLOI DU TEMPS
+// ==========================================
+
+function afficherEmploiDuTemps(periode = "Q1") {
+
+    const tableau = document.querySelector("#schedule-body");
+
+    if (!tableau) {
+        return;
+    }
+
+    tableau.innerHTML = "";
+
+    jours.forEach(jour => {
+
+        const coursDuJour = emploiDuTemps[periode][jour] || [];
+
+        coursDuJour.forEach(cours => {
+
+            const ligne = document.createElement("tr");
+
+            ligne.innerHTML = `
+                <td>
+                    <strong>${cours.debut}</strong><br>
+                    ${cours.fin}
+                </td>
+
+                <td>
+                    <div class="course">
+                        <strong>${cours.matiere}</strong>
+                        <span>${cours.professeur || ""}</span>
+                        <small>${cours.salle || ""}</small>
+                    </div>
+                </td>
+            `;
+
+            tableau.appendChild(ligne);
+        });
+
+    });
+}
+
+
+// Affichage initial
+document.addEventListener("DOMContentLoaded", () => {
+    afficherEmploiDuTemps("Q1");
+});
