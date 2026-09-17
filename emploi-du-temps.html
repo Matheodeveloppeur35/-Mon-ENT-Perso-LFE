@@ -85,21 +85,38 @@
 
             <h2>Semaine actuelle</h2>
 
-            <div class="schedule-placeholder">
+            <div class="schedule-table-container">
 
-                📅
+                <table class="schedule-table">
 
-                <h3>Emploi du temps</h3>
+                    <thead>
 
-                <p>
-                    Ton emploi du temps apparaîtra ici.
-                </p>
+                        <tr>
+                            <th>Horaire</th>
+                            <th>Lundi</th>
+                            <th>Mardi</th>
+                            <th>Mercredi</th>
+                            <th>Jeudi</th>
+                            <th>Vendredi</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="schedule-body">
+
+                    </tbody>
+
+                </table>
 
             </div>
 
         </section>
 
     </main>
-<script src="js/emploi-du-temps.js"></script>
+
+
+    <script src="js/emploi-du-temps.js"></script>
+
 </body>
+
 </html>
