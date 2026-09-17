@@ -1,41 +1,55 @@
-// ==========================================
-// MON ENT PERSO LFE
-// EMPLOI DU TEMPS
-// ==========================================
+/* =========================
+   EMPLOI DU TEMPS
+========================= */
 
+
+/* =========================
+   DONNÉES
+========================= */
 
 const emploiDuTemps = {
-
-    // ==========================================
-    // Q1
-    // ==========================================
 
     Q1: {
 
         lundi: [
+            {
+                debut: "08:00",
+                fin: "08:55",
+                matiere: "À compléter",
+                professeur: "",
+                salle: ""
+            },
 
             {
                 debut: "08:55",
                 fin: "09:50",
-                matiere: "Soutien au parcours",
-                professeur: "LE PAPE D.",
-                salle: "S.32 info"
+                matiere: "À compléter",
+                professeur: "",
+                salle: ""
             },
 
             {
                 debut: "10:10",
                 fin: "11:10",
-                matiere: "Français / Histoire-Géo / EMC",
-                professeur: "FREVILLE C.",
-                salle: "173 LP FCS HG"
+                matiere: "À compléter",
+                professeur: "",
+                salle: ""
             },
 
             {
                 debut: "11:10",
                 fin: "12:00",
-                matiere: "Prévention-Santé-Environnement",
-                professeur: "BASSO K.",
-                salle: "E014 HP"
+                matiere: "À compléter",
+                professeur: "",
+                salle: ""
+            },
+
+            {
+                debut: "13:00",
+                fin: "13:35",
+                matiere: "À compléter",
+                professeur: "",
+                salle: ""
             },
 
             {
@@ -50,243 +64,32 @@ const emploiDuTemps = {
                 debut: "14:40",
                 fin: "16:10",
                 matiere: "Réalisation projet",
-                professeur: "LE PAPE D.",
-                salle: "S.31 info"
+                professeur: "",
+                salle: ""
             }
-
         ],
 
+        mardi: [],
 
-        mardi: [
+        mercredi: [],
 
-            {
-                debut: "08:55",
-                fin: "09:50",
-                matiere: "Enseignement professionnel",
-                professeur: "LUCIEN E.",
-                salle: "S.31 info"
-            },
+        jeudi: [],
 
-            {
-                debut: "10:10",
-                fin: "11:10",
-                matiere: "Co-intervention",
-                professeur: "LE PAPE D. / MESLARD S.",
-                salle: "E220"
-            },
-
-            {
-                debut: "11:10",
-                fin: "12:00",
-                matiere: "Mathématiques",
-                professeur: "MESLARD S.",
-                salle: "E218 (MECA)"
-            },
-
-            {
-                debut: "13:40",
-                fin: "14:35",
-                matiere: "Arts appliqués / Culture artistique",
-                professeur: "NIEDERGANG L.",
-                salle: "E205 LP"
-            },
-
-            {
-                debut: "14:40",
-                fin: "15:30",
-                matiere: "Arts appliqués / Culture artistique",
-                professeur: "NIEDERGANG L.",
-                salle: "E205 LP"
-            }
-
-        ],
-
-
-        mercredi: [
-
-            {
-                debut: "08:00",
-                fin: "08:55",
-                matiere: "Éducation physique & sportive",
-                professeur: "HAMON F.",
-                salle: "Salle non renseignée"
-            },
-
-            {
-                debut: "08:55",
-                fin: "09:50",
-                matiere: "Éducation physique & sportive",
-                professeur: "HAMON F.",
-                salle: "Salle non renseignée"
-            },
-
-            {
-                debut: "10:10",
-                fin: "11:10",
-                matiere: "Anglais LV1",
-                professeur: "COLOMBEL S.",
-                salle: "I366"
-            },
-
-            {
-                debut: "11:10",
-                fin: "12:00",
-                matiere: "Mathématiques",
-                professeur: "MESLARD S.",
-                salle: "E218 (MECA)"
-            }
-
-        ],
-
-
-        jeudi: [
-
-            {
-                debut: "08:00",
-                fin: "08:55",
-                matiere: "Français / Histoire-Géo / EMC",
-                professeur: "FREVILLE C.",
-                salle: "173 LP FCS HG"
-            },
-
-            {
-                debut: "08:55",
-                fin: "09:50",
-                matiere: "Français / Histoire-Géo / EMC",
-                professeur: "FREVILLE C.",
-                salle: "173 LP FCS HG"
-            },
-
-            {
-                debut: "10:10",
-                fin: "11:10",
-                matiere: "Sciences physiques",
-                professeur: "MESLARD S.",
-                salle: "E224"
-            },
-
-            {
-                debut: "11:10",
-                fin: "12:00",
-                matiere: "Sciences physiques",
-                professeur: "MESLARD S.",
-                salle: "E224"
-            },
-            {
-                debut: "13:40",
-                fin: "14:35",
-                matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
-            },
-            {
-                debut: "14:40",
-                fin: "15:30",
-                matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
-            },
-
-            {
-                debut: "15:45",
-                fin: "16:40",
-                matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
-            },
-
-            {
-                debut: "16:40",
-                fin: "17:40",
-                matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E.",
-                salle: "S.29 AEP"
-            }
-
-        ],
-
-
-        vendredi: [
-
-            {
-                debut: "08:00",
-                fin: "08:55",
-                matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
-            },
-
-            {
-                debut: "08:55",
-                fin: "09:50",
-                matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
-            },
-
-            {
-                debut: "10:10",
-                fin: "11:10",
-                matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
-            },
-
-            {
-                debut: "11:10",
-                fin: "12:00",
-                matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEP"
-            },
-
-            {
-                debut: "13:40",
-                fin: "14:35",
-                matiere: "Anglais LV1",
-                professeur: "COLOMBEL S.",
-                salle: "I366"
-            },
-
-            {
-                debut: "14:40",
-                fin: "15:30",
-                matiere: "Anglais LV1",
-                professeur: "COLOMBEL S.",
-                salle: "I366"
-            },
-
-            {
-                debut: "15:45",
-                fin: "16:40",
-                matiere: "Éducation physique & sportive",
-                professeur: "HAMON F.",
-                salle: "Salle non renseignée"
-            },
-
-            {
-                debut: "16:40",
-                fin: "17:40",
-                matiere: "Éducation physique & sportive",
-                professeur: "HAMON F.",
-                salle: "Salle non renseignée"
-            }
-
-        ]
+        vendredi: []
 
     },
 
 
-    // ==========================================
-    // Q2
-    // ==========================================
-
     Q2: {
 
         lundi: [],
+
         mardi: [],
+
         mercredi: [],
+
         jeudi: [],
+
         vendredi: []
 
     }
@@ -294,43 +97,101 @@ const emploiDuTemps = {
 };
 
 
-// ==========================================
-// HORAIRES
-// ==========================================
+/* =========================
+   HORAIRES
+========================= */
 
 const horaires = [
 
-    ["08:00", "08:55"],
-    ["08:55", "09:50"],
+    {
+        debut: "08:00",
+        fin: "08:55"
+    },
 
-    ["09:50", "10:10"],
+    {
+        debut: "08:55",
+        fin: "09:50"
+    },
 
-    ["10:10", "11:10"],
-    ["11:10", "12:00"],
+    {
+        debut: "09:50",
+        fin: "10:10",
+        type: "pause",
+        texte: "Pause"
+    },
 
-    ["12:00", "13:00"],
+    {
+        debut: "10:10",
+        fin: "11:10"
+    },
 
-    ["13:00", "13:35"],
-    ["13:35", "13:40"],
+    {
+        debut: "11:10",
+        fin: "12:00"
+    },
 
-    ["13:40", "14:35"],
-    ["14:35", "14:40"],
+    {
+        debut: "12:00",
+        fin: "13:00",
+        type: "repas",
+        texte: "Pause déjeuner"
+    },
 
-    ["14:40", "15:30"],
+    {
+        debut: "13:00",
+        fin: "13:35"
+    },
 
-    ["15:30", "15:45"],
+    {
+        debut: "13:35",
+        fin: "13:40"
+    },
 
-    ["15:45", "16:40"],
-    ["16:40", "17:40"],
+    {
+        debut: "13:40",
+        fin: "14:35"
+    },
 
-    ["17:40", "17:55"]
+    {
+        debut: "14:35",
+        fin: "14:40"
+    },
+
+    {
+        debut: "14:40",
+        fin: "15:30"
+    },
+
+    {
+        debut: "15:30",
+        fin: "15:45",
+        type: "pause",
+        texte: "Pause"
+    },
+
+    {
+        debut: "15:45",
+        fin: "16:40"
+    },
+
+    {
+        debut: "16:40",
+        fin: "17:40"
+    },
+
+    {
+        debut: "17:40",
+        fin: "17:55",
+        type: "fin",
+        texte: "Fin"
+    }
 
 ];
 
 
-// ==========================================
-// JOURS
-// ==========================================
+/* =========================
+   JOURS
+========================= */
 
 const jours = [
     "lundi",
@@ -341,150 +202,182 @@ const jours = [
 ];
 
 
-// ==========================================
-// AFFICHER L'EMPLOI DU TEMPS
-// ==========================================
+/* =========================
+   CONVERSION HEURE
+========================= */
+
+function convertirMinutes(heure) {
+
+    const [heures, minutes] = heure.split(":").map(Number);
+
+    return heures * 60 + minutes;
+
+}
+
+
+/* =========================
+   AFFICHAGE
+========================= */
 
 function afficherEmploiDuTemps(periode) {
 
-    const tableau = document.querySelector("#schedule-body");
-    const titre = document.querySelector("#schedule-title");
+    const tbody = document.getElementById("schedule-body");
+    const titre = document.getElementById("schedule-title");
 
-    if (!tableau) {
+    if (!tbody) {
         return;
     }
 
-    tableau.innerHTML = "";
+    tbody.innerHTML = "";
+
+
+    /* TITRE */
 
     if (titre) {
         titre.textContent = `Emploi du temps — ${periode}`;
     }
 
 
-    horaires.forEach(horaire => {
+    /* PARCOURS DES HORAIRES */
+
+    horaires.forEach((horaire) => {
 
         const ligne = document.createElement("tr");
 
 
-        // ==========================================
-        // HORAIRE
-        // ==========================================
+        /* CELLULE HORAIRE */
 
         const celluleHoraire = document.createElement("td");
 
         celluleHoraire.innerHTML = `
-            <strong>${horaire[0]}</strong>
-            <br>
-            ${horaire[1]}
+            <strong>${horaire.debut}</strong><br>
+            ${horaire.fin}
         `;
 
         ligne.appendChild(celluleHoraire);
 
 
-        // ==========================================
-        // JOURS
-        // ==========================================
+        /* CELLULES DES JOURS */
 
-        jours.forEach(jour => {
+        jours.forEach((jour) => {
 
             const cellule = document.createElement("td");
 
 
-            // Récréation
+            /* PAUSE */
 
-            if (
-                horaire[0] === "09:50" &&
-                horaire[1] === "10:10"
-            ) {
+            if (horaire.type === "pause") {
 
-                cellule.innerHTML = "🔔 Récréation";
                 cellule.classList.add("break-cell");
 
+                cellule.innerHTML = `
+                    🕐 ${horaire.texte}
+                `;
+
+                ligne.appendChild(cellule);
+
+                return;
             }
 
 
-            // Pause déjeuner
+            /* REPAS */
 
-            else if (
-                horaire[0] === "12:00" &&
-                horaire[1] === "13:00"
-            ) {
+            if (horaire.type === "repas") {
 
-                cellule.innerHTML = "🍽️ Pause déjeuner";
                 cellule.classList.add("lunch-cell");
 
+                cellule.innerHTML = `
+                    🍴 ${horaire.texte}
+                `;
+
+                ligne.appendChild(cellule);
+
+                return;
             }
 
 
-            // Petites pauses
+            /* FIN DE JOURNÉE */
 
-            else if (
+            if (horaire.type === "fin") {
 
-                (horaire[0] === "13:35" &&
-                 horaire[1] === "13:40")
-
-                ||
-
-                (horaire[0] === "14:35" &&
-                 horaire[1] === "14:40")
-
-                ||
-
-                (horaire[0] === "15:30" &&
-                 horaire[1] === "15:45")
-
-            ) {
-
-                cellule.innerHTML = "⏸️ Pause";
-                cellule.classList.add("break-cell");
-
-            }
-
-
-            // Fin de journée
-
-            else if (horaire[0] === "17:40") {
-
-                cellule.innerHTML = "🏁 Fin";
                 cellule.classList.add("end-cell");
 
+                cellule.innerHTML = `
+                    🏁 ${horaire.texte}
+                `;
+
+                ligne.appendChild(cellule);
+
+                return;
             }
 
 
-            // Cours
+            /* RECHERCHE DU COURS */
 
-            else {
+            const coursJour = emploiDuTemps[periode]?.[jour] || [];
 
-                const cours = emploiDuTemps[periode][jour]?.find(
-                    cours =>
-                        cours.debut === horaire[0] &&
-                        cours.fin === horaire[1]
+            const debutHoraire = convertirMinutes(horaire.debut);
+            const finHoraire = convertirMinutes(horaire.fin);
+
+
+            /*
+                On cherche un cours qui couvre
+                le créneau actuel.
+
+                Exemple :
+
+                Cours :
+                14:40 → 16:10
+
+                Créneau :
+                14:40 → 15:30
+
+                Le cours est affiché.
+
+                Créneau :
+                15:45 → 16:40
+
+                Le cours est également détecté.
+            */
+
+            const cours = coursJour.find((element) => {
+
+                const debutCours = convertirMinutes(element.debut);
+                const finCours = convertirMinutes(element.fin);
+
+                return (
+                    debutCours < finHoraire &&
+                    finCours > debutHoraire
                 );
 
+            });
 
-                if (cours) {
 
-                    cellule.innerHTML = `
+            /* AFFICHAGE DU COURS */
 
-                        <div class="course">
+            if (cours) {
 
-                            <strong>
-                                ${cours.matiere}
-                            </strong>
+                cellule.innerHTML = `
+                    <div class="course">
 
-                            <span>
-                                👨‍🏫 ${cours.professeur || ""}
-                            </span>
+                        <strong>
+                            ${cours.matiere}
+                        </strong>
 
-                            <small>
-                                📍 ${cours.salle || "Salle non renseignée"}
-                            </small>
+                        ${
+                            cours.professeur
+                                ? `<span>👨‍🏫 ${cours.professeur}</span>`
+                                : ""
+                        }
 
-                        </div>
+                        ${
+                            cours.salle
+                                ? `<small>📍 ${cours.salle}</small>`
+                                : ""
+                        }
 
-                    `;
-
-                }
+                    </div>
+                `;
 
             }
 
@@ -494,29 +387,29 @@ function afficherEmploiDuTemps(periode) {
         });
 
 
-        tableau.appendChild(ligne);
+        tbody.appendChild(ligne);
 
     });
 
 }
 
 
-// ==========================================
-// BOUTONS Q1 / Q2
-// ==========================================
+/* =========================
+   CHANGEMENT DE PÉRIODE
+========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const boutonQ1 = document.querySelector("#q1-button");
-    const boutonQ2 = document.querySelector("#q2-button");
+    const boutonQ1 = document.getElementById("q1-button");
+    const boutonQ2 = document.getElementById("q2-button");
 
 
-    // Affichage initial
+    /* AFFICHAGE INITIAL */
 
     afficherEmploiDuTemps("Q1");
 
 
-    // Q1
+    /* Q1 */
 
     if (boutonQ1) {
 
@@ -535,7 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // Q2
+    /* Q2 */
 
     if (boutonQ2) {
 
