@@ -31,13 +31,14 @@ const emploiDuTemps = {
                 fin: "12:00",
                 matiere: "Prévention-Santé-Environnement",
                 professeur: "BASSO K.",
-                salle: "E014-0014 HP"
+                salle: "E014 HP"
             },
             {
                 debut: "13:40",
                 fin: "14:35",
                 matiere: "Économie & Gestion",
                 professeur: "LINDAUER A."
+                salle: "I460"
             },
             {
                 debut: "14:35",
