@@ -181,3 +181,162 @@ header p {
     color: #1f2937;
     margin: 12px 0 8px;
 }
+/* =========================
+   TABLEAU EMPLOI DU TEMPS
+========================= */
+
+.schedule-table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.schedule-table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: separate;
+    border-spacing: 5px;
+    table-layout: fixed;
+}
+
+.schedule-table th {
+    background: #2563eb;
+    color: white;
+    padding: 15px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.schedule-table th:first-child {
+    width: 100px;
+}
+
+.schedule-table td {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 8px;
+    min-height: 70px;
+    height: 75px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* =========================
+   HORAIRES
+========================= */
+
+.schedule-table td:first-child {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* =========================
+   COURS
+========================= */
+
+.course {
+    background: #e8f0ff;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 9px;
+    text-align: left;
+    height: 100%;
+}
+
+.course strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.course span {
+    display: block;
+    color: #475569;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.course small {
+    display: block;
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+/* =========================
+   PAUSES
+========================= */
+
+.break-cell {
+    background: #fff7ed !important;
+    color: #c2410c;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.lunch-cell {
+    background: #f0fdf4 !important;
+    color: #15803d;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.end-cell {
+    background: #f1f5f9 !important;
+    color: #64748b;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+
+/* =========================
+   CELLULES VIDES
+========================= */
+
+.schedule-table td:empty {
+    background: #ffffff;
+}
+
+
+/* =========================
+   EFFET AU SURVOL
+========================= */
+
+.course {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(37, 99, 235, 0.15);
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .schedule-card {
+        padding: 15px;
+    }
+
+}
