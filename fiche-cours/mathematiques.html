@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mathématiques - Mon ENT Perso LFE</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        /* =========================
+           EN-TÊTE DE LA MATIÈRE
+        ========================= */
+
+        .subject-header {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .subject-title {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .subject-icon {
+            width: 65px;
+            height: 65px;
+
+            background: #e8f0ff;
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+        }
+
+        .subject-title h2 {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .subject-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           INFORMATIONS
+        ========================= */
+
+        .subject-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .info-card span {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .info-card strong {
+            font-size: 14px;
+            color: #1f2937;
+        }
+
+
+        /* =========================
+           CONTENU
+        ========================= */
+
+        .course-content {
+            margin-top: 25px;
+        }
+
+        .content-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .content-card h2 {
+            margin-bottom: 18px;
+            font-size: 20px;
+        }
+
+
+        /* =========================
+           CHAPITRES
+        ========================= */
+
+        .chapter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chapter {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 15px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .chapter-number {
+            width: 38px;
+            height: 38px;
+
+            flex-shrink: 0;
+
+            background: #e8f0ff;
+            color: #2563eb;
+
+            border-radius: 9px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .chapter-info {
+            flex: 1;
+        }
+
+        .chapter-info strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .chapter-info span {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .chapter button {
+            border: none;
+
+            background: #2563eb;
+            color: white;
+
+            padding: 8px 12px;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .chapter button:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* =========================
+           COURS RÉCENTS
+        ========================= */
+
+        .lesson {
+            padding: 18px;
+
+            background: #f8fafc;
+
+            border-left: 4px solid #2563eb;
+
+            border-radius: 10px;
+
+            margin-bottom: 12px;
+        }
+
+        .lesson strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .lesson span {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           DOCUMENTS
+        ========================= */
+
+        .document {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 15px;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+
+            margin-bottom: 10px;
+        }
+
+        .document-icon {
+            font-size: 25px;
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-info strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .document-info span {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           DEVOIRS
+        ========================= */
+
+        .homework {
+            padding: 18px;
+
+            background: #fff7ed;
+
+            border-left: 4px solid #f97316;
+
+            border-radius: 10px;
+
+            margin-bottom: 12px;
+        }
+
+        .homework strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .homework span {
+            color: #9a3412;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RETOUR
+        ========================= */
+
+        .back-button {
+            display: inline-block;
+
+            margin-top: 25px;
+
+            text-decoration: none;
+
+            background: #e8f0ff;
+            color: #2563eb;
+
+            padding: 10px 15px;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .subject-info {
+                grid-template-columns: 1fr;
+            }
+
+            .subject-title {
+                align-items: flex-start;
+            }
+
+            .chapter {
+                flex-wrap: wrap;
+            }
+
+            .chapter button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         MENU
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            🎓
+
+            <h2>Mon ENT</h2>
+
+            <span>Perso LFE</span>
+
+        </div>
+
+
+        <nav>
+
+            <a href="../index.html">
+                🏠 Accueil
+            </a>
+
+            <a href="../emploi-du-temps.html">
+                📅 Emploi du temps
+            </a>
+
+            <a href="../mes-cours.html" class="active">
+                📚 Mes cours
+            </a>
+
+            <a href="#">
+                📝 Mes devoirs
+            </a>
+
+            <a href="#">
+                📊 Mes notes
+            </a>
+
+            <a href="#">
+                📋 Mes contrôles
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =========================
+         CONTENU
+    ========================= -->
+
+    <main class="main-content">
+
+
+        <header>
+
+            <h1>🔢 Mathématiques</h1>
+
+            <p>
+                Retrouvez ici tous tes cours de mathématiques.
+            </p>
+
+        </header>
+
+
+        <!-- =========================
+             INFORMATIONS MATIÈRE
+        ========================= -->
+
+        <section class="subject-header">
+
+            <div class="subject-title">
+
+                <div class="subject-icon">
+                    🔢
+                </div>
+
+                <div>
+
+                    <h2>Mathématiques</h2>
+
+                    <p>
+                        Cours avec MESLARD S.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="subject-info">
+
+                <div class="info-card">
+
+                    <span>Professeur</span>
+
+                    <strong>
+                        MESLARD S.
+                    </strong>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <span>Matière</span>
+
+                    <strong>
+                        Enseignement général
+                    </strong>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <span>Année scolaire</span>
+
+                    <strong>
+                        2026 - 2027
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CONTENU DES COURS
+        ========================= -->
+
+        <section class="course-content">
+
+
+            <!-- CHAPITRES -->
+
+            <div class="content-card">
+
+                <h2>📚 Chapitres</h2>
+
+                <div class="chapter-list">
+
+
+                    <div class="chapter">
+
+                        <div class="chapter-number">
+                            01
+                        </div>
+
+                        <div class="chapter-info">
+
+                            <strong>
+                                Chapitre 1
+                            </strong>
+
+                            <span>
+                                Aucun contenu ajouté pour le moment
+                            </span>
+
+                        </div>
+
+                        <button>
+                            Ouvrir
+                        </button>
+
+                    </div>
+
+
+                    <div class="chapter">
+
+                        <div class="chapter-number">
+                            02
+                        </div>
+
+                        <div class="chapter-info">
+
+                            <strong>
+                                Chapitre 2
+                            </strong>
+
+                            <span>
+                                Aucun contenu ajouté pour le moment
+                            </span>
+
+                        </div>
+
+                        <button>
+                            Ouvrir
+                        </button>
+
+                    </div>
+
+
+                    <div class="chapter">
+
+                        <div class="chapter-number">
+                            03
+                        </div>
+
+                        <div class="chapter-info">
+
+                            <strong>
+                                Chapitre 3
+                            </strong>
+
+                            <span>
+                                Aucun contenu ajouté pour le moment
+                            </span>
+
+                        </div>
+
+                        <button>
+                            Ouvrir
+                        </button>
+
+                    </div>
+
+
+                    <div class="chapter">
+
+                        <div class="chapter-number">
+                            04
+                        </div>
+
+                        <div class="chapter-info">
+
+                            <strong>
+                                Chapitre 4
+                            </strong>
+
+                            <span>
+                                Aucun contenu ajouté pour le moment
+                            </span>
+
+                        </div>
+
+                        <button>
+                            Ouvrir
+                        </button>
+
+                    </div>
+
+
+                    <div class="chapter">
+
+                        <div class="chapter-number">
+                            05
+                        </div>
+
+                        <div class="chapter-info">
+
+                            <strong>
+                                Chapitre 5
+                            </strong>
+
+                            <span>
+                                Aucun contenu ajouté pour le moment
+                            </span>
+
+                        </div>
+
+                        <button>
+                            Ouvrir
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- COURS RÉCENTS -->
+
+            <div class="content-card">
+
+                <h2>📝 Cours récents</h2>
+
+
+                <div class="lesson">
+
+                    <strong>
+                        Aucun cours enregistré
+                    </strong>
+
+                    <span>
+                        Les nouveaux cours pourront être ajoutés ici.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- DOCUMENTS -->
+
+            <div class="content-card">
+
+                <h2>📎 Documents</h2>
+
+
+                <div class="document">
+
+                    <div class="document-icon">
+                        📄
+                    </div>
+
+                    <div class="document-info">
+
+                        <strong>
+                            Aucun document
+                        </strong>
+
+                        <span>
+                            Les documents de mathématiques apparaîtront ici.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DEVOIRS -->
+
+            <div class="content-card">
+
+                <h2>🏠 Devoirs</h2>
+
+
+                <div class="homework">
+
+                    <strong>
+                        Aucun devoir enregistré
+                    </strong>
+
+                    <span>
+                        Les devoirs de mathématiques apparaîtront ici.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- RETOUR -->
+
+        <a
+            href="../mes-cours.html"
+            class="back-button">
+
+            ← Retour à mes cours
+
+        </a>
+
+
+    </main>
+
+
+</body>
+
+</html>
