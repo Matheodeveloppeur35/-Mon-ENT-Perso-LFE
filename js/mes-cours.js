@@ -22,3 +22,25 @@ searchInput.addEventListener("input", function () {
     });
 
 });
+
+
+// =========================
+// BOUTONS « VOIR LES COURS »
+// =========================
+
+const buttons = document.querySelectorAll(".view-course-btn");
+
+buttons.forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+        const matiere = button.dataset.course;
+
+        alert(
+            "📚 " + matiere +
+            "\n\nLa fiche de cette matière sera bientôt disponible."
+        );
+
+    });
+
+});
