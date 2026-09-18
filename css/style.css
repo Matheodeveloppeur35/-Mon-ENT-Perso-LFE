@@ -524,3 +524,32 @@ header p {
     }
 
 }
+/* =========================
+   BOUTON FICHE DE COURS
+========================= */
+
+.course-card-button {
+    border: none;
+    background: #2563eb;
+    color: white;
+
+    padding: 9px 13px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+.course-card-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
