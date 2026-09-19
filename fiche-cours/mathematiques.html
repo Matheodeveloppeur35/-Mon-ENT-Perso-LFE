@@ -183,7 +183,86 @@
             background: #1d4ed8;
         }
 
+<!-- MODIFIER UN COURS -->
 
+<div class="content-card" id="edit-course-section" style="display: none;">
+
+    <h2>✏️ Modifier le cours</h2>
+
+    <form id="edit-course-form">
+
+        <div class="form-group">
+            <label for="edit-course-date">📅 Date du cours</label>
+
+            <input
+                type="date"
+                id="edit-course-date"
+                required
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label for="edit-course-title">📝 Titre du cours</label>
+
+            <input
+                type="text"
+                id="edit-course-title"
+                required
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label for="edit-course-content">📖 Contenu du cours</label>
+
+            <textarea
+                id="edit-course-content"
+                rows="6"
+                required
+            ></textarea>
+        </div>
+
+
+        <div class="form-group">
+            <label for="edit-course-homework">📚 Devoir à faire</label>
+
+            <textarea
+                id="edit-course-homework"
+                rows="3"
+            ></textarea>
+        </div>
+
+
+        <div class="form-group">
+            <label for="edit-course-link">🔗 Document ou lien</label>
+
+            <input
+                type="url"
+                id="edit-course-link"
+            >
+        </div>
+
+
+        <button
+            type="submit"
+            class="save-course-button"
+        >
+            💾 Enregistrer les modifications
+        </button>
+
+
+        <button
+            type="button"
+            id="cancel-edit-button"
+            class="cancel-course-button"
+        >
+            ❌ Annuler
+        </button>
+
+    </form>
+
+</div>
         /* =========================
            COURS RÉCENTS
         ========================= */
