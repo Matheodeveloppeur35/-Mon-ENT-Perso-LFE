@@ -156,12 +156,21 @@ function afficherCours() {
                 : ""
             }
 
-            <button
-                type="button"
-                onclick="supprimerEtActualiser(${index})">
-                🗑️ Supprimer
-            </button>
-        `;
+            <div class="course-actions">
+
+    <button
+        type="button"
+        onclick="modifierEtActualiser(${index})">
+        ✏️ Modifier
+    </button>
+
+    <button
+        type="button"
+        onclick="supprimerEtActualiser(${index})">
+        🗑️ Supprimer
+    </button>
+
+</div>
 
         liste.appendChild(bloc);
     });
