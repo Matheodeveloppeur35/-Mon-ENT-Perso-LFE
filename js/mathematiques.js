@@ -206,3 +206,62 @@ document.addEventListener("DOMContentLoaded", function () {
     afficherCours();
 
 });
+// ========================================
+// MODIFIER UN COURS
+// ========================================
+
+function modifierEtActualiser(index) {
+
+    const cours = recupererCours();
+    const coursActuel = cours[index];
+
+    const nouveauTitre = prompt(
+        "📝 Titre du cours :",
+        coursActuel.titre
+    );
+
+    if (nouveauTitre === null) {
+        return;
+    }
+
+    const nouveauContenu = prompt(
+        "📖 Contenu du cours :",
+        coursActuel.contenu
+    );
+
+    if (nouveauContenu === null) {
+        return;
+    }
+
+    const nouveauDevoir = prompt(
+        "📚 Devoir à faire :",
+        coursActuel.devoir
+    );
+
+    if (nouveauDevoir === null) {
+        return;
+    }
+
+    const nouveauLien = prompt(
+        "🔗 Document ou lien :",
+        coursActuel.lien
+    );
+
+    if (nouveauLien === null) {
+        return;
+    }
+
+    const nouveauCours = {
+        date: coursActuel.date,
+        titre: nouveauTitre,
+        contenu: nouveauContenu,
+        devoir: nouveauDevoir,
+        lien: nouveauLien
+    };
+
+    modifierCours(index, nouveauCours);
+
+    afficherCours();
+
+    alert("✅ Le cours a été modifié !");
+}
