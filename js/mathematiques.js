@@ -96,3 +96,104 @@ if (formulaire) {
     });
 
 }
+// ========================================
+// AFFICHAGE DES COURS
+// ========================================
+
+function afficherCours() {
+
+    const liste = document.getElementById("courses-list");
+
+    if (!liste) {
+        return;
+    }
+
+    const cours = recupererCours();
+
+    if (cours.length === 0) {
+
+        liste.innerHTML = `
+            <p class="empty-courses">
+                Aucun cours enregistré pour le moment.
+            </p>
+        `;
+
+        return;
+    }
+
+    liste.innerHTML = "";
+
+    cours.forEach(function (cours, index) {
+
+        const bloc = document.createElement("div");
+
+        bloc.className = "lesson";
+
+        bloc.innerHTML = `
+            <strong>${cours.titre}</strong>
+
+            <span>
+                📅 ${cours.date}
+            </span>
+
+            <p>
+                ${cours.contenu}
+            </p>
+
+            ${
+                cours.devoir
+                ? `<p><strong>📚 Devoir :</strong> ${cours.devoir}</p>`
+                : ""
+            }
+
+            ${
+                cours.lien
+                ? `<p>
+                    🔗 <a href="${cours.lien}" target="_blank">
+                        Ouvrir le document
+                    </a>
+                </p>`
+                : ""
+            }
+
+            <button
+                type="button"
+                onclick="supprimerEtActualiser(${index})">
+                🗑️ Supprimer
+            </button>
+        `;
+
+        liste.appendChild(bloc);
+    });
+}
+
+
+// ========================================
+// SUPPRIMER ET ACTUALISER
+// ========================================
+
+function supprimerEtActualiser(index) {
+
+    const confirmation = confirm(
+        "Voulez-vous vraiment supprimer ce cours ?"
+    );
+
+    if (!confirmation) {
+        return;
+    }
+
+    supprimerCours(index);
+
+    afficherCours();
+}
+
+
+// ========================================
+// AFFICHAGE AU CHARGEMENT
+// ========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    afficherCours();
+
+});
