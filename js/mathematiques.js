@@ -61,3 +61,38 @@ function obtenirTousLesCours() {
 
     return recupererCours();
 }
+// ========================================
+// FORMULAIRE D'AJOUT D'UN COURS
+// ========================================
+
+const formulaire = document.getElementById("course-form");
+
+if (formulaire) {
+
+    formulaire.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const date = document.getElementById("course-date").value;
+        const titre = document.getElementById("course-title").value;
+        const contenu = document.getElementById("course-content").value;
+        const devoir = document.getElementById("course-homework").value;
+        const lien = document.getElementById("course-link").value;
+
+        const nouveauCours = {
+            date: date,
+            titre: titre,
+            contenu: contenu,
+            devoir: devoir,
+            lien: lien
+        };
+
+        ajouterCours(nouveauCours);
+
+        alert("✅ Le cours a été enregistré !");
+
+        formulaire.reset();
+
+    });
+
+}
