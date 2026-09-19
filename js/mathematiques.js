@@ -2,8 +2,13 @@
 // FICHE DE COURS — MATHÉMATIQUES
 // ========================================
 
-// Récupération des cours enregistrés
+
+// ========================================
+// RÉCUPÉRER LES COURS
+// ========================================
+
 function recupererCours() {
+
     const cours = localStorage.getItem("cours-mathematiques");
 
     if (cours) {
@@ -14,8 +19,12 @@ function recupererCours() {
 }
 
 
-// Sauvegarde des cours
+// ========================================
+// SAUVEGARDER LES COURS
+// ========================================
+
 function sauvegarderCours(cours) {
+
     localStorage.setItem(
         "cours-mathematiques",
         JSON.stringify(cours)
@@ -23,7 +32,10 @@ function sauvegarderCours(cours) {
 }
 
 
-// Ajouter un cours
+// ========================================
+// AJOUTER UN COURS
+// ========================================
+
 function ajouterCours(cours) {
 
     const coursExistants = recupererCours();
@@ -34,7 +46,10 @@ function ajouterCours(cours) {
 }
 
 
-// Supprimer un cours
+// ========================================
+// SUPPRIMER UN COURS
+// ========================================
+
 function supprimerCours(index) {
 
     const cours = recupererCours();
@@ -45,7 +60,10 @@ function supprimerCours(index) {
 }
 
 
-// Modifier un cours
+// ========================================
+// MODIFIER UN COURS
+// ========================================
+
 function modifierCours(index, nouveauCours) {
 
     const cours = recupererCours();
@@ -56,13 +74,18 @@ function modifierCours(index, nouveauCours) {
 }
 
 
-// Récupérer tous les cours
+// ========================================
+// RÉCUPÉRER TOUS LES COURS
+// ========================================
+
 function obtenirTousLesCours() {
 
     return recupererCours();
 }
+
+
 // ========================================
-// FORMULAIRE D'AJOUT D'UN COURS
+// FORMULAIRE D'AJOUT
 // ========================================
 
 const formulaire = document.getElementById("course-form");
@@ -73,19 +96,32 @@ if (formulaire) {
 
         event.preventDefault();
 
-        const date = document.getElementById("course-date").value;
-        const titre = document.getElementById("course-title").value;
-        const contenu = document.getElementById("course-content").value;
-        const devoir = document.getElementById("course-homework").value;
-        const lien = document.getElementById("course-link").value;
+        const date =
+            document.getElementById("course-date").value;
+
+        const titre =
+            document.getElementById("course-title").value;
+
+        const contenu =
+            document.getElementById("course-content").value;
+
+        const devoir =
+            document.getElementById("course-homework").value;
+
+        const lien =
+            document.getElementById("course-link").value;
+
 
         const nouveauCours = {
+
             date: date,
             titre: titre,
             contenu: contenu,
             devoir: devoir,
             lien: lien
+
         };
+
 
         ajouterCours(nouveauCours);
 
@@ -93,23 +129,32 @@ if (formulaire) {
 
         formulaire.reset();
 
+        afficherCours();
+
     });
 
 }
+
+
 // ========================================
-// AFFICHAGE DES COURS
+// AFFICHER LES COURS
 // ========================================
 
 function afficherCours() {
 
-    const liste = document.getElementById("courses-list");
+    const liste =
+        document.getElementById("courses-list");
+
 
     if (!liste) {
         return;
     }
 
+
     const cours = recupererCours();
 
+
+    // Aucun cours
     if (cours.length === 0) {
 
         liste.innerHTML = `
@@ -121,16 +166,26 @@ function afficherCours() {
         return;
     }
 
+
+    // Nettoyage de la liste
     liste.innerHTML = "";
 
+
+    // Affichage des cours
     cours.forEach(function (cours, index) {
 
-        const bloc = document.createElement("div");
+        const bloc =
+            document.createElement("div");
+
 
         bloc.className = "lesson";
 
+
         bloc.innerHTML = `
-            <strong>${cours.titre}</strong>
+
+            <strong>
+                ${cours.titre}
+            </strong>
 
             <span>
                 📅 ${cours.date}
@@ -140,40 +195,63 @@ function afficherCours() {
                 ${cours.contenu}
             </p>
 
+
             ${
                 cours.devoir
-                ? `<p><strong>📚 Devoir :</strong> ${cours.devoir}</p>`
+                ? `
+                    <p>
+                        <strong>📚 Devoir :</strong>
+                        ${cours.devoir}
+                    </p>
+                `
                 : ""
             }
+
 
             ${
                 cours.lien
-                ? `<p>
-                    🔗 <a href="${cours.lien}" target="_blank">
-                        Ouvrir le document
-                    </a>
-                </p>`
+                ? `
+                    <p>
+                        🔗
+                        <a
+                            href="${cours.lien}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Ouvrir le document
+                        </a>
+                    </p>
+                `
                 : ""
             }
 
+
             <div class="course-actions">
 
-    <button
-        type="button"
-        onclick="modifierEtActualiser(${index})">
-        ✏️ Modifier
-    </button>
+                <button
+                    type="button"
+                    onclick="modifierEtActualiser(${index})"
+                >
+                    ✏️ Modifier
+                </button>
 
-    <button
-        type="button"
-        onclick="supprimerEtActualiser(${index})">
-        🗑️ Supprimer
-    </button>
 
-</div>
+                <button
+                    type="button"
+                    onclick="supprimerEtActualiser(${index})"
+                >
+                    🗑️ Supprimer
+                </button>
+
+            </div>
+
+        `;
+
 
         liste.appendChild(bloc);
+
     });
+
 }
 
 
@@ -187,13 +265,101 @@ function supprimerEtActualiser(index) {
         "Voulez-vous vraiment supprimer ce cours ?"
     );
 
+
     if (!confirmation) {
         return;
     }
 
+
     supprimerCours(index);
 
     afficherCours();
+
+}
+
+
+// ========================================
+// MODIFIER ET ACTUALISER
+// ========================================
+
+function modifierEtActualiser(index) {
+
+    const cours = recupererCours();
+
+    const coursActuel = cours[index];
+
+
+    if (!coursActuel) {
+        return;
+    }
+
+
+    const nouveauTitre = prompt(
+        "📝 Titre du cours :",
+        coursActuel.titre
+    );
+
+
+    if (nouveauTitre === null) {
+        return;
+    }
+
+
+    const nouveauContenu = prompt(
+        "📖 Contenu du cours :",
+        coursActuel.contenu
+    );
+
+
+    if (nouveauContenu === null) {
+        return;
+    }
+
+
+    const nouveauDevoir = prompt(
+        "📚 Devoir à faire :",
+        coursActuel.devoir || ""
+    );
+
+
+    if (nouveauDevoir === null) {
+        return;
+    }
+
+
+    const nouveauLien = prompt(
+        "🔗 Document ou lien :",
+        coursActuel.lien || ""
+    );
+
+
+    if (nouveauLien === null) {
+        return;
+    }
+
+
+    const nouveauCours = {
+
+        date: coursActuel.date,
+
+        titre: nouveauTitre,
+
+        contenu: nouveauContenu,
+
+        devoir: nouveauDevoir,
+
+        lien: nouveauLien
+
+    };
+
+
+    modifierCours(index, nouveauCours);
+
+    afficherCours();
+
+
+    alert("✅ Le cours a été modifié !");
+
 }
 
 
@@ -201,67 +367,11 @@ function supprimerEtActualiser(index) {
 // AFFICHAGE AU CHARGEMENT
 // ========================================
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    afficherCours();
+        afficherCours();
 
-});
-// ========================================
-// MODIFIER UN COURS
-// ========================================
-
-function modifierEtActualiser(index) {
-
-    const cours = recupererCours();
-    const coursActuel = cours[index];
-
-    const nouveauTitre = prompt(
-        "📝 Titre du cours :",
-        coursActuel.titre
-    );
-
-    if (nouveauTitre === null) {
-        return;
     }
-
-    const nouveauContenu = prompt(
-        "📖 Contenu du cours :",
-        coursActuel.contenu
-    );
-
-    if (nouveauContenu === null) {
-        return;
-    }
-
-    const nouveauDevoir = prompt(
-        "📚 Devoir à faire :",
-        coursActuel.devoir
-    );
-
-    if (nouveauDevoir === null) {
-        return;
-    }
-
-    const nouveauLien = prompt(
-        "🔗 Document ou lien :",
-        coursActuel.lien
-    );
-
-    if (nouveauLien === null) {
-        return;
-    }
-
-    const nouveauCours = {
-        date: coursActuel.date,
-        titre: nouveauTitre,
-        contenu: nouveauContenu,
-        devoir: nouveauDevoir,
-        lien: nouveauLien
-    };
-
-    modifierCours(index, nouveauCours);
-
-    afficherCours();
-
-    alert("✅ Le cours a été modifié !");
-}
+);
