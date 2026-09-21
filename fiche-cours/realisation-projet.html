@@ -8,11 +8,152 @@
     <title>Réalisation projet - Mon ENT Perso LFE</title>
 
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .course-header {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .course-header h2 {
+            margin: 0 0 10px;
+        }
+
+        .course-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .info-badge {
+            background: rgba(255,255,255,0.18);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .chapters,
+        .recent-courses,
+        .documents,
+        .homework-section,
+        .add-course-section,
+        .edit-course-section {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .chapter-card h3 {
+            margin-top: 0;
+        }
+
+        .chapter-card button {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 8px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .course-form {
+            display: grid;
+            gap: 15px;
+        }
+
+        .course-form label {
+            font-weight: bold;
+        }
+
+        .course-form input,
+        .course-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-family: inherit;
+        }
+
+        .course-form textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .course-form button {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 9px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .saved-course {
+            border-left: 5px solid #7c3aed;
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .saved-course h3 {
+            margin-top: 0;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .course-actions button {
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .edit-button {
+            background: #2563eb;
+        }
+
+        .delete-button {
+            background: #dc2626;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: #7c3aed;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- MENU -->
     <aside class="sidebar">
 
         <div class="logo">
@@ -51,217 +192,242 @@
 
     </aside>
 
-
-    <!-- CONTENU -->
     <main class="main-content">
 
         <header>
-
-            <h1>💻 Réalisation projet</h1>
-
-            <p>
-                Retrouve ici les cours, travaux et ressources liés à ton projet.
-            </p>
-
+            <h1>🛠️ Réalisation projet</h1>
+            <p>Ta fiche de projet personnelle.</p>
         </header>
 
+        <section class="course-header">
 
-        <!-- INFORMATIONS -->
-        <section class="welcome-card">
-
-            <h2>🚀 Informations sur la matière</h2>
+            <h2>🛠️ Réalisation projet</h2>
 
             <p>
-                <strong>Professeurs :</strong>
-                LE PAPE D. / MESLARD S.
+                Retrouve ici les cours, les étapes, les travaux
+                et les informations concernant ton projet.
             </p>
 
-            <p>
-                <strong>Matière :</strong>
-                Réalisation projet
-            </p>
+            <div class="course-info">
 
-            <p>
-                <strong>Année scolaire :</strong>
-                2026-2027
-            </p>
+                <span class="info-badge">
+                    👨‍🏫 LE PAPE D.
+                </span>
 
-        </section>
+                <span class="info-badge">
+                    👨‍🏫 MESLARD S.
+                </span>
 
+                <span class="info-badge">
+                    🛠️ Réalisation projet
+                </span>
 
-        <!-- CHAPITRES -->
-        <section class="courses-section">
-
-            <h2>📚 Mes chapitres</h2>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    💡
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 01</h3>
-
-                    <p>
-                        Découverte et préparation du projet
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    📝
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 02</h3>
-
-                    <p>
-                        Organisation du projet
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    💻
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 03</h3>
-
-                    <p>
-                        Développement du projet
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🔧
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 04</h3>
-
-                    <p>
-                        Mise en œuvre et réalisation
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🎯
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 05</h3>
-
-                    <p>
-                        Présentation et bilan du projet
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
+                <span class="info-badge">
+                    📅 2026-2027
+                </span>
 
             </div>
 
         </section>
 
+        <section class="chapters">
 
-        <!-- COURS RÉCENTS -->
-        <section class="welcome-card">
+            <h2>📖 Chapitres / étapes du projet</h2>
 
-            <h2>📝 Cours récents</h2>
+            <div class="chapter-list">
+
+                <div class="chapter-card">
+                    <h3>Étape 1</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
+                </div>
+
+                <div class="chapter-card">
+                    <h3>Étape 2</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
+                </div>
+
+                <div class="chapter-card">
+                    <h3>Étape 3</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
+                </div>
+
+                <div class="chapter-card">
+                    <h3>Étape 4</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
+                </div>
+
+                <div class="chapter-card">
+                    <h3>Étape 5</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="add-course-section">
+
+            <h2>➕ Ajouter un cours / une étape</h2>
+
+            <form id="course-form" class="course-form">
+
+                <div>
+                    <label for="course-date">Date</label>
+                    <input type="date" id="course-date" required>
+                </div>
+
+                <div>
+                    <label for="course-title">Titre</label>
+                    <input
+                        type="text"
+                        id="course-title"
+                        placeholder="Ex : Recherche d'une idée de projet"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="course-content">Contenu</label>
+                    <textarea
+                        id="course-content"
+                        placeholder="Décris ce qui a été réalisé..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label for="course-homework">Travail à faire</label>
+                    <textarea
+                        id="course-homework"
+                        placeholder="Indique le travail à poursuivre..."
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label for="course-link">Lien vers un document</label>
+                    <input
+                        type="url"
+                        id="course-link"
+                        placeholder="https://..."
+                    >
+                </div>
+
+                <button type="submit">
+                    💾 Enregistrer
+                </button>
+
+            </form>
+
+        </section>
+
+        <section
+            class="edit-course-section"
+            id="edit-course-section"
+            style="display:none;"
+        >
+
+            <h2>✏️ Modifier le cours</h2>
+
+            <form id="edit-course-form" class="course-form">
+
+                <div>
+                    <label for="edit-course-date">Date</label>
+                    <input type="date" id="edit-course-date" required>
+                </div>
+
+                <div>
+                    <label for="edit-course-title">Titre</label>
+                    <input type="text" id="edit-course-title" required>
+                </div>
+
+                <div>
+                    <label for="edit-course-content">Contenu</label>
+                    <textarea
+                        id="edit-course-content"
+                        required
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label for="edit-course-homework">
+                        Travail à faire
+                    </label>
+
+                    <textarea id="edit-course-homework"></textarea>
+                </div>
+
+                <div>
+                    <label for="edit-course-link">
+                        Lien vers un document
+                    </label>
+
+                    <input type="url" id="edit-course-link">
+                </div>
+
+                <button type="submit">
+                    💾 Enregistrer les modifications
+                </button>
+
+                <button
+                    type="button"
+                    id="cancel-edit-button"
+                    style="background:#6b7280;"
+                >
+                    Annuler
+                </button>
+
+            </form>
+
+        </section>
+
+        <section class="recent-courses">
+
+            <h2>📚 Cours et étapes enregistrés</h2>
+
+            <div id="courses-list">
+
+                <p>
+                    Aucun cours ou étape enregistré pour le moment.
+                </p>
+
+            </div>
+
+        </section>
+
+        <section class="documents">
+
+            <h2>📎 Documents</h2>
 
             <p>
-                Aucun cours enregistré pour le moment.
+                Les documents associés à tes cours apparaîtront
+                ici sous forme de liens.
             </p>
 
         </section>
 
+        <section class="homework-section">
 
-        <!-- DOCUMENTS -->
-        <section class="welcome-card">
-
-            <h2>📎 Documents du projet</h2>
+            <h2>📝 Travail à faire</h2>
 
             <p>
-                Aucun document disponible pour le moment.
+                Le travail à poursuivre est enregistré directement
+                avec chaque étape du projet.
             </p>
 
         </section>
 
-
-        <!-- DEVOIRS -->
-        <section class="welcome-card">
-
-            <h2>📝 Travaux à réaliser</h2>
-
-            <p>
-                Aucun travail enregistré pour le moment.
-            </p>
-
-        </section>
-
-
-        <!-- RETOUR -->
-        <section>
-
-            <a
-                href="../mes-cours.html"
-                class="course-card-button">
-
-                ← Retour à Mes cours
-
-            </a>
-
-        </section>
+        <a href="../mes-cours.html" class="back-link">
+            ← Retour à Mes cours
+        </a>
 
     </main>
+
+    <script src="../js/realisation-projet.js"></script>
 
 </body>
 
