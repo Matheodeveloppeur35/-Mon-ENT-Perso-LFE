@@ -8,11 +8,152 @@
     <title>Sciences physiques - Mon ENT Perso LFE</title>
 
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .course-header {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .course-header h2 {
+            margin: 0 0 10px;
+        }
+
+        .course-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .info-badge {
+            background: rgba(255,255,255,0.18);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .chapters,
+        .recent-courses,
+        .documents,
+        .homework-section,
+        .add-course-section,
+        .edit-course-section {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .chapter-card h3 {
+            margin-top: 0;
+        }
+
+        .chapter-card button {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 8px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .course-form {
+            display: grid;
+            gap: 15px;
+        }
+
+        .course-form label {
+            font-weight: bold;
+        }
+
+        .course-form input,
+        .course-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-family: inherit;
+        }
+
+        .course-form textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .course-form button {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 9px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .saved-course {
+            border-left: 5px solid #f97316;
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .saved-course h3 {
+            margin-top: 0;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .course-actions button {
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .edit-button {
+            background: #2563eb;
+        }
+
+        .delete-button {
+            background: #dc2626;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: #f97316;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- MENU -->
     <aside class="sidebar">
 
         <div class="logo">
@@ -51,214 +192,272 @@
 
     </aside>
 
-
-    <!-- CONTENU -->
     <main class="main-content">
 
         <header>
-
-            <h1>⚗️ Sciences physiques</h1>
-
-            <p>
-                Retrouve ici tes cours, chapitres et documents.
-            </p>
-
+            <h1>🔬 Sciences physiques</h1>
+            <p>Ta fiche de cours personnelle.</p>
         </header>
 
 
-        <!-- INFORMATIONS -->
-        <section class="welcome-card">
+        <!-- EN-TÊTE -->
 
-            <h2>🔬 Informations sur la matière</h2>
+        <section class="course-header">
 
-            <p>
-                <strong>Professeur :</strong> MESLARD S.
-            </p>
+            <h2>🔬 Sciences physiques</h2>
 
             <p>
-                <strong>Matière :</strong> Sciences physiques
+                Retrouvez ici tes cours, tes chapitres,
+                tes documents et tes devoirs de sciences physiques.
             </p>
 
-            <p>
-                <strong>Année scolaire :</strong> 2026-2027
-            </p>
+            <div class="course-info">
+
+                <span class="info-badge">
+                    👨‍🏫 MESLARD S.
+                </span>
+
+                <span class="info-badge">
+                    📚 Sciences physiques
+                </span>
+
+                <span class="info-badge">
+                    📅 2026-2027
+                </span>
+
+            </div>
 
         </section>
 
 
         <!-- CHAPITRES -->
-        <section class="courses-section">
 
-            <h2>📚 Mes chapitres</h2>
+        <section class="chapters">
 
+            <h2>📖 Chapitres</h2>
 
-            <div class="course-card">
+            <div class="chapter-list">
 
-                <div class="course-icon">
-                    ⚗️
+                <div class="chapter-card">
+                    <h3>Chapitre 1</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
                 </div>
 
-                <div class="course-info">
-
-                    <h3>Chapitre 01</h3>
-
-                    <p>
-                        Sciences physiques
-                    </p>
-
+                <div class="chapter-card">
+                    <h3>Chapitre 2</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
                 </div>
 
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🔬
+                <div class="chapter-card">
+                    <h3>Chapitre 3</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
                 </div>
 
-                <div class="course-info">
-
-                    <h3>Chapitre 02</h3>
-
-                    <p>
-                        Sciences physiques
-                    </p>
-
+                <div class="chapter-card">
+                    <h3>Chapitre 4</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
                 </div>
 
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    ⚡
+                <div class="chapter-card">
+                    <h3>Chapitre 5</h3>
+                    <p>À compléter</p>
+                    <button>Ouvrir</button>
                 </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 03</h3>
-
-                    <p>
-                        Sciences physiques
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🔋
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 04</h3>
-
-                    <p>
-                        Sciences physiques
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🧪
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 05</h3>
-
-                    <p>
-                        Sciences physiques
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
 
             </div>
 
         </section>
 
 
-        <!-- COURS RÉCENTS -->
-        <section class="welcome-card">
+        <!-- AJOUTER UN COURS -->
 
-            <h2>📝 Cours récents</h2>
+        <section class="add-course-section">
 
-            <p>
-                Aucun cours enregistré pour le moment.
-            </p>
+            <h2>➕ Ajouter un cours</h2>
+
+            <form id="course-form" class="course-form">
+
+                <div>
+                    <label for="course-date">Date</label>
+                    <input type="date" id="course-date" required>
+                </div>
+
+                <div>
+                    <label for="course-title">Titre du cours</label>
+                    <input
+                        type="text"
+                        id="course-title"
+                        placeholder="Ex : Les circuits électriques"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="course-content">Contenu du cours</label>
+                    <textarea
+                        id="course-content"
+                        placeholder="Écris ici ce que vous avez fait en cours..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label for="course-homework">Devoirs</label>
+                    <textarea
+                        id="course-homework"
+                        placeholder="Ex : Exercices 4 et 5 pour lundi"
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label for="course-link">Lien vers un document</label>
+                    <input
+                        type="url"
+                        id="course-link"
+                        placeholder="https://..."
+                    >
+                </div>
+
+                <button type="submit">
+                    💾 Enregistrer le cours
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- MODIFICATION -->
+
+        <section
+            class="edit-course-section"
+            id="edit-course-section"
+            style="display:none;"
+        >
+
+            <h2>✏️ Modifier le cours</h2>
+
+            <form id="edit-course-form" class="course-form">
+
+                <div>
+                    <label for="edit-course-date">Date</label>
+                    <input type="date" id="edit-course-date" required>
+                </div>
+
+                <div>
+                    <label for="edit-course-title">Titre du cours</label>
+                    <input type="text" id="edit-course-title" required>
+                </div>
+
+                <div>
+                    <label for="edit-course-content">
+                        Contenu du cours
+                    </label>
+
+                    <textarea
+                        id="edit-course-content"
+                        required
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label for="edit-course-homework">
+                        Devoirs
+                    </label>
+
+                    <textarea
+                        id="edit-course-homework"
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label for="edit-course-link">
+                        Lien vers un document
+                    </label>
+
+                    <input
+                        type="url"
+                        id="edit-course-link"
+                    >
+                </div>
+
+                <button type="submit">
+                    💾 Enregistrer les modifications
+                </button>
+
+                <button
+                    type="button"
+                    id="cancel-edit-button"
+                    style="background:#6b7280;"
+                >
+                    Annuler
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- COURS ENREGISTRÉS -->
+
+        <section class="recent-courses">
+
+            <h2>📚 Mes cours enregistrés</h2>
+
+            <div id="courses-list">
+
+                <p>
+                    Aucun cours enregistré pour le moment.
+                </p>
+
+            </div>
 
         </section>
 
 
         <!-- DOCUMENTS -->
-        <section class="welcome-card">
+
+        <section class="documents">
 
             <h2>📎 Documents</h2>
 
             <p>
-                Aucun document disponible pour le moment.
+                Les liens vers tes documents apparaîtront ici
+                lorsqu'ils seront ajoutés à un cours.
             </p>
 
         </section>
 
 
         <!-- DEVOIRS -->
-        <section class="welcome-card">
+
+        <section class="homework-section">
 
             <h2>📝 Devoirs</h2>
 
             <p>
-                Aucun devoir enregistré pour le moment.
+                Les devoirs associés à tes cours apparaîtront
+                dans les cours enregistrés.
             </p>
 
         </section>
 
 
-        <!-- RETOUR -->
-        <section>
-
-            <a
-                href="../mes-cours.html"
-                class="course-card-button">
-
-                ← Retour à Mes cours
-
-            </a>
-
-        </section>
+        <a
+            href="../mes-cours.html"
+            class="back-link"
+        >
+            ← Retour à Mes cours
+        </a>
 
     </main>
+
+
+    <script src="../js/sciences-physiques.js"></script>
 
 </body>
 
