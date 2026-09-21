@@ -8,18 +8,329 @@
     <title>Mes cours - Mon ENT Perso LFE</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        /* =========================
+           PAGE MES COURS
+        ========================= */
+
+        .courses-top {
+            margin-bottom: 25px;
+        }
+
+        .courses-top h1 {
+            margin-bottom: 8px;
+        }
+
+        .courses-top p {
+            color: #64748b;
+        }
+
+
+        /* =========================
+           BARRE DE RECHERCHE
+        ========================= */
+
+        .courses-tools {
+            background: white;
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+
+        .search-box input {
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 13px 15px 13px 45px;
+
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+        }
+
+
+        /* =========================
+           FILTRE
+        ========================= */
+
+        .filter-box select {
+            padding: 13px 15px;
+
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+
+            background: white;
+
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           COMPTEUR
+        ========================= */
+
+        .courses-count {
+            margin-bottom: 18px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           GRILLE
+        ========================= */
+
+        .courses-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(280px, 1fr));
+
+            gap: 20px;
+        }
+
+
+        /* =========================
+           CARTE
+        ========================= */
+
+        .course-card {
+
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.06);
+
+            border: 1px solid #eef2f7;
+
+            display: flex;
+            flex-direction: column;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+
+            overflow: hidden;
+        }
+
+        .course-card:hover {
+
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 12px 30px rgba(0,0,0,0.10);
+        }
+
+
+        /* =========================
+           ICÔNE
+        ========================= */
+
+        .course-icon {
+
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            font-size: 27px;
+
+            background: #eff6ff;
+
+            margin-bottom: 16px;
+        }
+
+
+        /* =========================
+           TEXTE
+        ========================= */
+
+        .course-card h2 {
+
+            margin: 0 0 8px;
+
+            font-size: 19px;
+
+            color: #172033;
+        }
+
+        .course-teacher {
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            margin-bottom: 10px;
+        }
+
+        .course-category {
+
+            display: inline-block;
+
+            width: fit-content;
+
+            background: #f1f5f9;
+
+            color: #475569;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* =========================
+           BOUTON
+        ========================= */
+
+        .course-card-button {
+
+            margin-top: auto;
+
+            display: block;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            background: #2563eb;
+
+            color: white;
+
+            padding: 11px 15px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+        .course-card-button:hover {
+
+            background: #1d4ed8;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           AUCUN RÉSULTAT
+        ========================= */
+
+        .no-results {
+
+            display: none;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .courses-tools {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-box select {
+                width: 100%;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <!-- MENU -->
+
+    <!-- =========================
+         MENU
+    ========================= -->
+
     <aside class="sidebar">
 
         <div class="logo">
+
             🎓
+
             <h2>Mon ENT</h2>
+
             <span>Perso LFE</span>
+
         </div>
+
 
         <nav>
 
@@ -52,320 +363,512 @@
     </aside>
 
 
-    <!-- CONTENU -->
+    <!-- =========================
+         CONTENU
+    ========================= -->
+
     <main class="main-content">
 
-        <header>
-            <h1>📚 Mes cours</h1>
+
+        <header class="courses-top">
+
+            <h1>
+                📚 Mes cours
+            </h1>
 
             <p>
-                Retrouve tes différentes matières et tes cours.
+                Retrouve toutes tes matières et leurs fiches de cours.
             </p>
+
         </header>
 
 
-        <!-- RECHERCHE -->
-        <section class="welcome-card">
+        <!-- =========================
+             OUTILS
+        ========================= -->
 
-            <h2>🔎 Rechercher un cours</h2>
+        <section class="courses-tools">
 
-            <input
-                type="text"
-                id="search-course"
-                placeholder="Rechercher une matière..."
-            >
+
+            <div class="search-box">
+
+                <span>🔎</span>
+
+                <input
+                    type="search"
+                    id="search-course"
+                    placeholder="Rechercher une matière, un professeur..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="filter-box">
+
+                <select id="course-filter">
+
+                    <option value="all">
+                        📚 Toutes les matières
+                    </option>
+
+                    <option value="general">
+                        📘 Enseignement général
+                    </option>
+
+                    <option value="professional">
+                        🛠️ Enseignement professionnel
+                    </option>
+
+                    <option value="other">
+                        🎨 Autres
+                    </option>
+
+                </select>
+
+            </div>
 
         </section>
 
 
-        <!-- MATIÈRES -->
-        <section class="courses-section">
+        <div
+            class="courses-count"
+            id="courses-count"
+        >
+            12 matières
+        </div>
 
 
-            <!-- FRANÇAIS / HISTOIRE-GÉO -->
-            <div class="course-card">
+        <!-- =========================
+             CARTES
+        ========================= -->
 
-                <div class="course-icon">📘</div>
+        <section
+            class="courses-grid"
+            id="courses-grid"
+        >
 
-                <div class="course-info">
 
-                    <h2>Français / Histoire-Géo / EMC</h2>
+            <!-- FRANÇAIS -->
 
-                    <p>👨‍🏫 FREVILLE C.</p>
+            <article
+                class="course-card"
+                data-category="general"
+            >
 
-                    <span>Matière générale</span>
-
+                <div class="course-icon">
+                    📖
                 </div>
 
-               <a
-    href="fiche-cours/francais-histoire-geo.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                <h2>
+                    Français / Histoire-Géo / EMC
+                </h2>
 
-            </div>
-
-
-            <!-- MATHÉMATIQUES -->
-            <div class="course-card">
-
-                <div class="course-icon">🔢</div>
-
-                <div class="course-info">
-
-                    <h2>Mathématiques</h2>
-
-                    <p>👨‍🏫 MESLARD S.</p>
-
-                    <span>Matière générale</span>
-
+                <div class="course-teacher">
+                    👨‍🏫 FREVILLE C.
                 </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
 
                 <a
-    href="fiche-cours/mathematiques.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                    href="fiche-cours/francais-histoire-geo.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
 
-            </div>
+            </article>
+
+
+            <!-- MATHS -->
+
+            <article
+                class="course-card"
+                data-category="general"
+            >
+
+                <div class="course-icon">
+                    ➗
+                </div>
+
+                <h2>
+                    Mathématiques
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 MESLARD S.
+                </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
+
+                <a
+                    href="fiche-cours/mathematiques.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
 
 
             <!-- ANGLAIS -->
-            <div class="course-card">
 
-                <div class="course-icon">🇬🇧</div>
+            <article
+                class="course-card"
+                data-category="general"
+            >
 
-                <div class="course-info">
-
-                    <h2>Anglais LV1</h2>
-
-                    <p>👨‍🏫 COLOMBEL S.</p>
-
-                    <span>Langue vivante</span>
-
+                <div class="course-icon">
+                    🇬🇧
                 </div>
+
+                <h2>
+                    Anglais LV1
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 COLOMBEL S.
+                </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
 
                 <a
-    href="fiche-cours/anglais.html"
-    class="course-card-button">
-    Voir les cours
-</a>
-            </div>
+                    href="fiche-cours/anglais.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
 
 
-            <!-- SCIENCES PHYSIQUES -->
-            <div class="course-card">
+            <!-- SCIENCES -->
 
-                <div class="course-icon">⚡</div>
+            <article
+                class="course-card"
+                data-category="general"
+            >
 
-                <div class="course-info">
-
-                    <h2>Sciences physiques</h2>
-
-                    <p>👨‍🏫 MESLARD S.</p>
-
-                    <span>Matière générale</span>
-
+                <div class="course-icon">
+                    ⚗️
                 </div>
 
-                 <a
-    href="fiche-cours/sciences-physiques.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                <h2>
+                    Sciences physiques
+                </h2>
 
-            </div>
-
-
-            <!-- ENSEIGNEMENT PROFESSIONNEL -->
-            <div class="course-card">
-
-                <div class="course-icon">🧑‍💻</div>
-
-                <div class="course-info">
-
-                    <h2>Enseignement professionnel</h2>
-
-                    <p>👨‍🏫 LUCIEN E.</p>
-
-                    <span>Enseignement professionnel</span>
-
+                <div class="course-teacher">
+                    👨‍🏫 MESLARD S.
                 </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
 
                 <a
-    href="fiche-cours/enseignement-professionnel.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                    href="fiche-cours/sciences-physiques.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
 
-            </div>
+            </article>
 
 
-            <!-- PRATIQUE PROFESSIONNELLE -->
-            <div class="course-card">
+            <!-- ENSEIGNEMENT PRO -->
 
-                <div class="course-icon">🛠️</div>
+            <article
+                class="course-card"
+                data-category="professional"
+            >
 
-                <div class="course-info">
-
-                    <h2>Pratique professionnelle</h2>
-
-                    <p>👨‍🏫 LUCIEN E. / LETTELIER J / LE PAPE D
-                    <span>Enseignement professionnel</span>
-
+                <div class="course-icon">
+                    🛠️
                 </div>
 
-                <a
-    href="fiche-cours/pratique-professionnelle.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                <h2>
+                    Enseignement professionnel
+                </h2>
 
-            </div>
-
-
-            <!-- ARTS APPLIQUÉS -->
-            <div class="course-card">
-
-                <div class="course-icon">🎨</div>
-
-                <div class="course-info">
-
-                    <h2>Arts appliqués / Culture artistique</h2>
-
-                    <p>👨‍🏫 NIEDERGANG L.</p>
-
-                    <span>Enseignement général</span>
-
+                <div class="course-teacher">
+                    👨‍🏫 LUCIEN E.
                 </div>
 
-                <a
-    href="fiche-cours/arts-appliques.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                <span class="course-category">
+                    Enseignement professionnel
+                </span>
 
-            </div>
+                <a
+                    href="fiche-cours/enseignement-professionnel.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+
+            <!-- PRATIQUE PRO -->
+
+            <article
+                class="course-card"
+                data-category="professional"
+            >
+
+                <div class="course-icon">
+                    🔧
+                </div>
+
+                <h2>
+                    Pratique professionnelle
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LUCIEN E. / LETTELIER J. / LE PAPE D.
+                </div>
+
+                <span class="course-category">
+                    Enseignement professionnel
+                </span>
+
+                <a
+                    href="fiche-cours/pratique-professionnelle.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+
+            <!-- ARTS -->
+
+            <article
+                class="course-card"
+                data-category="other"
+            >
+
+                <div class="course-icon">
+                    🎨
+                </div>
+
+                <h2>
+                    Arts appliqués / Culture artistique
+                </h2>
+
+                <div class="course-teacher">
+                    👩‍🏫 NIEDERGANG L.
+                </div>
+
+                <span class="course-category">
+                    Arts
+                </span>
+
+                <a
+                    href="fiche-cours/arts-appliques.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
 
 
             <!-- SOUTIEN -->
-            <div class="course-card">
 
-                <div class="course-icon">🧠</div>
+            <article
+                class="course-card"
+                data-category="other"
+            >
 
-                <div class="course-info">
-
-                    <h2>Soutien au parcours</h2>
-
-                    <p>👨‍🏫 LE PAPE D.</p>
-
-                    <span>Accompagnement</span>
-
+                <div class="course-icon">
+                    🤝
                 </div>
 
+                <h2>
+                    Soutien au parcours
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LE PAPE D.
+                </div>
+
+                <span class="course-category">
+                    Accompagnement
+                </span>
+
                 <a
-    href="fiche-cours/soutien-au-parcours.html"
-    class="course-card-button">
-    Voir les cours
-</a>
-            </div>
+                    href="fiche-cours/soutien-au-parcours.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
 
 
             <!-- PSE -->
-            <div class="course-card">
 
-                <div class="course-icon">🩺</div>
+            <article
+                class="course-card"
+                data-category="other"
+            >
 
-                <div class="course-info">
-
-                    <h2>Prévention-Santé-Environnement</h2>
-
-                    <p>👨‍🏫 BASSO K.</p>
-
-                    <span>Matière générale</span>
-
+                <div class="course-icon">
+                    🩺
                 </div>
 
-                <a
-    href="fiche-cours/prevention-sante-environnement.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                <h2>
+                    Prévention-Santé-Environnement
+                </h2>
 
-            </div>
+                <div class="course-teacher">
+                    👩‍🏫 BASSO K.
+                </div>
+
+                <span class="course-category">
+                    Prévention / Santé
+                </span>
+
+                <a
+                    href="fiche-cours/prevention-sante-environnement.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
 
 
             <!-- ÉCONOMIE -->
-            <div class="course-card">
 
-                <div class="course-icon">💼</div>
+            <article
+                class="course-card"
+                data-category="professional"
+            >
 
-                <div class="course-info">
-
-                    <h2>Économie &amp; Gestion</h2>
-
-                    <p>👨‍🏫 LINDAUER A.</p>
-
-                    <span>Matière générale</span>
-
+                <div class="course-icon">
+                    💼
                 </div>
 
+                <h2>
+                    Économie & Gestion
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LINDAUER A.
+                </div>
+
+                <span class="course-category">
+                    Enseignement professionnel
+                </span>
+
                 <a
-    href="fiche-cours/economie-gestion.html"
-    class="course-card-button">
-    Voir les cours
-</a>
-            </div>
+                    href="fiche-cours/economie-gestion.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
 
 
             <!-- PROJET -->
-            <div class="course-card">
 
-                <div class="course-icon">🎯</div>
+            <article
+                class="course-card"
+                data-category="professional"
+            >
 
-                <div class="course-info">
-
-                    <h2>Réalisation projet</h2>
-
-                    <p>👨‍🏫 LE PAPE D. / MESLARD S.</p>
-
-                    <span>Projet</span>
-
+                <div class="course-icon">
+                    💡
                 </div>
 
-                <a
-    href="fiche-cours/realisation-projet.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                <h2>
+                    Réalisation projet
+                </h2>
 
-            </div>
+                <div class="course-teacher">
+                    👨‍🏫 LE PAPE D. / MESLARD S.
+                </div>
+
+                <span class="course-category">
+                    Projet
+                </span>
+
+                <a
+                    href="fiche-cours/realisation-projet.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
 
 
             <!-- EPS -->
-            <div class="course-card">
 
-                <div class="course-icon">🏃</div>
+            <article
+                class="course-card"
+                data-category="other"
+            >
 
-                <div class="course-info">
-
-                    <h2>Éducation physique &amp; sportive</h2>
-
-                    <p>👨‍🏫 HAMON F.</p>
-
-                    <span>EPS</span>
-
+                <div class="course-icon">
+                    🏃
                 </div>
 
-                <a
-    href="fiche-cours/education-physique-sportive.html"
-    class="course-card-button">
-    Voir les cours
-</a>
+                <h2>
+                    Éducation physique & sportive
+                </h2>
 
-            </div>
+                <div class="course-teacher">
+                    👨‍🏫 HAMON F.
+                </div>
+
+                <span class="course-category">
+                    Sport
+                </span>
+
+                <a
+                    href="fiche-cours/education-physique-sportive.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
 
         </section>
+
+
+        <!-- =========================
+             AUCUN RÉSULTAT
+        ========================= -->
+
+        <div
+            class="no-results"
+            id="no-results"
+        >
+
+            🔎
+
+            <h2>
+                Aucun cours trouvé
+            </h2>
+
+            <p>
+                Essaie avec un autre mot ou une autre catégorie.
+            </p>
+
+        </div>
+
 
     </main>
 
