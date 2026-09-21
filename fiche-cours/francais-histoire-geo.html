@@ -2,24 +2,270 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Français / Histoire-Géo / EMC - Mon ENT Perso LFE</title>
 
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        .subject-header {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .subject-header h2 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .subject-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-badge {
+            background: rgba(255,255,255,0.18);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .content-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            background: #f9fafb;
+        }
+
+        .chapter h3 {
+            margin-top: 0;
+        }
+
+        .chapter button {
+            border: none;
+            background: #dc2626;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.12);
+        }
+
+        .save-course-button {
+            border: none;
+            background: #16a34a;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-course-button:hover {
+            background: #15803d;
+        }
+
+        .cancel-course-button {
+            border: none;
+            background: #6b7280;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        .cancel-course-button:hover {
+            background: #4b5563;
+        }
+
+        .lesson {
+            background: #f8fafc;
+            border-left: 5px solid #dc2626;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .lesson strong {
+            display: block;
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .lesson span {
+            display: block;
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .lesson p {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .lesson a {
+            color: #dc2626;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .lesson a:hover {
+            text-decoration: underline;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .course-actions button {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .course-actions button:first-child {
+            background: #dc2626;
+            color: white;
+        }
+
+        .course-actions button:last-child {
+            background: #dc2626;
+            color: white;
+        }
+
+        .empty-courses {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: #dc2626;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+
+            .subject-info {
+                flex-direction: column;
+            }
+
+            .chapter-list {
+                grid-template-columns: 1fr;
+            }
+
+            .course-actions {
+                flex-direction: column;
+            }
+
+            .course-actions button {
+                width: 100%;
+            }
+
+            .cancel-course-button {
+                margin-left: 0;
+                margin-top: 8px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
+
     <!-- MENU -->
+
     <aside class="sidebar">
 
         <div class="logo">
+
             🎓
+
             <h2>Mon ENT</h2>
+
             <span>Perso LFE</span>
+
         </div>
+
 
         <nav>
 
@@ -52,212 +298,367 @@
     </aside>
 
 
-    <!-- CONTENU -->
     <main class="main-content">
+
 
         <header>
 
             <h1>📚 Français / Histoire-Géo / EMC</h1>
 
             <p>
-                Retrouve ici tes cours, chapitres et documents.
+                Retrouvez ici tous tes cours de français,
+                histoire-géographie et EMC.
             </p>
 
         </header>
 
 
-        <!-- INFORMATIONS -->
-        <section class="welcome-card">
+        <!-- EN-TÊTE -->
 
-            <h2>📖 Informations sur la matière</h2>
+        <section class="subject-header">
 
-            <p>
-                <strong>Professeur :</strong> FREVILLE C.
-            </p>
+            <h2>📚 Français / Histoire-Géo / EMC</h2>
 
             <p>
-                <strong>Matière :</strong> Français / Histoire-Géo / EMC
+                Espace consacré à tes cours,
+                devoirs et documents.
             </p>
 
-            <p>
-                <strong>Année scolaire :</strong> 2026-2027
-            </p>
+
+            <div class="subject-info">
+
+                <span class="info-badge">
+                    👨‍🏫 Professeur : FREVILLE C.
+                </span>
+
+                <span class="info-badge">
+                    📖 Français / Histoire-Géo / EMC
+                </span>
+
+                <span class="info-badge">
+                    📅 Année 2026-2027
+                </span>
+
+            </div>
 
         </section>
 
 
         <!-- CHAPITRES -->
-        <section class="courses-section">
 
-            <h2>📚 Mes chapitres</h2>
+        <section class="content-card">
 
-            <div class="course-card">
+            <h2>📖 Mes chapitres</h2>
 
-                <div class="course-icon">
-                    📘
+
+            <div class="chapter-list">
+
+                <div class="chapter">
+                    <h3>Chapitre 1</h3>
+                    <p>Français</p>
+                    <button type="button">Ouvrir</button>
                 </div>
 
-                <div class="course-info">
-
-                    <h3>Chapitre 01</h3>
-
-                    <p>
-                        Français
-                    </p>
-
+                <div class="chapter">
+                    <h3>Chapitre 2</h3>
+                    <p>Histoire</p>
+                    <button type="button">Ouvrir</button>
                 </div>
 
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    📕
+                <div class="chapter">
+                    <h3>Chapitre 3</h3>
+                    <p>Géographie</p>
+                    <button type="button">Ouvrir</button>
                 </div>
 
-                <div class="course-info">
-
-                    <h3>Chapitre 02</h3>
-
-                    <p>
-                        Français
-                    </p>
-
+                <div class="chapter">
+                    <h3>Chapitre 4</h3>
+                    <p>EMC</p>
+                    <button type="button">Ouvrir</button>
                 </div>
 
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🌍
+                <div class="chapter">
+                    <h3>Chapitre 5</h3>
+                    <p>Français / Histoire-Géo / EMC</p>
+                    <button type="button">Ouvrir</button>
                 </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 03</h3>
-
-                    <p>
-                        Histoire-Géographie
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🌎
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 04</h3>
-
-                    <p>
-                        Histoire-Géographie
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
-
-            </div>
-
-
-            <div class="course-card">
-
-                <div class="course-icon">
-                    🏛️
-                </div>
-
-                <div class="course-info">
-
-                    <h3>Chapitre 05</h3>
-
-                    <p>
-                        EMC
-                    </p>
-
-                </div>
-
-                <button class="course-card-button">
-                    Ouvrir
-                </button>
 
             </div>
 
         </section>
+
+
+        <!-- AJOUTER UN COURS -->
+
+        <div class="content-card">
+
+            <h2>➕ Ajouter un cours</h2>
+
+
+            <form id="course-form">
+
+
+                <div class="form-group">
+
+                    <label for="course-date">
+                        📅 Date du cours
+                    </label>
+
+                    <input
+                        type="date"
+                        id="course-date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-title">
+                        📝 Titre du cours
+                    </label>
+
+                    <input
+                        type="text"
+                        id="course-title"
+                        placeholder="Ex : La Première Guerre mondiale"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-content">
+                        📖 Contenu du cours
+                    </label>
+
+                    <textarea
+                        id="course-content"
+                        rows="6"
+                        placeholder="Écris ici le contenu du cours..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-homework">
+                        📚 Devoir à faire
+                    </label>
+
+                    <textarea
+                        id="course-homework"
+                        rows="3"
+                        placeholder="Ex : Relire le cours et faire les exercices"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-link">
+                        🔗 Document ou lien
+                    </label>
+
+                    <input
+                        type="url"
+                        id="course-link"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-course-button"
+                >
+                    💾 Enregistrer le cours
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- MODIFIER UN COURS -->
+
+        <div
+            class="content-card"
+            id="edit-course-section"
+            style="display: none;"
+        >
+
+            <h2>✏️ Modifier le cours</h2>
+
+
+            <form id="edit-course-form">
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-date">
+                        📅 Date du cours
+                    </label>
+
+                    <input
+                        type="date"
+                        id="edit-course-date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-title">
+                        📝 Titre du cours
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-course-title"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-content">
+                        📖 Contenu du cours
+                    </label>
+
+                    <textarea
+                        id="edit-course-content"
+                        rows="6"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-homework">
+                        📚 Devoir à faire
+                    </label>
+
+                    <textarea
+                        id="edit-course-homework"
+                        rows="3"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-link">
+                        🔗 Document ou lien
+                    </label>
+
+                    <input
+                        type="url"
+                        id="edit-course-link"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-course-button"
+                >
+                    💾 Enregistrer les modifications
+                </button>
+
+
+                <button
+                    type="button"
+                    id="cancel-edit-button"
+                    class="cancel-course-button"
+                >
+                    ❌ Annuler
+                </button>
+
+            </form>
+
+        </div>
 
 
         <!-- COURS RÉCENTS -->
-        <section class="welcome-card">
+
+        <div class="content-card">
 
             <h2>📝 Cours récents</h2>
 
-            <p>
-                Aucun cours enregistré pour le moment.
-            </p>
 
-        </section>
+            <div id="courses-list">
+
+                <p class="empty-courses">
+                    Aucun cours enregistré pour le moment.
+                </p>
+
+            </div>
+
+        </div>
 
 
         <!-- DOCUMENTS -->
-        <section class="welcome-card">
 
-            <h2>📎 Documents</h2>
+        <div class="content-card">
+
+            <h2>📂 Documents</h2>
 
             <p>
-                Aucun document disponible pour le moment.
+                Les documents liés aux cours
+                apparaîtront ici.
             </p>
 
-        </section>
+        </div>
 
 
         <!-- DEVOIRS -->
-        <section class="welcome-card">
 
-            <h2>📝 Devoirs</h2>
+        <div class="content-card">
+
+            <h2>📚 Devoirs</h2>
 
             <p>
-                Aucun devoir enregistré pour le moment.
+                Les devoirs de français,
+                histoire-géographie et EMC
+                apparaîtront ici.
             </p>
 
-        </section>
+        </div>
 
 
         <!-- RETOUR -->
-        <section>
 
-            <a
-                href="../mes-cours.html"
-                class="course-card-button">
+        <a
+            href="../mes-cours.html"
+            class="back-link"
+        >
+            ← Retour à Mes cours
+        </a>
 
-                ← Retour à Mes cours
-
-            </a>
-
-        </section>
 
     </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="../js/francais-histoire-geo.js"></script>
+
 
 </body>
 
