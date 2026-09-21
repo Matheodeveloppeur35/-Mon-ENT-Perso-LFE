@@ -1,46 +1,132 @@
 // =========================
-// RECHERCHE DES COURS
+// MES COURS
+// RECHERCHE + FILTRES
 // =========================
 
-const searchInput = document.getElementById("search-course");
-const courseCards = document.querySelectorAll(".course-card");
+const searchInput =
+    document.getElementById("search-course");
 
-searchInput.addEventListener("input", function () {
+const filterSelect =
+    document.getElementById("course-filter");
 
-    const recherche = searchInput.value.toLowerCase().trim();
+const courseCards =
+    document.querySelectorAll(".course-card");
 
-    courseCards.forEach(function (card) {
+const coursesCount =
+    document.getElementById("courses-count");
 
-        const texte = card.textContent.toLowerCase();
+const noResults =
+    document.getElementById("no-results");
 
-        if (texte.includes(recherche)) {
+
+// =========================
+// FILTRER LES COURS
+// =========================
+
+function filtrerCours() {
+
+    const recherche =
+        searchInput.value
+            .toLowerCase()
+            .trim();
+
+    const categorie =
+        filterSelect.value;
+
+    let nombreVisible = 0;
+
+
+    courseCards.forEach(function(card) {
+
+        const texte =
+            card.textContent.toLowerCase();
+
+        const cardCategorie =
+            card.dataset.category;
+
+
+        // Recherche
+        const correspondRecherche =
+            texte.includes(recherche);
+
+
+        // Catégorie
+        const correspondCategorie =
+            categorie === "all" ||
+            cardCategorie === categorie;
+
+
+        // Affichage
+        if (
+            correspondRecherche &&
+            correspondCategorie
+        ) {
+
             card.style.display = "flex";
+
+            nombreVisible++;
+
         } else {
+
             card.style.display = "none";
+
         }
 
     });
 
-});
+
+    // =========================
+    // COMPTEUR
+    // =========================
+
+    if (nombreVisible === 0) {
+
+        coursesCount.textContent =
+            "Aucune matière trouvée";
+
+        noResults.style.display =
+            "block";
+
+    } else {
+
+        coursesCount.textContent =
+            nombreVisible +
+            (
+                nombreVisible > 1
+                    ? " matières affichées"
+                    : " matière affichée"
+            );
+
+        noResults.style.display =
+            "none";
+
+    }
+
+}
 
 
 // =========================
-// BOUTONS « VOIR LES COURS »
+// RECHERCHE
 // =========================
 
-const buttons = document.querySelectorAll(".view-course-btn");
+searchInput.addEventListener(
+    "input",
+    filtrerCours
+);
 
-buttons.forEach(function (button) {
 
-    button.addEventListener("click", function () {
+// =========================
+// FILTRE
+// =========================
 
-        const matiere = button.dataset.course;
+filterSelect.addEventListener(
+    "change",
+    filtrerCours
+);
 
-        alert(
-            "📚 " + matiere +
-            "\n\nLa fiche de cette matière sera bientôt disponible."
-        );
 
-    });
+// =========================
+// AFFICHAGE INITIAL
+// =========================
 
-});
+filtrerCours();
