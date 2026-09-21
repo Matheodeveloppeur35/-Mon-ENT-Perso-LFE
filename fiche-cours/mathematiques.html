@@ -2,405 +2,498 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Mathématiques - Mon ENT Perso LFE</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
 
     <style>
 
-        /* =========================
-           EN-TÊTE DE LA MATIÈRE
-        ========================= */
+        /* ========================================
+           FICHE DE MATIÈRE
+        ======================================== */
 
         .subject-header {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 15px;
+
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #1d4ed8
+            );
+
+            color: white;
+
             padding: 30px;
-            margin-top: 30px;
-        }
 
-        .subject-title {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
+            border-radius: 18px;
 
-        .subject-icon {
-            width: 65px;
-            height: 65px;
+            margin-bottom: 25px;
 
-            background: #e8f0ff;
-            border-radius: 14px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 32px;
-        }
-
-        .subject-title h2 {
-            font-size: 24px;
-            margin-bottom: 6px;
-        }
-
-        .subject-title p {
-            color: #6b7280;
-            font-size: 14px;
         }
 
 
-        /* =========================
-           INFORMATIONS
-        ========================= */
+        .subject-header h2 {
+
+            margin-top: 0;
+
+            font-size: 28px;
+
+        }
+
 
         .subject-info {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            display: flex;
+
+            flex-wrap: wrap;
+
             gap: 15px;
-            margin-top: 25px;
+
+            margin-top: 20px;
+
         }
 
-        .info-card {
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 18px;
-        }
 
-        .info-card span {
-            display: block;
-            color: #6b7280;
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
+        .info-badge {
 
-        .info-card strong {
+            background: rgba(255,255,255,0.18);
+
+            padding: 8px 14px;
+
+            border-radius: 20px;
+
             font-size: 14px;
-            color: #1f2937;
+
         }
 
 
-        /* =========================
-           CONTENU
-        ========================= */
-
-        .course-content {
-            margin-top: 25px;
-        }
+        /* ========================================
+           CARTES
+        ======================================== */
 
         .content-card {
+
             background: white;
-            border: 1px solid #e5e7eb;
+
             border-radius: 15px;
+
             padding: 25px;
-            margin-bottom: 20px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.08);
+
         }
+
 
         .content-card h2 {
-            margin-bottom: 18px;
-            font-size: 20px;
+
+            margin-top: 0;
+
+            margin-bottom: 20px;
+
         }
 
 
-        /* =========================
+        /* ========================================
            CHAPITRES
-        ========================= */
+        ======================================== */
 
         .chapter-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
 
-        .chapter {
-            display: flex;
-            align-items: center;
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
             gap: 15px;
 
-            padding: 15px;
+        }
 
-            background: #f8fafc;
+
+        .chapter {
 
             border: 1px solid #e5e7eb;
-            border-radius: 10px;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            background: #f9fafb;
+
         }
 
-        .chapter-number {
-            width: 38px;
-            height: 38px;
 
-            flex-shrink: 0;
+        .chapter h3 {
 
-            background: #e8f0ff;
-            color: #2563eb;
+            margin-top: 0;
 
-            border-radius: 9px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-weight: bold;
-            font-size: 13px;
         }
 
-        .chapter-info {
-            flex: 1;
-        }
-
-        .chapter-info strong {
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .chapter-info span {
-            color: #6b7280;
-            font-size: 12px;
-        }
 
         .chapter button {
+
             border: none;
 
             background: #2563eb;
+
             color: white;
 
             padding: 8px 12px;
 
             border-radius: 8px;
 
-            font-size: 12px;
+            cursor: pointer;
+
+        }
+
+
+        /* ========================================
+           FORMULAIRES
+        ======================================== */
+
+        .form-group {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .form-group input,
+        .form-group textarea {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 11px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 9px;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+        }
+
+
+        .form-group textarea {
+
+            resize: vertical;
+
+        }
+
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+
+            outline: none;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px rgba(37,99,235,0.12);
+
+        }
+
+
+        /* ========================================
+           BOUTON ENREGISTRER
+        ======================================== */
+
+        .save-course-button {
+
+            border: none;
+
+            background: #16a34a;
+
+            color: white;
+
+            padding: 11px 18px;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+
             font-weight: bold;
 
             cursor: pointer;
+
         }
 
-        .chapter button:hover {
-            background: #1d4ed8;
+
+        .save-course-button:hover {
+
+            background: #15803d;
+
         }
 
-<!-- MODIFIER UN COURS -->
 
-<div class="content-card" id="edit-course-section" style="display: none;">
+        /* ========================================
+           BOUTON ANNULER
+        ======================================== */
 
-    <h2>✏️ Modifier le cours</h2>
+        .cancel-course-button {
 
-    <form id="edit-course-form">
+            border: none;
 
-        <div class="form-group">
-            <label for="edit-course-date">📅 Date du cours</label>
+            background: #6b7280;
 
-            <input
-                type="date"
-                id="edit-course-date"
-                required
-            >
-        </div>
+            color: white;
 
+            padding: 11px 18px;
 
-        <div class="form-group">
-            <label for="edit-course-title">📝 Titre du cours</label>
+            border-radius: 9px;
 
-            <input
-                type="text"
-                id="edit-course-title"
-                required
-            >
-        </div>
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-left: 8px;
+
+        }
 
 
-        <div class="form-group">
-            <label for="edit-course-content">📖 Contenu du cours</label>
+        .cancel-course-button:hover {
 
-            <textarea
-                id="edit-course-content"
-                rows="6"
-                required
-            ></textarea>
-        </div>
+            background: #4b5563;
+
+        }
 
 
-        <div class="form-group">
-            <label for="edit-course-homework">📚 Devoir à faire</label>
-
-            <textarea
-                id="edit-course-homework"
-                rows="3"
-            ></textarea>
-        </div>
-
-
-        <div class="form-group">
-            <label for="edit-course-link">🔗 Document ou lien</label>
-
-            <input
-                type="url"
-                id="edit-course-link"
-            >
-        </div>
-
-
-        <button
-            type="submit"
-            class="save-course-button"
-        >
-            💾 Enregistrer les modifications
-        </button>
-
-
-        <button
-            type="button"
-            id="cancel-edit-button"
-            class="cancel-course-button"
-        >
-            ❌ Annuler
-        </button>
-
-    </form>
-
-</div>
-        /* =========================
-           COURS RÉCENTS
-        ========================= */
+        /* ========================================
+           COURS
+        ======================================== */
 
         .lesson {
-            padding: 18px;
 
             background: #f8fafc;
 
-            border-left: 4px solid #2563eb;
+            border-left: 5px solid #2563eb;
 
             border-radius: 10px;
 
-            margin-bottom: 12px;
-        }
-
-        .lesson strong {
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .lesson span {
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-
-        /* =========================
-           DOCUMENTS
-        ========================= */
-
-        .document {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-
-            padding: 15px;
-
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-
-            margin-bottom: 10px;
-        }
-
-        .document-icon {
-            font-size: 25px;
-        }
-
-        .document-info {
-            flex: 1;
-        }
-
-        .document-info strong {
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .document-info span {
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-
-        /* =========================
-           DEVOIRS
-        ========================= */
-
-        .homework {
             padding: 18px;
 
-            background: #fff7ed;
+            margin-bottom: 15px;
 
-            border-left: 4px solid #f97316;
+        }
 
-            border-radius: 10px;
+
+        .lesson strong {
+
+            display: block;
+
+            font-size: 17px;
+
+            margin-bottom: 6px;
+
+        }
+
+
+        .lesson span {
+
+            display: block;
+
+            color: #6b7280;
+
+            font-size: 13px;
 
             margin-bottom: 12px;
-        }
 
-        .homework strong {
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .homework span {
-            color: #9a3412;
-            font-size: 12px;
         }
 
 
-        /* =========================
-           RETOUR
-        ========================= */
+        .lesson p {
 
-        .back-button {
-            display: inline-block;
+            white-space: pre-wrap;
 
-            margin-top: 25px;
+            line-height: 1.6;
+
+        }
+
+
+        .lesson a {
+
+            color: #2563eb;
+
+            font-weight: bold;
 
             text-decoration: none;
 
-            background: #e8f0ff;
+        }
+
+
+        .lesson a:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        /* ========================================
+           ACTIONS DES COURS
+        ======================================== */
+
+        .course-actions {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .course-actions button {
+
+            border: none;
+
+            padding: 8px 12px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+        }
+
+
+        .course-actions button:first-child {
+
+            background: #2563eb;
+
+            color: white;
+
+        }
+
+
+        .course-actions button:first-child:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+        .course-actions button:last-child {
+
+            background: #dc2626;
+
+            color: white;
+
+        }
+
+
+        .course-actions button:last-child:hover {
+
+            background: #b91c1c;
+
+        }
+
+
+        .empty-courses {
+
+            color: #6b7280;
+
+            font-style: italic;
+
+        }
+
+
+        /* ========================================
+           RETOUR
+        ======================================== */
+
+        .back-link {
+
+            display: inline-block;
+
+            margin-top: 5px;
+
             color: #2563eb;
 
-            padding: 10px 15px;
-
-            border-radius: 10px;
-
-            font-size: 13px;
             font-weight: bold;
+
+            text-decoration: none;
+
         }
 
-        .back-button:hover {
-            background: #2563eb;
-            color: white;
+
+        .back-link:hover {
+
+            text-decoration: underline;
+
         }
 
 
-        /* =========================
+        /* ========================================
            MOBILE
-        ========================= */
+        ======================================== */
 
-        @media (max-width: 800px) {
+        @media (max-width: 700px) {
 
             .subject-info {
+
+                flex-direction: column;
+
+            }
+
+
+            .chapter-list {
+
                 grid-template-columns: 1fr;
+
             }
 
-            .subject-title {
-                align-items: flex-start;
+
+            .course-actions {
+
+                flex-direction: column;
+
             }
 
-            .chapter {
-                flex-wrap: wrap;
-            }
 
-            .chapter button {
+            .course-actions button {
+
                 width: 100%;
+
+            }
+
+
+            .cancel-course-button {
+
+                margin-left: 0;
+
+                margin-top: 8px;
+
             }
 
         }
@@ -413,9 +506,9 @@
 <body>
 
 
-    <!-- =========================
+    <!-- ========================================
          MENU
-    ========================= -->
+    ======================================== -->
 
     <aside class="sidebar">
 
@@ -436,21 +529,29 @@
                 🏠 Accueil
             </a>
 
+
             <a href="../emploi-du-temps.html">
                 📅 Emploi du temps
             </a>
 
-            <a href="../mes-cours.html" class="active">
+
+            <a
+                href="../mes-cours.html"
+                class="active"
+            >
                 📚 Mes cours
             </a>
+
 
             <a href="#">
                 📝 Mes devoirs
             </a>
 
+
             <a href="#">
                 📊 Mes notes
             </a>
+
 
             <a href="#">
                 📋 Mes contrôles
@@ -461,16 +562,16 @@
     </aside>
 
 
-    <!-- =========================
-         CONTENU
-    ========================= -->
+    <!-- ========================================
+         CONTENU PRINCIPAL
+    ======================================== -->
 
     <main class="main-content">
 
 
         <header>
 
-            <h1>🔢 Mathématiques</h1>
+            <h1>📚 Mathématiques</h1>
 
             <p>
                 Retrouvez ici tous tes cours de mathématiques.
@@ -479,345 +580,417 @@
         </header>
 
 
-        <!-- =========================
-             INFORMATIONS MATIÈRE
-        ========================= -->
+        <!-- ========================================
+             EN-TÊTE MATIÈRE
+        ======================================== -->
 
         <section class="subject-header">
 
-            <div class="subject-title">
+            <h2>📐 Mathématiques</h2>
 
-                <div class="subject-icon">
-                    🔢
-                </div>
-
-                <div>
-
-                    <h2>Mathématiques</h2>
-
-                    <p>
-                        Cours avec MESLARD S.
-                    </p>
-
-                </div>
-
-            </div>
+            <p>
+                Espace consacré à tes cours,
+                devoirs et documents de mathématiques.
+            </p>
 
 
             <div class="subject-info">
 
-                <div class="info-card">
-
-                    <span>Professeur</span>
-
-                    <strong>
-                        MESLARD S.
-                    </strong>
-
-                </div>
+                <span class="info-badge">
+                    👨‍🏫 Professeur : MESLARD S.
+                </span>
 
 
-                <div class="info-card">
-
-                    <span>Matière</span>
-
-                    <strong>
-                        Enseignement général
-                    </strong>
-
-                </div>
+                <span class="info-badge">
+                    📘 Enseignement général
+                </span>
 
 
-                <div class="info-card">
-
-                    <span>Année scolaire</span>
-
-                    <strong>
-                        2026 - 2027
-                    </strong>
-
-                </div>
+                <span class="info-badge">
+                    📅 Année 2026-2027
+                </span>
 
             </div>
 
         </section>
 
 
-        <!-- =========================
-             CONTENU DES COURS
-        ========================= -->
+        <!-- ========================================
+             CHAPITRES
+        ======================================== -->
 
-        <section class="course-content">
+        <section class="content-card">
 
+            <h2>📖 Mes chapitres</h2>
 
-            <!-- CHAPITRES -->
 
-            <div class="content-card">
+            <div class="chapter-list">
 
-                <h2>📚 Chapitres</h2>
 
-                <div class="chapter-list">
+                <div class="chapter">
 
+                    <h3>Chapitre 1</h3>
 
-                    <div class="chapter">
+                    <p>
+                        Cours de mathématiques
+                    </p>
 
-                        <div class="chapter-number">
-                            01
-                        </div>
-
-                        <div class="chapter-info">
-
-                            <strong>
-                                Chapitre 1
-                            </strong>
-
-                            <span>
-                                Aucun contenu ajouté pour le moment
-                            </span>
-
-                        </div>
-
-                        <button>
-                            Ouvrir
-                        </button>
-
-                    </div>
-
-
-                    <div class="chapter">
-
-                        <div class="chapter-number">
-                            02
-                        </div>
-
-                        <div class="chapter-info">
-
-                            <strong>
-                                Chapitre 2
-                            </strong>
-
-                            <span>
-                                Aucun contenu ajouté pour le moment
-                            </span>
-
-                        </div>
-
-                        <button>
-                            Ouvrir
-                        </button>
-
-                    </div>
-
-
-                    <div class="chapter">
-
-                        <div class="chapter-number">
-                            03
-                        </div>
-
-                        <div class="chapter-info">
-
-                            <strong>
-                                Chapitre 3
-                            </strong>
-
-                            <span>
-                                Aucun contenu ajouté pour le moment
-                            </span>
-
-                        </div>
-
-                        <button>
-                            Ouvrir
-                        </button>
-
-                    </div>
-
-
-                    <div class="chapter">
-
-                        <div class="chapter-number">
-                            04
-                        </div>
-
-                        <div class="chapter-info">
-
-                            <strong>
-                                Chapitre 4
-                            </strong>
-
-                            <span>
-                                Aucun contenu ajouté pour le moment
-                            </span>
-
-                        </div>
-
-                        <button>
-                            Ouvrir
-                        </button>
-
-                    </div>
-
-
-                    <div class="chapter">
-
-                        <div class="chapter-number">
-                            05
-                        </div>
-
-                        <div class="chapter-info">
-
-                            <strong>
-                                Chapitre 5
-                            </strong>
-
-                            <span>
-                                Aucun contenu ajouté pour le moment
-                            </span>
-
-                        </div>
-
-                        <button>
-                            Ouvrir
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- AJOUTER UN COURS -->
-
-            <div class="content-card">
-
-                <h2>➕ Ajouter un cours</h2>
-
-                <form id="course-form">
-
-                    <div class="form-group">
-                        <label for="course-date">📅 Date du cours</label>
-                        <input type="date" id="course-date" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="course-title">📝 Titre du cours</label>
-                        <input type="text" id="course-title" placeholder="Ex : Les fonctions" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="course-content">📖 Contenu du cours</label>
-                        <textarea id="course-content" rows="6" placeholder="Écris ici le contenu du cours..." required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="course-homework">📚 Devoir à faire</label>
-                        <textarea id="course-homework" rows="3" placeholder="Ex : Exercices 4 à 8 page 52"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="course-link">🔗 Document ou lien</label>
-                        <input type="url" id="course-link" placeholder="https://...">
-                    </div>
-
-                    <button type="submit" class="save-course-button">
-                        💾 Enregistrer le cours
+                    <button type="button">
+                        Ouvrir
                     </button>
 
-                </form>
-
-            </div>
+                </div>
 
 
-            <!-- COURS RÉCENTS -->
+                <div class="chapter">
 
-           <!-- COURS RÉCENTS -->
+                    <h3>Chapitre 2</h3>
 
-<div class="content-card">
+                    <p>
+                        Cours de mathématiques
+                    </p>
 
-    <h2>📝 Cours récents</h2>
+                    <button type="button">
+                        Ouvrir
+                    </button>
 
-    <div id="courses-list">
-
-        <p class="empty-courses">
-            Aucun cours enregistré pour le moment.
-        </p>
-
-    </div>
-
-</div>
+                </div>
 
 
-            <!-- DOCUMENTS -->
+                <div class="chapter">
 
-            <div class="content-card">
+                    <h3>Chapitre 3</h3>
 
-                <h2>📎 Documents</h2>
+                    <p>
+                        Cours de mathématiques
+                    </p>
+
+                    <button type="button">
+                        Ouvrir
+                    </button>
+
+                </div>
 
 
-                <div class="document">
+                <div class="chapter">
 
-                    <div class="document-icon">
-                        📄
-                    </div>
+                    <h3>Chapitre 4</h3>
 
-                    <div class="document-info">
+                    <p>
+                        Cours de mathématiques
+                    </p>
 
-                        <strong>
-                            Aucun document
-                        </strong>
+                    <button type="button">
+                        Ouvrir
+                    </button>
 
-                        <span>
-                            Les documents de mathématiques apparaîtront ici.
-                        </span>
+                </div>
 
-                    </div>
+
+                <div class="chapter">
+
+                    <h3>Chapitre 5</h3>
+
+                    <p>
+                        Cours de mathématiques
+                    </p>
+
+                    <button type="button">
+                        Ouvrir
+                    </button>
 
                 </div>
 
             </div>
-
-
-            <!-- DEVOIRS -->
-
-            <div class="content-card">
-
-                <h2>🏠 Devoirs</h2>
-
-
-                <div class="homework">
-
-                    <strong>
-                        Aucun devoir enregistré
-                    </strong>
-
-                    <span>
-                        Les devoirs de mathématiques apparaîtront ici.
-                    </span>
-
-                </div>
-
-            </div>
-
 
         </section>
 
 
-        <!-- RETOUR -->
+        <!-- ========================================
+             AJOUTER UN COURS
+        ======================================== -->
+
+        <div class="content-card">
+
+            <h2>➕ Ajouter un cours</h2>
+
+
+            <form id="course-form">
+
+
+                <div class="form-group">
+
+                    <label for="course-date">
+                        📅 Date du cours
+                    </label>
+
+                    <input
+                        type="date"
+                        id="course-date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-title">
+                        📝 Titre du cours
+                    </label>
+
+                    <input
+                        type="text"
+                        id="course-title"
+                        placeholder="Ex : Les fonctions"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-content">
+                        📖 Contenu du cours
+                    </label>
+
+                    <textarea
+                        id="course-content"
+                        rows="6"
+                        placeholder="Écris ici le contenu du cours..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-homework">
+                        📚 Devoir à faire
+                    </label>
+
+                    <textarea
+                        id="course-homework"
+                        rows="3"
+                        placeholder="Ex : Exercices 4 à 8 page 52"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="course-link">
+                        🔗 Document ou lien
+                    </label>
+
+                    <input
+                        type="url"
+                        id="course-link"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-course-button"
+                >
+                    💾 Enregistrer le cours
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ========================================
+             MODIFIER UN COURS
+        ======================================== -->
+
+        <div
+            class="content-card"
+            id="edit-course-section"
+            style="display: none;"
+        >
+
+            <h2>✏️ Modifier le cours</h2>
+
+
+            <form id="edit-course-form">
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-date">
+                        📅 Date du cours
+                    </label>
+
+                    <input
+                        type="date"
+                        id="edit-course-date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-title">
+                        📝 Titre du cours
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-course-title"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-content">
+                        📖 Contenu du cours
+                    </label>
+
+                    <textarea
+                        id="edit-course-content"
+                        rows="6"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-homework">
+                        📚 Devoir à faire
+                    </label>
+
+                    <textarea
+                        id="edit-course-homework"
+                        rows="3"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-course-link">
+                        🔗 Document ou lien
+                    </label>
+
+                    <input
+                        type="url"
+                        id="edit-course-link"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-course-button"
+                >
+                    💾 Enregistrer les modifications
+                </button>
+
+
+                <button
+                    type="button"
+                    id="cancel-edit-button"
+                    class="cancel-course-button"
+                >
+                    ❌ Annuler
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ========================================
+             COURS RÉCENTS
+        ======================================== -->
+
+        <div class="content-card">
+
+            <h2>📝 Cours récents</h2>
+
+
+            <div id="courses-list">
+
+                <p class="empty-courses">
+                    Aucun cours enregistré pour le moment.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================
+             DOCUMENTS
+        ======================================== -->
+
+        <div class="content-card">
+
+            <h2>📂 Documents</h2>
+
+            <p>
+                Les documents liés aux cours
+                apparaîtront ici.
+            </p>
+
+        </div>
+
+
+        <!-- ========================================
+             DEVOIRS
+        ======================================== -->
+
+        <div class="content-card">
+
+            <h2>📚 Devoirs</h2>
+
+            <p>
+                Les devoirs de mathématiques
+                apparaîtront ici.
+            </p>
+
+        </div>
+
+
+        <!-- ========================================
+             RETOUR
+        ======================================== -->
 
         <a
             href="../mes-cours.html"
-            class="back-button">
-
-            ← Retour à mes cours
-
+            class="back-link"
+        >
+            ← Retour à Mes cours
         </a>
 
 
     </main>
 
-<script src="../js/mathematiques.js"></script>
+
+    <!-- ========================================
+         JAVASCRIPT
+    ======================================== -->
+
+    <script src="../js/mathematiques.js"></script>
+
+
 </body>
 
 </html>
