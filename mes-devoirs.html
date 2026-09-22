@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mes devoirs - Mon ENT Perso LFE</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header p {
+            color: #64748b;
+        }
+
+        .tools,
+        .add-homework,
+        .edit-homework,
+        .homework-section {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .tools {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input,
+        .tools select,
+        .homework-form input,
+        .homework-form textarea,
+        .homework-form select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .tools select {
+            width: auto;
+            min-width: 180px;
+        }
+
+        .homework-form {
+            display: grid;
+            gap: 15px;
+        }
+
+        .homework-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .homework-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .homework-form button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .homework-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .homework-card {
+            border-left: 5px solid #2563eb;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .homework-card.done {
+            border-left-color: #16a34a;
+            opacity: 0.75;
+        }
+
+        .homework-card h3 {
+            margin-top: 0;
+        }
+
+        .homework-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .badge {
+            background: #e2e8f0;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-date {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-done {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-todo {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .homework-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .homework-actions button {
+            border: none;
+            color: white;
+            padding: 9px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .complete-button {
+            background: #16a34a;
+        }
+
+        .edit-button {
+            background: #2563eb;
+        }
+
+        .delete-button {
+            background: #dc2626;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        @media (max-width: 700px) {
+
+            .tools {
+                flex-direction: column;
+            }
+
+            .tools select {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎓
+            <h2>Mon ENT</h2>
+            <span>Perso LFE</span>
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                🏠 Accueil
+            </a>
+
+            <a href="emploi-du-temps.html">
+                📅 Emploi du temps
+            </a>
+
+            <a href="mes-cours.html">
+                📚 Mes cours
+            </a>
+
+            <a href="mes-devoirs.html" class="active">
+                📝 Mes devoirs
+            </a>
+
+            <a href="#">
+                📊 Mes notes
+            </a>
+
+            <a href="#">
+                📋 Mes contrôles
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="page-header">
+
+            <h1>📝 Mes devoirs</h1>
+
+            <p>
+                Retrouve et organise tous tes devoirs.
+            </p>
+
+        </header>
+
+
+        <!-- OUTILS -->
+
+        <section class="tools">
+
+            <div class="search-box">
+
+                <input
+                    type="search"
+                    id="search-homework"
+                    placeholder="🔎 Rechercher un devoir..."
+                >
+
+            </div>
+
+            <select id="status-filter">
+
+                <option value="all">
+                    📋 Tous les devoirs
+                </option>
+
+                <option value="todo">
+                    🔴 À faire
+                </option>
+
+                <option value="done">
+                    🟢 Terminés
+                </option>
+
+            </select>
+
+            <select id="subject-filter">
+
+                <option value="all">
+                    📚 Toutes les matières
+                </option>
+
+                <option value="Mathématiques">
+                    Mathématiques
+                </option>
+
+                <option value="Anglais LV1">
+                    Anglais LV1
+                </option>
+
+                <option value="Français / Histoire-Géo / EMC">
+                    Français / Histoire-Géo / EMC
+                </option>
+
+                <option value="Sciences physiques">
+                    Sciences physiques
+                </option>
+
+                <option value="Enseignement professionnel">
+                    Enseignement professionnel
+                </option>
+
+                <option value="Pratique professionnelle">
+                    Pratique professionnelle
+                </option>
+
+                <option value="Arts appliqués / Culture artistique">
+                    Arts appliqués / Culture artistique
+                </option>
+
+                <option value="Soutien au parcours">
+                    Soutien au parcours
+                </option>
+
+                <option value="Prévention-Santé-Environnement">
+                    Prévention-Santé-Environnement
+                </option>
+
+                <option value="Économie & Gestion">
+                    Économie & Gestion
+                </option>
+
+                <option value="Réalisation projet">
+                    Réalisation projet
+                </option>
+
+                <option value="Éducation physique & sportive">
+                    Éducation physique & sportive
+                </option>
+
+            </select>
+
+        </section>
+
+
+        <!-- AJOUT -->
+
+        <section class="add-homework">
+
+            <h2>➕ Ajouter un devoir</h2>
+
+            <form id="homework-form" class="homework-form">
+
+                <div>
+
+                    <label for="homework-subject">
+                        Matière
+                    </label>
+
+                    <select id="homework-subject" required>
+
+                        <option value="">
+                            Sélectionner une matière
+                        </option>
+
+                        <option>Mathématiques</option>
+                        <option>Anglais LV1</option>
+                        <option>Français / Histoire-Géo / EMC</option>
+                        <option>Sciences physiques</option>
+                        <option>Enseignement professionnel</option>
+                        <option>Pratique professionnelle</option>
+                        <option>Arts appliqués / Culture artistique</option>
+                        <option>Soutien au parcours</option>
+                        <option>Prévention-Santé-Environnement</option>
+                        <option>Économie & Gestion</option>
+                        <option>Réalisation projet</option>
+                        <option>Éducation physique & sportive</option>
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label for="homework-title">
+                        Titre du devoir
+                    </label>
+
+                    <input
+                        type="text"
+                        id="homework-title"
+                        placeholder="Ex : Exercices chapitre 2"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label for="homework-date">
+                        Date pour rendre le devoir
+                    </label>
+
+                    <input
+                        type="date"
+                        id="homework-date"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label for="homework-description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="homework-description"
+                        placeholder="Décris le travail à faire..."
+                    ></textarea>
+
+                </div>
+
+                <button type="submit">
+                    💾 Enregistrer le devoir
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- MODIFICATION -->
+
+        <section
+            class="edit-homework"
+            id="edit-homework-section"
+            style="display:none;"
+        >
+
+            <h2>✏️ Modifier le devoir</h2>
+
+            <form
+                id="edit-homework-form"
+                class="homework-form"
+            >
+
+                <div>
+
+                    <label for="edit-homework-subject">
+                        Matière
+                    </label>
+
+                    <select id="edit-homework-subject" required>
+
+                        <option>Mathématiques</option>
+                        <option>Anglais LV1</option>
+                        <option>Français / Histoire-Géo / EMC</option>
+                        <option>Sciences physiques</option>
+                        <option>Enseignement professionnel</option>
+                        <option>Pratique professionnelle</option>
+                        <option>Arts appliqués / Culture artistique</option>
+                        <option>Soutien au parcours</option>
+                        <option>Prévention-Santé-Environnement</option>
+                        <option>Économie & Gestion</option>
+                        <option>Réalisation projet</option>
+                        <option>Éducation physique & sportive</option>
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label for="edit-homework-title">
+                        Titre
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-homework-title"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label for="edit-homework-date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="edit-homework-date"
+                        required
+                    >
+
+                </div>
+
+                <div>
+
+                    <label for="edit-homework-description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="edit-homework-description"
+                    ></textarea>
+
+                </div>
+
+                <button type="submit">
+                    💾 Enregistrer les modifications
+                </button>
+
+                <button
+                    type="button"
+                    id="cancel-homework-edit"
+                    style="background:#64748b;"
+                >
+                    Annuler
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- LISTE -->
+
+        <section class="homework-section">
+
+            <h2>📚 Mes devoirs</h2>
+
+            <div
+                class="homework-list"
+                id="homework-list"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/mes-devoirs.js"></script>
+
+</body>
+
+</html>
