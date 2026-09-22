@@ -957,16 +957,84 @@
              DEVOIRS
         ======================================== -->
 
-        <div class="content-card">
+       <!-- ========================================
+     DEVOIRS
+======================================== -->
 
-            <h2>📚 Devoirs</h2>
+<div class="content-card">
 
-            <p>
-                Les devoirs de mathématiques
-                apparaîtront ici.
-            </p>
+    <h2>📚 Devoirs de mathématiques</h2>
+
+    <form id="math-homework-form">
+
+        <div class="form-group">
+
+            <label for="math-homework-title">
+                📝 Devoir
+            </label>
+
+            <input
+                type="text"
+                id="math-homework-title"
+                placeholder="Ex : Exercices 4 à 8 page 52"
+                required
+            >
 
         </div>
+
+        <div class="form-group">
+
+            <label for="math-homework-date">
+                📅 Date de rendu
+            </label>
+
+            <input
+                type="date"
+                id="math-homework-date"
+                required
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="math-homework-description">
+                📖 Description
+            </label>
+
+            <textarea
+                id="math-homework-description"
+                rows="4"
+                placeholder="Ajoute des précisions sur le devoir..."
+            ></textarea>
+
+        </div>
+
+        <button
+            type="submit"
+            class="save-course-button"
+        >
+            ➕ Ajouter le devoir
+        </button>
+
+    </form>
+
+</div>
+
+
+<div class="content-card">
+
+    <h2>📋 Devoirs enregistrés</h2>
+
+    <div id="math-homework-list">
+
+        <p class="empty-courses">
+            Aucun devoir enregistré pour le moment.
+        </p>
+
+    </div>
+
+</div>
 
 
         <!-- ========================================
