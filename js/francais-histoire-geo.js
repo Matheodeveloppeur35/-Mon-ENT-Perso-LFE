@@ -1,102 +1,99 @@
-// ========================================
-// FICHE DE COURS — FRANÇAIS / HISTOIRE-GÉO / EMC
-// ========================================
+// =========================
+// FRANÇAIS / HISTOIRE-GÉO / EMC
+// COURS + DEVOIRS
+// =========================
 
+const STORAGE_KEY = "cours-francais-histoire-geo";
+const HOMEWORK_STORAGE_KEY = "mes-devoirs";
 
-// ========================================
-// RÉCUPÉRER LES COURS
-// ========================================
+let cours = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let devoirs = JSON.parse(localStorage.getItem(HOMEWORK_STORAGE_KEY)) || [];
 
-function recupererCours() {
+let coursEnModification = null;
 
-    const cours =
-        localStorage.getItem(
-            "cours-francais-histoire-geo"
-        );
+// =========================
+// ÉLÉMENTS DE LA PAGE
+// =========================
 
-    if (cours) {
-        return JSON.parse(cours);
-    }
+const courseForm = document.getElementById("course-form");
+const courseDate = document.getElementById("course-date");
+const courseTitle = document.getElementById("course-title");
+const courseContent = document.getElementById("course-content");
+const courseHomework = document.getElementById("course-homework");
+const courseLink = document.getElementById("course-link");
 
-    return [];
-}
+const coursesList = document.getElementById("courses-list");
 
+const editCourseSection =
+    document.getElementById("edit-course-section");
 
-// ========================================
-// SAUVEGARDER LES COURS
-// ========================================
+const editCourseForm =
+    document.getElementById("edit-course-form");
 
-function sauvegarderCours(cours) {
+const editCourseDate =
+    document.getElementById("edit-course-date");
 
+const editCourseTitle =
+    document.getElementById("edit-course-title");
+
+const editCourseContent =
+    document.getElementById("edit-course-content");
+
+const editCourseHomework =
+    document.getElementById("edit-course-homework");
+
+const editCourseLink =
+    document.getElementById("edit-course-link");
+
+const cancelEditButton =
+    document.getElementById("cancel-edit-button");
+
+// =========================
+// DEVOIRS
+// =========================
+
+const homeworkForm =
+    document.getElementById("french-homework-form");
+
+const homeworkTitle =
+    document.getElementById("french-homework-title");
+
+const homeworkDate =
+    document.getElementById("french-homework-date");
+
+const homeworkDescription =
+    document.getElementById("french-homework-description");
+
+const homeworkList =
+    document.getElementById("french-homework-list");
+
+// =========================
+// SAUVEGARDE
+// =========================
+
+function sauvegarderCours() {
     localStorage.setItem(
-        "cours-francais-histoire-geo",
+        STORAGE_KEY,
         JSON.stringify(cours)
     );
 }
 
-
-// ========================================
-// AJOUTER UN COURS
-// ========================================
-
-function ajouterCours(cours) {
-
-    const coursExistants =
-        recupererCours();
-
-    coursExistants.push(cours);
-
-    sauvegarderCours(
-        coursExistants
+function sauvegarderDevoirs() {
+    localStorage.setItem(
+        HOMEWORK_STORAGE_KEY,
+        JSON.stringify(devoirs)
     );
 }
 
-
-// ========================================
-// SUPPRIMER UN COURS
-// ========================================
-
-function supprimerCours(index) {
-
-    const cours =
-        recupererCours();
-
-    cours.splice(index, 1);
-
-    sauvegarderCours(cours);
-}
-
-
-// ========================================
-// MODIFIER UN COURS
-// ========================================
-
-function modifierCours(
-    index,
-    nouveauCours
-) {
-
-    const cours =
-        recupererCours();
-
-    cours[index] =
-        nouveauCours;
-
-    sauvegarderCours(cours);
-}
-
-
-// ========================================
+// =========================
 // PROTECTION HTML
-// ========================================
+// =========================
 
 function echapperHTML(texte) {
 
-    if (!texte) {
-        return "";
-    }
+    if (!texte) return "";
 
-    return String(texte)
+    return texte
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -104,453 +101,354 @@ function echapperHTML(texte) {
         .replace(/'/g, "&#039;");
 }
 
+// =========================
+// AFFICHER LES COURS
+// =========================
 
-// ========================================
-// FORMULAIRE D'AJOUT
-// ========================================
+function afficherCours() {
 
-const formulaire =
-    document.getElementById(
-        "course-form"
-    );
+    if (!coursesList) return;
 
+    coursesList.innerHTML = "";
 
-if (formulaire) {
+    if (cours.length === 0) {
 
-    formulaire.addEventListener(
+        coursesList.innerHTML =
+            `<p class="empty-courses">
+                Aucun cours enregistré pour le moment.
+            </p>`;
+
+        return;
+    }
+
+    cours.slice().reverse().forEach(function(leCours) {
+
+        const index = cours.indexOf(leCours);
+
+        const lesson = document.createElement("article");
+
+        lesson.className = "lesson";
+
+        lesson.innerHTML = `
+            <strong>
+                ${echapperHTML(leCours.title)}
+            </strong>
+
+            <span>
+                📅 ${echapperHTML(leCours.date)}
+            </span>
+
+            <p>
+                ${echapperHTML(leCours.content)}
+            </p>
+
+            ${
+                leCours.homework
+                ?
+                `<p>
+                    📚 <strong>Devoir :</strong><br>
+                    ${echapperHTML(leCours.homework)}
+                </p>`
+                :
+                ""
+            }
+
+            ${
+                leCours.link
+                ?
+                `<a
+                    href="${echapperHTML(leCours.link)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    🔗 Ouvrir le document
+                </a>`
+                :
+                ""
+            }
+
+            <div class="course-actions">
+
+                <button
+                    onclick="ouvrirModification(${index})"
+                >
+                    ✏️ Modifier
+                </button>
+
+                <button
+                    onclick="supprimerEtActualiser(${index})"
+                >
+                    🗑️ Supprimer
+                </button>
+
+            </div>
+        `;
+
+        coursesList.appendChild(lesson);
+
+    });
+}
+
+// =========================
+// AJOUTER UN COURS
+// =========================
+
+if (courseForm) {
+
+    courseForm.addEventListener(
         "submit",
         function(event) {
 
             event.preventDefault();
 
+            cours.push({
 
-            const nouveauCours = {
+                date: courseDate.value,
 
-                date:
-                    document.getElementById(
-                        "course-date"
-                    ).value,
+                title:
+                    courseTitle.value.trim(),
 
-                titre:
-                    document.getElementById(
-                        "course-title"
-                    ).value,
+                content:
+                    courseContent.value.trim(),
 
-                contenu:
-                    document.getElementById(
-                        "course-content"
-                    ).value,
+                homework:
+                    courseHomework.value.trim(),
 
-                devoir:
-                    document.getElementById(
-                        "course-homework"
-                    ).value,
+                link:
+                    courseLink.value.trim()
 
-                lien:
-                    document.getElementById(
-                        "course-link"
-                    ).value
+            });
 
-            };
-
-
-            ajouterCours(
-                nouveauCours
-            );
-
-
-            alert(
-                "✅ Le cours a été enregistré !"
-            );
-
-
-            formulaire.reset();
-
+            sauvegarderCours();
 
             afficherCours();
 
+            courseForm.reset();
+
         }
     );
-
 }
 
+// =========================
+// MODIFIER UN COURS
+// =========================
 
-// ========================================
-// AFFICHER LES COURS
-// ========================================
+function ouvrirModification(index) {
 
-function afficherCours() {
+    const leCours = cours[index];
 
-    const liste =
-        document.getElementById(
-            "courses-list"
-        );
+    coursEnModification = index;
 
+    editCourseDate.value = leCours.date;
+    editCourseTitle.value = leCours.title;
+    editCourseContent.value = leCours.content;
+    editCourseHomework.value =
+        leCours.homework || "";
+    editCourseLink.value =
+        leCours.link || "";
 
-    if (!liste) {
+    editCourseSection.style.display = "block";
+
+    editCourseSection.scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+if (editCourseForm) {
+
+    editCourseForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            if (coursEnModification === null)
+                return;
+
+            cours[coursEnModification] = {
+
+                date:
+                    editCourseDate.value,
+
+                title:
+                    editCourseTitle.value.trim(),
+
+                content:
+                    editCourseContent.value.trim(),
+
+                homework:
+                    editCourseHomework.value.trim(),
+
+                link:
+                    editCourseLink.value.trim()
+
+            };
+
+            sauvegarderCours();
+
+            afficherCours();
+
+            coursEnModification = null;
+
+            editCourseForm.reset();
+
+            editCourseSection.style.display =
+                "none";
+        }
+    );
+}
+
+// =========================
+// ANNULER MODIFICATION
+// =========================
+
+if (cancelEditButton) {
+
+    cancelEditButton.addEventListener(
+        "click",
+        function() {
+
+            coursEnModification = null;
+
+            editCourseForm.reset();
+
+            editCourseSection.style.display =
+                "none";
+        }
+    );
+}
+
+// =========================
+// SUPPRIMER UN COURS
+// =========================
+
+function supprimerEtActualiser(index) {
+
+    cours.splice(index, 1);
+
+    sauvegarderCours();
+
+    afficherCours();
+}
+
+// =========================
+// AJOUTER UN DEVOIR
+// =========================
+
+if (homeworkForm) {
+
+    homeworkForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            devoirs.push({
+
+                subject:
+                    "Français / Histoire-Géo / EMC",
+
+                title:
+                    homeworkTitle.value.trim(),
+
+                date:
+                    homeworkDate.value,
+
+                description:
+                    homeworkDescription.value.trim(),
+
+                done: false
+
+            });
+
+            sauvegarderDevoirs();
+
+            afficherDevoirs();
+
+            homeworkForm.reset();
+        }
+    );
+}
+
+// =========================
+// AFFICHER LES DEVOIRS
+// =========================
+
+function afficherDevoirs() {
+
+    if (!homeworkList)
+        return;
+
+    homeworkList.innerHTML = "";
+
+    const devoirsFrancais =
+        devoirs.filter(function(devoir) {
+
+            return devoir.subject ===
+                "Français / Histoire-Géo / EMC";
+
+        });
+
+    if (devoirsFrancais.length === 0) {
+
+        homeworkList.innerHTML =
+            `<p class="empty-courses">
+                Aucun devoir de Français / Histoire-Géo / EMC enregistré.
+            </p>`;
+
         return;
     }
 
-
-    const cours =
-        recupererCours();
-
-
-    if (cours.length === 0) {
-
-        liste.innerHTML = `
-            <p class="empty-courses">
-                Aucun cours enregistré pour le moment.
-            </p>
-        `;
-
-        return;
-    }
-
-
-    liste.innerHTML = "";
-
-
-    cours.forEach(
-        function(cours, index) {
+    devoirsFrancais
+        .slice()
+        .reverse()
+        .forEach(function(devoir) {
 
             const bloc =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
-
-            bloc.className =
-                "lesson";
-
+            bloc.className = "lesson";
 
             bloc.innerHTML = `
 
                 <strong>
-                    ${echapperHTML(cours.titre)}
+                    ${echapperHTML(devoir.title)}
                 </strong>
 
                 <span>
-                    📅 ${echapperHTML(cours.date)}
+                    📅 À rendre le
+                    ${echapperHTML(devoir.date)}
                 </span>
 
+                ${
+                    devoir.description
+                    ?
+                    `<p>
+                        ${echapperHTML(
+                            devoir.description
+                        )}
+                    </p>`
+                    :
+                    ""
+                }
+
                 <p>
-                    ${echapperHTML(cours.contenu)}
+                    ${
+                        devoir.done
+                        ? "🟢 Devoir terminé"
+                        : "🔴 Devoir à faire"
+                    }
                 </p>
-
-
-                ${
-                    cours.devoir
-                    ? `
-                        <p>
-                            <strong>
-                                📚 Devoir :
-                            </strong>
-
-                            ${echapperHTML(cours.devoir)}
-                        </p>
-                    `
-                    : ""
-                }
-
-
-                ${
-                    cours.lien
-                    ? `
-                        <p>
-                            🔗
-
-                            <a
-                                href="${echapperHTML(cours.lien)}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Ouvrir le document
-                            </a>
-
-                        </p>
-                    `
-                    : ""
-                }
-
-
-                <div class="course-actions">
-
-                    <button
-                        type="button"
-                        onclick="ouvrirModification(${index})"
-                    >
-                        ✏️ Modifier
-                    </button>
-
-
-                    <button
-                        type="button"
-                        onclick="supprimerEtActualiser(${index})"
-                    >
-                        🗑️ Supprimer
-                    </button>
-
-                </div>
-
             `;
 
+            homeworkList.appendChild(bloc);
 
-            liste.appendChild(
-                bloc
-            );
-
-        }
-    );
-
+        });
 }
 
-
-// ========================================
-// OUVRIR MODIFICATION
-// ========================================
-
-function ouvrirModification(index) {
-
-    const cours =
-        recupererCours();
-
-
-    const coursActuel =
-        cours[index];
-
-
-    if (!coursActuel) {
-        return;
-    }
-
-
-    const section =
-        document.getElementById(
-            "edit-course-section"
-        );
-
-
-    if (!section) {
-
-        alert(
-            "⚠️ Le formulaire de modification est introuvable."
-        );
-
-        return;
-    }
-
-
-    document.getElementById(
-        "edit-course-date"
-    ).value =
-        coursActuel.date || "";
-
-
-    document.getElementById(
-        "edit-course-title"
-    ).value =
-        coursActuel.titre || "";
-
-
-    document.getElementById(
-        "edit-course-content"
-    ).value =
-        coursActuel.contenu || "";
-
-
-    document.getElementById(
-        "edit-course-homework"
-    ).value =
-        coursActuel.devoir || "";
-
-
-    document.getElementById(
-        "edit-course-link"
-    ).value =
-        coursActuel.lien || "";
-
-
-    section.dataset.index =
-        index;
-
-
-    section.style.display =
-        "block";
-
-
-    section.scrollIntoView({
-
-        behavior: "smooth",
-
-        block: "start"
-
-    });
-
-}
-
-
-// ========================================
-// FORMULAIRE DE MODIFICATION
-// ========================================
-
-const formulaireModification =
-    document.getElementById(
-        "edit-course-form"
-    );
-
-
-if (formulaireModification) {
-
-    formulaireModification.addEventListener(
-        "submit",
-        function(event) {
-
-            event.preventDefault();
-
-
-            const section =
-                document.getElementById(
-                    "edit-course-section"
-                );
-
-
-            const index =
-                Number(
-                    section.dataset.index
-                );
-
-
-            const nouveauCours = {
-
-                date:
-                    document.getElementById(
-                        "edit-course-date"
-                    ).value,
-
-                titre:
-                    document.getElementById(
-                        "edit-course-title"
-                    ).value,
-
-                contenu:
-                    document.getElementById(
-                        "edit-course-content"
-                    ).value,
-
-                devoir:
-                    document.getElementById(
-                        "edit-course-homework"
-                    ).value,
-
-                lien:
-                    document.getElementById(
-                        "edit-course-link"
-                    ).value
-
-            };
-
-
-            modifierCours(
-                index,
-                nouveauCours
-            );
-
-
-            section.style.display =
-                "none";
-
-
-            delete section.dataset.index;
-
-
-            formulaireModification.reset();
-
-
-            afficherCours();
-
-
-            alert(
-                "✅ Le cours a été modifié !"
-            );
-
-        }
-    );
-
-}
-
-
-// ========================================
-// ANNULER
-// ========================================
-
-const boutonAnnuler =
-    document.getElementById(
-        "cancel-edit-button"
-    );
-
-
-if (boutonAnnuler) {
-
-    boutonAnnuler.addEventListener(
-        "click",
-        function() {
-
-            const section =
-                document.getElementById(
-                    "edit-course-section"
-                );
-
-
-            section.style.display =
-                "none";
-
-
-            formulaireModification.reset();
-
-
-            delete section.dataset.index;
-
-        }
-    );
-
-}
-
-
-// ========================================
-// SUPPRIMER
-// ========================================
-
-function supprimerEtActualiser(index) {
-
-    const confirmation =
-        confirm(
-            "Voulez-vous vraiment supprimer ce cours ?"
-        );
-
-
-    if (!confirmation) {
-        return;
-    }
-
-
-    supprimerCours(index);
-
-
-    afficherCours();
-
-}
-
-
-// ========================================
-// AFFICHAGE AU CHARGEMENT
-// ========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        afficherCours();
-
-    }
-);
+// =========================
+// INITIALISATION
+// =========================
+
+afficherCours();
+afficherDevoirs();
