@@ -7,6 +7,61 @@ const STORAGE_KEY = "mes-devoirs";
 let devoirs = JSON.parse(
     localStorage.getItem(STORAGE_KEY)
 ) || [];
+// =========================
+// IMPORTER LES DEVOIRS
+// DES FICHES DE MATIÈRES
+// =========================
+
+const sourcesMatieres = [
+    {
+        cle: "cours-mathematiques",
+        matiere: "Mathématiques"
+    },
+    {
+        cle: "cours-anglais",
+        matiere: "Anglais LV1"
+    },
+    {
+        cle: "cours-francais-histoire-geo",
+        matiere: "Français / Histoire-Géo / EMC"
+    },
+    {
+        cle: "cours-sciences-physiques",
+        matiere: "Sciences physiques"
+    },
+    {
+        cle: "cours-enseignement-professionnel",
+        matiere: "Enseignement professionnel"
+    },
+    {
+        cle: "cours-pratique-professionnelle",
+        matiere: "Pratique professionnelle"
+    },
+    {
+        cle: "cours-arts-appliques",
+        matiere: "Arts appliqués / Culture artistique"
+    },
+    {
+        cle: "cours-soutien-au-parcours",
+        matiere: "Soutien au parcours"
+    },
+    {
+        cle: "cours-prevention-sante-environnement",
+        matiere: "Prévention-Santé-Environnement"
+    },
+    {
+        cle: "cours-economie-gestion",
+        matiere: "Économie & Gestion"
+    },
+    {
+        cle: "cours-realisation-projet",
+        matiere: "Réalisation projet"
+    },
+    {
+        cle: "cours-education-physique-sportive",
+        matiere: "Éducation physique & sportive"
+    }
+];
 
 let devoirEnModification = null;
 
