@@ -1,304 +1,248 @@
-// ========================================
-// FICHE DE COURS — ANGLAIS LV1
-// ========================================
+// =========================
+// ANGLAIS LV1
+// COURS + DEVOIRS
+// =========================
+
+const STORAGE_KEY = "cours-anglais";
+const HOMEWORK_STORAGE_KEY = "mes-devoirs";
+
+let cours = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let devoirs = JSON.parse(localStorage.getItem(HOMEWORK_STORAGE_KEY)) || [];
+
+let coursEnModification = null;
+
+// =========================
+// ÉLÉMENTS DE LA PAGE
+// =========================
+
+const courseForm = document.getElementById("course-form");
+const courseDate = document.getElementById("course-date");
+const courseTitle = document.getElementById("course-title");
+const courseContent = document.getElementById("course-content");
+const courseHomework = document.getElementById("course-homework");
+const courseLink = document.getElementById("course-link");
+
+const coursesList = document.getElementById("courses-list");
+
+const editCourseSection =
+    document.getElementById("edit-course-section");
+
+const editCourseForm =
+    document.getElementById("edit-course-form");
+
+const editCourseDate =
+    document.getElementById("edit-course-date");
+
+const editCourseTitle =
+    document.getElementById("edit-course-title");
+
+const editCourseContent =
+    document.getElementById("edit-course-content");
+
+const editCourseHomework =
+    document.getElementById("edit-course-homework");
+
+const editCourseLink =
+    document.getElementById("edit-course-link");
+
+const cancelEditButton =
+    document.getElementById("cancel-edit-button");
+
+// =========================
+// DEVOIRS
+// =========================
+
+const homeworkForm =
+    document.getElementById("english-homework-form");
+
+const homeworkTitle =
+    document.getElementById("english-homework-title");
+
+const homeworkDate =
+    document.getElementById("english-homework-date");
+
+const homeworkDescription =
+    document.getElementById("english-homework-description");
+
+const homeworkList =
+    document.getElementById("english-homework-list");
 
 
-// ========================================
-// RÉCUPÉRER LES COURS
-// ========================================
+// =========================
+// SAUVEGARDE
+// =========================
 
-function recupererCours() {
-
-    const cours = localStorage.getItem("cours-anglais");
-
-    if (cours) {
-        return JSON.parse(cours);
-    }
-
-    return [];
-}
-
-
-// ========================================
-// SAUVEGARDER LES COURS
-// ========================================
-
-function sauvegarderCours(cours) {
+function sauvegarderCours() {
 
     localStorage.setItem(
-        "cours-anglais",
+        STORAGE_KEY,
         JSON.stringify(cours)
     );
+
 }
 
 
-// ========================================
-// AJOUTER UN COURS
-// ========================================
+function sauvegarderDevoirs() {
 
-function ajouterCours(cours) {
+    localStorage.setItem(
+        HOMEWORK_STORAGE_KEY,
+        JSON.stringify(devoirs)
+    );
 
-    const coursExistants = recupererCours();
-
-    coursExistants.push(cours);
-
-    sauvegarderCours(coursExistants);
 }
 
 
-// ========================================
-// SUPPRIMER UN COURS
-// ========================================
-
-function supprimerCours(index) {
-
-    const cours = recupererCours();
-
-    cours.splice(index, 1);
-
-    sauvegarderCours(cours);
-}
-
-
-// ========================================
-// MODIFIER UN COURS
-// ========================================
-
-function modifierCours(index, nouveauCours) {
-
-    const cours = recupererCours();
-
-    cours[index] = nouveauCours;
-
-    sauvegarderCours(cours);
-}
-
-
-// ========================================
-// ÉCHAPPER LE HTML
-// ========================================
+// =========================
+// PROTECTION HTML
+// =========================
 
 function echapperHTML(texte) {
 
-    if (!texte) {
-        return "";
-    }
+    if (!texte) return "";
 
-    return String(texte)
+    return texte
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-}
-
-
-// ========================================
-// FORMULAIRE D'AJOUT
-// ========================================
-
-const formulaire =
-    document.getElementById("course-form");
-
-
-if (formulaire) {
-
-    formulaire.addEventListener(
-        "submit",
-        function (event) {
-
-            event.preventDefault();
-
-
-            const date =
-                document.getElementById(
-                    "course-date"
-                ).value;
-
-
-            const titre =
-                document.getElementById(
-                    "course-title"
-                ).value;
-
-
-            const contenu =
-                document.getElementById(
-                    "course-content"
-                ).value;
-
-
-            const devoir =
-                document.getElementById(
-                    "course-homework"
-                ).value;
-
-
-            const lien =
-                document.getElementById(
-                    "course-link"
-                ).value;
-
-
-            const nouveauCours = {
-
-                date: date,
-
-                titre: titre,
-
-                contenu: contenu,
-
-                devoir: devoir,
-
-                lien: lien
-
-            };
-
-
-            ajouterCours(nouveauCours);
-
-
-            alert(
-                "✅ Le cours d'anglais a été enregistré !"
-            );
-
-
-            formulaire.reset();
-
-
-            afficherCours();
-
-        }
-    );
 
 }
 
 
-// ========================================
+// =========================
 // AFFICHER LES COURS
-// ========================================
+// =========================
 
 function afficherCours() {
 
-    const liste =
-        document.getElementById(
-            "courses-list"
-        );
+    if (!coursesList) return;
 
+    coursesList.innerHTML = "";
 
-    if (!liste) {
-        return;
-    }
-
-
-    const cours = recupererCours();
-
-
-    // Aucun cours
     if (cours.length === 0) {
 
-        liste.innerHTML = `
-            <p class="empty-courses">
+        coursesList.innerHTML =
+            `<p class="empty-courses">
                 Aucun cours enregistré pour le moment.
-            </p>
-        `;
+            </p>`;
 
         return;
     }
 
+    cours
+        .slice()
+        .reverse()
+        .forEach(function(leCours) {
 
-    // Nettoyage
-    liste.innerHTML = "";
+            const index =
+                cours.indexOf(leCours);
 
+            const lesson =
+                document.createElement("article");
 
-    // Affichage
-    cours.forEach(
-        function (cours, index) {
+            lesson.className = "lesson";
 
-            const bloc =
-                document.createElement(
-                    "div"
-                );
-
-
-            bloc.className = "lesson";
-
-
-            bloc.innerHTML = `
+            lesson.innerHTML = `
 
                 <strong>
-                    ${echapperHTML(cours.titre)}
+                    ${echapperHTML(leCours.title)}
                 </strong>
 
-
                 <span>
-                    📅 ${echapperHTML(cours.date)}
+                    📅 ${echapperHTML(leCours.date)}
                 </span>
 
-
                 <p>
-                    ${echapperHTML(cours.contenu)}
+                    ${echapperHTML(leCours.content)}
                 </p>
 
-
                 ${
-                    cours.devoir
-                    ? `
-                        <p>
-                            <strong>
-                                📚 Devoir :
-                            </strong>
-
-                            ${echapperHTML(cours.devoir)}
-                        </p>
-                    `
-                    : ""
+                    leCours.homework
+                    ?
+                    `<p>
+                        📚 <strong>Devoir :</strong><br>
+                        ${echapperHTML(leCours.homework)}
+                    </p>`
+                    :
+                    ""
                 }
 
-
                 ${
-                    cours.lien
-                    ? `
-                        <p>
-                            🔗
-
-                            <a
-                                href="${echapperHTML(cours.lien)}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Ouvrir le document
-                            </a>
-
-                        </p>
-                    `
-                    : ""
+                    leCours.link
+                    ?
+                    `<a
+                        href="${echapperHTML(leCours.link)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        🔗 Ouvrir le document
+                    </a>`
+                    :
+                    ""
                 }
-
 
                 <div class="course-actions">
 
                     <button
-                        type="button"
                         onclick="ouvrirModification(${index})"
                     >
                         ✏️ Modifier
                     </button>
 
-
                     <button
-                        type="button"
                         onclick="supprimerEtActualiser(${index})"
                     >
                         🗑️ Supprimer
                     </button>
 
                 </div>
-
             `;
 
+            coursesList.appendChild(lesson);
 
-            liste.appendChild(bloc);
+        });
+
+}
+
+
+// =========================
+// AJOUTER UN COURS
+// =========================
+
+if (courseForm) {
+
+    courseForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            const nouveauCours = {
+
+                date: courseDate.value,
+
+                title:
+                    courseTitle.value.trim(),
+
+                content:
+                    courseContent.value.trim(),
+
+                homework:
+                    courseHomework.value.trim(),
+
+                link:
+                    courseLink.value.trim()
+
+            };
+
+            cours.push(nouveauCours);
+
+            sauvegarderCours();
+
+            afficherCours();
+
+            courseForm.reset();
 
         }
     );
@@ -306,209 +250,104 @@ function afficherCours() {
 }
 
 
-// ========================================
-// OUVRIR LA MODIFICATION
-// ========================================
+// =========================
+// MODIFIER UN COURS
+// =========================
 
 function ouvrirModification(index) {
 
-    const cours = recupererCours();
+    const leCours = cours[index];
 
-    const coursActuel = cours[index];
+    coursEnModification = index;
 
+    editCourseDate.value =
+        leCours.date;
 
-    if (!coursActuel) {
-        return;
-    }
+    editCourseTitle.value =
+        leCours.title;
 
+    editCourseContent.value =
+        leCours.content;
 
-    const section =
-        document.getElementById(
-            "edit-course-section"
-        );
+    editCourseHomework.value =
+        leCours.homework || "";
 
+    editCourseLink.value =
+        leCours.link || "";
 
-    if (!section) {
+    editCourseSection.style.display =
+        "block";
 
-        alert(
-            "⚠️ Le formulaire de modification est introuvable."
-        );
-
-        return;
-    }
-
-
-    document.getElementById(
-        "edit-course-date"
-    ).value =
-        coursActuel.date || "";
-
-
-    document.getElementById(
-        "edit-course-title"
-    ).value =
-        coursActuel.titre || "";
-
-
-    document.getElementById(
-        "edit-course-content"
-    ).value =
-        coursActuel.contenu || "";
-
-
-    document.getElementById(
-        "edit-course-homework"
-    ).value =
-        coursActuel.devoir || "";
-
-
-    document.getElementById(
-        "edit-course-link"
-    ).value =
-        coursActuel.lien || "";
-
-
-    section.dataset.index = index;
-
-
-    section.style.display = "block";
-
-
-    section.scrollIntoView({
-
-        behavior: "smooth",
-
-        block: "start"
-
+    editCourseSection.scrollIntoView({
+        behavior: "smooth"
     });
 
 }
 
 
-// ========================================
-// FORMULAIRE DE MODIFICATION
-// ========================================
+if (editCourseForm) {
 
-const formulaireModification =
-    document.getElementById(
-        "edit-course-form"
-    );
-
-
-if (formulaireModification) {
-
-    formulaireModification.addEventListener(
+    editCourseForm.addEventListener(
         "submit",
-        function (event) {
+        function(event) {
 
             event.preventDefault();
 
+            if (coursEnModification === null)
+                return;
 
-            const section =
-                document.getElementById(
-                    "edit-course-section"
-                );
-
-
-            const index =
-                Number(
-                    section.dataset.index
-                );
-
-
-            const nouveauCours = {
+            cours[coursEnModification] = {
 
                 date:
-                    document.getElementById(
-                        "edit-course-date"
-                    ).value,
+                    editCourseDate.value,
 
+                title:
+                    editCourseTitle.value.trim(),
 
-                titre:
-                    document.getElementById(
-                        "edit-course-title"
-                    ).value,
+                content:
+                    editCourseContent.value.trim(),
 
+                homework:
+                    editCourseHomework.value.trim(),
 
-                contenu:
-                    document.getElementById(
-                        "edit-course-content"
-                    ).value,
-
-
-                devoir:
-                    document.getElementById(
-                        "edit-course-homework"
-                    ).value,
-
-
-                lien:
-                    document.getElementById(
-                        "edit-course-link"
-                    ).value
+                link:
+                    editCourseLink.value.trim()
 
             };
 
-
-            modifierCours(
-                index,
-                nouveauCours
-            );
-
-
-            section.style.display =
-                "none";
-
-
-            delete section.dataset.index;
-
-
-            formulaireModification.reset();
-
+            sauvegarderCours();
 
             afficherCours();
 
+            coursEnModification = null;
 
-            alert(
-                "✅ Le cours d'anglais a été modifié !"
-            );
+            editCourseForm.reset();
 
-        }
-    );
-
-}
-
-
-// ========================================
-// ANNULER LA MODIFICATION
-// ========================================
-
-const boutonAnnuler =
-    document.getElementById(
-        "cancel-edit-button"
-    );
-
-
-if (boutonAnnuler) {
-
-    boutonAnnuler.addEventListener(
-        "click",
-        function () {
-
-            const section =
-                document.getElementById(
-                    "edit-course-section"
-                );
-
-
-            section.style.display =
+            editCourseSection.style.display =
                 "none";
 
+        }
+    );
 
-            formulaireModification.reset();
+}
 
 
-            delete section.dataset.index;
+// =========================
+// ANNULER MODIFICATION
+// =========================
+
+if (cancelEditButton) {
+
+    cancelEditButton.addEventListener(
+        "click",
+        function() {
+
+            coursEnModification = null;
+
+            editCourseForm.reset();
+
+            editCourseSection.style.display =
+                "none";
 
         }
     );
@@ -516,40 +355,147 @@ if (boutonAnnuler) {
 }
 
 
-// ========================================
+// =========================
 // SUPPRIMER UN COURS
-// ========================================
+// =========================
 
 function supprimerEtActualiser(index) {
 
-    const confirmation =
-        confirm(
-            "Voulez-vous vraiment supprimer ce cours ?"
-        );
+    cours.splice(index, 1);
 
-
-    if (!confirmation) {
-        return;
-    }
-
-
-    supprimerCours(index);
-
+    sauvegarderCours();
 
     afficherCours();
 
 }
 
 
-// ========================================
-// AFFICHAGE AU CHARGEMENT
-// ========================================
+// =========================
+// AJOUTER UN DEVOIR
+// =========================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+if (homeworkForm) {
 
-        afficherCours();
+    homeworkForm.addEventListener(
+        "submit",
+        function(event) {
 
+            event.preventDefault();
+
+            const nouveauDevoir = {
+
+                subject: "Anglais LV1",
+
+                title:
+                    homeworkTitle.value.trim(),
+
+                date:
+                    homeworkDate.value,
+
+                description:
+                    homeworkDescription.value.trim(),
+
+                done: false
+
+            };
+
+            devoirs.push(nouveauDevoir);
+
+            sauvegarderDevoirs();
+
+            afficherDevoirs();
+
+            homeworkForm.reset();
+
+        }
+    );
+
+}
+
+
+// =========================
+// AFFICHER LES DEVOIRS
+// =========================
+
+function afficherDevoirs() {
+
+    if (!homeworkList)
+        return;
+
+    homeworkList.innerHTML = "";
+
+    const devoirsAnglais =
+        devoirs.filter(function(devoir) {
+
+            return devoir.subject === "Anglais LV1";
+
+        });
+
+
+    if (devoirsAnglais.length === 0) {
+
+        homeworkList.innerHTML =
+            `<p class="empty-courses">
+                Aucun devoir d'anglais enregistré.
+            </p>`;
+
+        return;
     }
-);
+
+
+    devoirsAnglais
+        .slice()
+        .reverse()
+        .forEach(function(devoir) {
+
+            const bloc =
+                document.createElement("div");
+
+            bloc.className = "lesson";
+
+            bloc.innerHTML = `
+
+                <strong>
+                    ${echapperHTML(devoir.title)}
+                </strong>
+
+                <span>
+                    📅 À rendre le
+                    ${echapperHTML(devoir.date)}
+                </span>
+
+                ${
+                    devoir.description
+                    ?
+                    `<p>
+                        ${echapperHTML(
+                            devoir.description
+                        )}
+                    </p>`
+                    :
+                    ""
+                }
+
+                <p>
+                    ${
+                        devoir.done
+                        ? "🟢 Devoir terminé"
+                        : "🔴 Devoir à faire"
+                    }
+                </p>
+
+            `;
+
+            homeworkList.appendChild(bloc);
+
+        });
+
+}
+
+
+// =========================
+// INITIALISATION
+// =========================
+
+afficherCours();
+afficherDevoirs();
