@@ -628,20 +628,74 @@
 
 
         <!-- DEVOIRS -->
+<div class="content-card">
 
-        <div class="content-card">
+    <h2>📚 Devoirs de Français / Histoire-Géo / EMC</h2>
 
-            <h2>📚 Devoirs</h2>
+    <form id="french-homework-form">
 
-            <p>
-                Les devoirs de français,
-                histoire-géographie et EMC
-                apparaîtront ici.
-            </p>
+        <div class="form-group">
+            <label for="french-homework-title">
+                📝 Devoir
+            </label>
 
+            <input
+                type="text"
+                id="french-homework-title"
+                placeholder="Ex : Réviser le chapitre 2"
+                required
+            >
         </div>
 
+        <div class="form-group">
+            <label for="french-homework-date">
+                📅 Date de rendu
+            </label>
 
+            <input
+                type="date"
+                id="french-homework-date"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="french-homework-description">
+                📖 Description
+            </label>
+
+            <textarea
+                id="french-homework-description"
+                rows="4"
+                placeholder="Ajoute des précisions..."
+            ></textarea>
+        </div>
+
+        <button
+            type="submit"
+            class="save-course-button"
+        >
+            ➕ Ajouter le devoir
+        </button>
+
+    </form>
+
+</div>
+
+
+<div class="content-card">
+
+    <h2>📋 Devoirs enregistrés</h2>
+
+    <div id="french-homework-list">
+
+        <p class="empty-courses">
+            Aucun devoir enregistré pour le moment.
+        </p>
+
+    </div>
+
+</div>
         <!-- RETOUR -->
 
         <a
