@@ -667,19 +667,80 @@
 
 
         <!-- DEVOIRS -->
+<div class="content-card">
 
-        <div class="content-card">
+    <h2>📚 Devoirs d'anglais</h2>
 
-            <h2>📚 Devoirs</h2>
+    <form id="english-homework-form">
 
-            <p>
-                Les devoirs d'anglais
-                apparaîtront ici.
-            </p>
+        <div class="form-group">
+
+            <label for="english-homework-title">
+                📝 Devoir
+            </label>
+
+            <input
+                type="text"
+                id="english-homework-title"
+                placeholder="Ex : Vocabulary unit 2"
+                required
+            >
 
         </div>
 
+        <div class="form-group">
 
+            <label for="english-homework-date">
+                📅 Date de rendu
+            </label>
+
+            <input
+                type="date"
+                id="english-homework-date"
+                required
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="english-homework-description">
+                📖 Description
+            </label>
+
+            <textarea
+                id="english-homework-description"
+                rows="4"
+                placeholder="Ajoute des précisions..."
+            ></textarea>
+
+        </div>
+
+        <button
+            type="submit"
+            class="save-course-button"
+        >
+            ➕ Ajouter le devoir
+        </button>
+
+    </form>
+
+</div>
+
+
+<div class="content-card">
+
+    <h2>📋 Devoirs enregistrés</h2>
+
+    <div id="english-homework-list">
+
+        <p class="empty-courses">
+            Aucun devoir enregistré pour le moment.
+        </p>
+
+    </div>
+
+</div>
         <a
             href="../mes-cours.html"
             class="back-link"
