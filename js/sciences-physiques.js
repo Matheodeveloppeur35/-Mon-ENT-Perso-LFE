@@ -1,21 +1,21 @@
 // =========================
-// GESTION DES COURS
 // SCIENCES PHYSIQUES
+// COURS + DEVOIRS
 // =========================
 
 const STORAGE_KEY = "cours-sciences-physiques";
+const HOMEWORK_STORAGE_KEY = "mes-devoirs";
 
-let courses = JSON.parse(
-    localStorage.getItem(STORAGE_KEY)
-) || [];
+let cours = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let devoirs = JSON.parse(localStorage.getItem(HOMEWORK_STORAGE_KEY)) || [];
 
+let coursEnModification = null;
 
 // =========================
-// ÉLÉMENTS HTML
+// ÉLÉMENTS DE LA PAGE
 // =========================
 
 const courseForm = document.getElementById("course-form");
-
 const courseDate = document.getElementById("course-date");
 const courseTitle = document.getElementById("course-title");
 const courseContent = document.getElementById("course-content");
@@ -24,44 +24,74 @@ const courseLink = document.getElementById("course-link");
 
 const coursesList = document.getElementById("courses-list");
 
-const editSection = document.getElementById("edit-course-section");
-const editForm = document.getElementById("edit-course-form");
+const editCourseSection =
+    document.getElementById("edit-course-section");
 
-const editDate = document.getElementById("edit-course-date");
-const editTitle = document.getElementById("edit-course-title");
-const editContent = document.getElementById("edit-course-content");
-const editHomework = document.getElementById("edit-course-homework");
-const editLink = document.getElementById("edit-course-link");
+const editCourseForm =
+    document.getElementById("edit-course-form");
+
+const editCourseDate =
+    document.getElementById("edit-course-date");
+
+const editCourseTitle =
+    document.getElementById("edit-course-title");
+
+const editCourseContent =
+    document.getElementById("edit-course-content");
+
+const editCourseHomework =
+    document.getElementById("edit-course-homework");
+
+const editCourseLink =
+    document.getElementById("edit-course-link");
 
 const cancelEditButton =
     document.getElementById("cancel-edit-button");
 
-let courseToEdit = null;
+// =========================
+// DEVOIRS
+// =========================
 
+const homeworkForm =
+    document.getElementById("physics-homework-form");
+
+const homeworkTitle =
+    document.getElementById("physics-homework-title");
+
+const homeworkDate =
+    document.getElementById("physics-homework-date");
+
+const homeworkDescription =
+    document.getElementById("physics-homework-description");
+
+const homeworkList =
+    document.getElementById("physics-homework-list");
 
 // =========================
 // SAUVEGARDE
 // =========================
 
 function sauvegarderCours() {
-
     localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify(courses)
+        JSON.stringify(cours)
     );
-
 }
 
+function sauvegarderDevoirs() {
+    localStorage.setItem(
+        HOMEWORK_STORAGE_KEY,
+        JSON.stringify(devoirs)
+    );
+}
 
 // =========================
-// ÉCHAPPER LE HTML
+// PROTECTION HTML
 // =========================
 
 function echapperHTML(texte) {
 
-    if (!texte) {
-        return "";
-    }
+    if (!texte) return "";
 
     return texte
         .replace(/&/g, "&amp;")
@@ -69,9 +99,7 @@ function echapperHTML(texte) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }
-
 
 // =========================
 // AFFICHER LES COURS
@@ -79,97 +107,77 @@ function echapperHTML(texte) {
 
 function afficherCours() {
 
+    if (!coursesList) return;
+
     coursesList.innerHTML = "";
 
-    if (courses.length === 0) {
+    if (cours.length === 0) {
 
-        coursesList.innerHTML = `
-            <p>
+        coursesList.innerHTML =
+            `<p class="empty-courses">
                 Aucun cours enregistré pour le moment.
-            </p>
-        `;
+            </p>`;
 
         return;
     }
 
+    cours.slice().reverse().forEach(function(leCours) {
 
-    courses.forEach(function(course, index) {
+        const index = cours.indexOf(leCours);
 
-        const courseElement =
-            document.createElement("div");
+        const lesson =
+            document.createElement("article");
 
-        courseElement.className = "saved-course";
+        lesson.className = "lesson";
 
-        let lienHTML = "";
+        lesson.innerHTML = `
 
-        if (course.link) {
+            <strong>
+                ${echapperHTML(leCours.title)}
+            </strong>
 
-            lienHTML = `
-                <p>
-                    📎
-                    <a
-                        href="${echapperHTML(course.link)}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Ouvrir le document
-                    </a>
-                </p>
-            `;
-
-        }
-
-
-        courseElement.innerHTML = `
-
-            <h3>
-                ${echapperHTML(course.title)}
-            </h3>
+            <span>
+                📅 ${echapperHTML(leCours.date)}
+            </span>
 
             <p>
-                📅
-                ${echapperHTML(course.date)}
-            </p>
-
-            <p>
-                <strong>📖 Contenu :</strong>
-            </p>
-
-            <p>
-                ${echapperHTML(course.content)
-                    .replace(/\n/g, "<br>")}
+                ${echapperHTML(leCours.content)}
             </p>
 
             ${
-                course.homework
+                leCours.homework
                 ?
-                `
-                <p>
-                    <strong>📝 Devoirs :</strong>
-                </p>
-
-                <p>
-                    ${echapperHTML(course.homework)
-                        .replace(/\n/g, "<br>")}
-                </p>
-                `
+                `<p>
+                    📚 <strong>Devoir :</strong><br>
+                    ${echapperHTML(leCours.homework)}
+                </p>`
                 :
                 ""
             }
 
-            ${lienHTML}
+            ${
+                leCours.link
+                ?
+                `<a
+                    href="${echapperHTML(leCours.link)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    🔗 Ouvrir le document
+                </a>`
+                :
+                ""
+            }
 
             <div class="course-actions">
 
                 <button
-                    class="edit-button"
                     onclick="ouvrirModification(${index})"
                 >
                     ✏️ Modifier
                 </button>
 
                 <button
-                    class="delete-button"
                     onclick="supprimerEtActualiser(${index})"
                 >
                     🗑️ Supprimer
@@ -178,147 +186,150 @@ function afficherCours() {
             </div>
         `;
 
-
-        coursesList.appendChild(courseElement);
+        coursesList.appendChild(lesson);
 
     });
-
 }
-
 
 // =========================
 // AJOUTER UN COURS
 // =========================
 
-courseForm.addEventListener(
-    "submit",
-    function(event) {
+if (courseForm) {
 
-        event.preventDefault();
+    courseForm.addEventListener(
+        "submit",
+        function(event) {
 
+            event.preventDefault();
 
-        const nouveauCours = {
+            cours.push({
 
-            date: courseDate.value,
+                date:
+                    courseDate.value,
 
-            title: courseTitle.value.trim(),
+                title:
+                    courseTitle.value.trim(),
 
-            content: courseContent.value.trim(),
+                content:
+                    courseContent.value.trim(),
 
-            homework: courseHomework.value.trim(),
+                homework:
+                    courseHomework.value.trim(),
 
-            link: courseLink.value.trim()
+                link:
+                    courseLink.value.trim()
 
-        };
+            });
 
+            sauvegarderCours();
 
-        courses.push(nouveauCours);
+            afficherCours();
 
-        sauvegarderCours();
+            courseForm.reset();
 
-        afficherCours();
-
-        courseForm.reset();
-
-    }
-);
-
+        }
+    );
+}
 
 // =========================
-// OUVRIR MODIFICATION
+// MODIFIER UN COURS
 // =========================
 
 function ouvrirModification(index) {
 
-    const course = courses[index];
+    const leCours = cours[index];
 
-    courseToEdit = index;
+    coursEnModification = index;
 
+    editCourseDate.value =
+        leCours.date;
 
-    editDate.value = course.date;
+    editCourseTitle.value =
+        leCours.title;
 
-    editTitle.value = course.title;
+    editCourseContent.value =
+        leCours.content;
 
-    editContent.value = course.content;
+    editCourseHomework.value =
+        leCours.homework || "";
 
-    editHomework.value = course.homework;
+    editCourseLink.value =
+        leCours.link || "";
 
-    editLink.value = course.link;
+    editCourseSection.style.display =
+        "block";
 
-
-    editSection.style.display = "block";
-
-
-    editSection.scrollIntoView({
+    editCourseSection.scrollIntoView({
         behavior: "smooth"
     });
-
 }
 
+if (editCourseForm) {
 
-// =========================
-// ENREGISTRER MODIFICATION
-// =========================
+    editCourseForm.addEventListener(
+        "submit",
+        function(event) {
 
-editForm.addEventListener(
-    "submit",
-    function(event) {
+            event.preventDefault();
 
-        event.preventDefault();
+            if (coursEnModification === null)
+                return;
 
+            cours[coursEnModification] = {
 
-        if (courseToEdit === null) {
-            return;
+                date:
+                    editCourseDate.value,
+
+                title:
+                    editCourseTitle.value.trim(),
+
+                content:
+                    editCourseContent.value.trim(),
+
+                homework:
+                    editCourseHomework.value.trim(),
+
+                link:
+                    editCourseLink.value.trim()
+
+            };
+
+            sauvegarderCours();
+
+            afficherCours();
+
+            coursEnModification = null;
+
+            editCourseForm.reset();
+
+            editCourseSection.style.display =
+                "none";
+
         }
-
-
-        courses[courseToEdit] = {
-
-            date: editDate.value,
-
-            title: editTitle.value.trim(),
-
-            content: editContent.value.trim(),
-
-            homework: editHomework.value.trim(),
-
-            link: editLink.value.trim()
-
-        };
-
-
-        sauvegarderCours();
-
-        afficherCours();
-
-
-        courseToEdit = null;
-
-        editForm.reset();
-
-        editSection.style.display = "none";
-
-    }
-);
-
+    );
+}
 
 // =========================
 // ANNULER MODIFICATION
 // =========================
 
-cancelEditButton.addEventListener(
-    "click",
-    function() {
+if (cancelEditButton) {
 
-        courseToEdit = null;
+    cancelEditButton.addEventListener(
+        "click",
+        function() {
 
-        editForm.reset();
+            coursEnModification = null;
 
-        editSection.style.display = "none";
+            editCourseForm.reset();
 
-    }
-);
+            editCourseSection.style.display =
+                "none";
 
+        }
+    );
+}
 
 // =========================
 // SUPPRIMER UN COURS
@@ -326,17 +337,133 @@ cancelEditButton.addEventListener(
 
 function supprimerEtActualiser(index) {
 
-    courses.splice(index, 1);
+    cours.splice(index, 1);
 
     sauvegarderCours();
 
     afficherCours();
-
 }
 
+// =========================
+// AJOUTER UN DEVOIR
+// =========================
+
+if (homeworkForm) {
+
+    homeworkForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            devoirs.push({
+
+                subject:
+                    "Sciences physiques",
+
+                title:
+                    homeworkTitle.value.trim(),
+
+                date:
+                    homeworkDate.value,
+
+                description:
+                    homeworkDescription.value.trim(),
+
+                done: false
+
+            });
+
+            sauvegarderDevoirs();
+
+            afficherDevoirs();
+
+            homeworkForm.reset();
+
+        }
+    );
+}
 
 // =========================
-// AFFICHAGE INITIAL
+// AFFICHER LES DEVOIRS
+// =========================
+
+function afficherDevoirs() {
+
+    if (!homeworkList)
+        return;
+
+    homeworkList.innerHTML = "";
+
+    const devoirsPhysique =
+        devoirs.filter(function(devoir) {
+
+            return devoir.subject ===
+                "Sciences physiques";
+
+        });
+
+    if (devoirsPhysique.length === 0) {
+
+        homeworkList.innerHTML =
+            `<p class="empty-courses">
+                Aucun devoir de sciences physiques enregistré.
+            </p>`;
+
+        return;
+    }
+
+    devoirsPhysique
+        .slice()
+        .reverse()
+        .forEach(function(devoir) {
+
+            const bloc =
+                document.createElement("div");
+
+            bloc.className = "lesson";
+
+            bloc.innerHTML = `
+
+                <strong>
+                    ${echapperHTML(devoir.title)}
+                </strong>
+
+                <span>
+                    📅 À rendre le
+                    ${echapperHTML(devoir.date)}
+                </span>
+
+                ${
+                    devoir.description
+                    ?
+                    `<p>
+                        ${echapperHTML(
+                            devoir.description
+                        )}
+                    </p>`
+                    :
+                    ""
+                }
+
+                <p>
+                    ${
+                        devoir.done
+                        ? "🟢 Devoir terminé"
+                        : "🔴 Devoir à faire"
+                    }
+                </p>
+
+            `;
+
+            homeworkList.appendChild(bloc);
+
+        });
+}
+
+// =========================
+// INITIALISATION
 // =========================
 
 afficherCours();
+afficherDevoirs();
