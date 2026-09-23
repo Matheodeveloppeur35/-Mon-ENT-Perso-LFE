@@ -432,15 +432,18 @@
         </section>
 
 
-        <!-- DEVOIRS -->
+<!-- DEVOIRS -->
 
-       <div class="content-card">
+<section class="homework-section">
 
     <h2>📚 Devoirs de sciences physiques</h2>
 
-    <form id="physics-homework-form">
+    <form
+        id="physics-homework-form"
+        class="course-form"
+    >
 
-        <div class="form-group">
+        <div>
             <label for="physics-homework-title">
                 📝 Devoir
             </label>
@@ -453,7 +456,7 @@
             >
         </div>
 
-        <div class="form-group">
+        <div>
             <label for="physics-homework-date">
                 📅 Date de rendu
             </label>
@@ -465,51 +468,39 @@
             >
         </div>
 
-        <div class="form-group">
+        <div>
             <label for="physics-homework-description">
                 📖 Description
             </label>
 
             <textarea
                 id="physics-homework-description"
-                rows="4"
-                placeholder="Ajoute des précisions..."
+                placeholder="Ajoute des précisions sur le devoir..."
             ></textarea>
         </div>
 
-        <button
-            type="submit"
-            class="save-course-button"
-        >
+        <button type="submit">
             ➕ Ajouter le devoir
         </button>
 
     </form>
 
-</div>
+</section>
 
-<div class="content-card">
+
+<section class="homework-section">
 
     <h2>📋 Devoirs enregistrés</h2>
 
     <div id="physics-homework-list">
 
-        <p class="empty-courses">
+        <p>
             Aucun devoir enregistré pour le moment.
         </p>
 
     </div>
 
-</div>
-
-
-        <a
-            href="../mes-cours.html"
-            class="back-link"
-        >
-            ← Retour à Mes cours
-        </a>
-
+</section>
     </main>
 
 
