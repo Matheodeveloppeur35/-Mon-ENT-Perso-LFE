@@ -390,25 +390,25 @@ if (homeworkForm) {
 
 function afficherDevoirs() {
 
-    if (!homeworkList)
+    if (!homeworkList) {
         return;
+    }
 
     homeworkList.innerHTML = "";
 
-    const devoirsPhysique =
-        devoirs.filter(function(devoir) {
+    const devoirsPhysique = devoirs.filter(function(devoir) {
 
-            return devoir.subject ===
-                "Sciences physiques";
+        return devoir.subject === "Sciences physiques";
 
-        });
+    });
 
     if (devoirsPhysique.length === 0) {
 
-        homeworkList.innerHTML =
-            `<p class="empty-courses">
-                Aucun devoir de sciences physiques enregistré.
-            </p>`;
+        homeworkList.innerHTML = `
+            <div class="empty-courses">
+                📭 Aucun devoir de sciences physiques enregistré pour le moment.
+            </div>
+        `;
 
         return;
     }
@@ -418,30 +418,34 @@ function afficherDevoirs() {
         .reverse()
         .forEach(function(devoir) {
 
-            const bloc =
-                document.createElement("div");
+            const bloc = document.createElement("div");
 
-            bloc.className = "lesson";
+            bloc.style.background = "#f8fafc";
+            bloc.style.border = "1px solid #e5e7eb";
+            bloc.style.borderRadius = "12px";
+            bloc.style.padding = "16px";
+            bloc.style.marginBottom = "12px";
 
             bloc.innerHTML = `
 
-                <strong>
-                    ${echapperHTML(devoir.title)}
-                </strong>
+                <h3 style="margin-top:0;">
+                    📝 ${echapperHTML(devoir.title)}
+                </h3>
 
-                <span>
-                    📅 À rendre le
+                <p>
+                    📅 <strong>Date de rendu :</strong>
                     ${echapperHTML(devoir.date)}
-                </span>
+                </p>
 
                 ${
                     devoir.description
                     ?
-                    `<p>
-                        ${echapperHTML(
-                            devoir.description
-                        )}
-                    </p>`
+                    `
+                    <p>
+                        📖 <strong>Description :</strong><br>
+                        ${echapperHTML(devoir.description)}
+                    </p>
+                    `
                     :
                     ""
                 }
@@ -449,8 +453,8 @@ function afficherDevoirs() {
                 <p>
                     ${
                         devoir.done
-                        ? "🟢 Devoir terminé"
-                        : "🔴 Devoir à faire"
+                        ? "🟢 <strong>Devoir terminé</strong>"
+                        : "🔴 <strong>Devoir à faire</strong>"
                     }
                 </p>
 
@@ -460,7 +464,6 @@ function afficherDevoirs() {
 
         });
 }
-
 // =========================
 // INITIALISATION
 // =========================
