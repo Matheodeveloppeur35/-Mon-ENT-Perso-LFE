@@ -397,9 +397,7 @@ function afficherDevoirs() {
     homeworkList.innerHTML = "";
 
     const devoirsPhysique = devoirs.filter(function(devoir) {
-
         return devoir.subject === "Sciences physiques";
-
     });
 
     if (devoirsPhysique.length === 0) {
@@ -417,6 +415,8 @@ function afficherDevoirs() {
         .slice()
         .reverse()
         .forEach(function(devoir) {
+
+            const vraiIndex = devoirs.indexOf(devoir);
 
             const bloc = document.createElement("div");
 
@@ -458,11 +458,51 @@ function afficherDevoirs() {
                     }
                 </p>
 
+                <button
+                    type="button"
+                    class="homework-status-button"
+                    data-index="${vraiIndex}"
+                >
+                    ${
+                        devoir.done
+                        ? "↩️ Remettre à faire"
+                        : "✅ Marquer comme terminé"
+                    }
+                </button>
+
             `;
 
             homeworkList.appendChild(bloc);
 
         });
+
+    // Boutons terminé / à faire
+    const boutons = document.querySelectorAll(
+        ".homework-status-button"
+    );
+
+    boutons.forEach(function(bouton) {
+
+        bouton.addEventListener("click", function() {
+
+            const index = Number(
+                bouton.dataset.index
+            );
+
+            if (!devoirs[index]) {
+                return;
+            }
+
+            devoirs[index].done =
+                !devoirs[index].done;
+
+            sauvegarderDevoirs();
+
+            afficherDevoirs();
+
+        });
+
+    });
 }
 // =========================
 // INITIALISATION
