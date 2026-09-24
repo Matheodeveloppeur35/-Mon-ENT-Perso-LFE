@@ -236,16 +236,75 @@
         </section>
 
 
-        <!-- DEVOIRS -->
-        <section class="welcome-card">
+      <!-- DEVOIRS -->
 
-            <h2>📝 Devoirs</h2>
+<section class="homework-section">
 
-            <p>
-                Aucun devoir enregistré pour le moment.
-            </p>
+    <h2>📝 Devoirs de pratique professionnelle</h2>
 
-        </section>
+    <form
+        id="professional-practice-homework-form"
+        class="course-form"
+    >
+
+        <div>
+            <label for="professional-practice-homework-title">
+                📝 Devoir
+            </label>
+
+            <input
+                type="text"
+                id="professional-practice-homework-title"
+                placeholder="Ex : Préparer une activité professionnelle"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="professional-practice-homework-date">
+                📅 Date de rendu
+            </label>
+
+            <input
+                type="date"
+                id="professional-practice-homework-date"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="professional-practice-homework-description">
+                📖 Description
+            </label>
+
+            <textarea
+                id="professional-practice-homework-description"
+                placeholder="Ajoute des précisions sur le devoir..."
+            ></textarea>
+        </div>
+
+        <button type="submit">
+            ➕ Ajouter le devoir
+        </button>
+
+    </form>
+
+</section>
+
+
+<section class="homework-section">
+
+    <h2>📋 Devoirs enregistrés</h2>
+
+    <div id="professional-practice-homework-list">
+
+        <p class="empty-courses">
+            Aucun devoir enregistré pour le moment.
+        </p>
+
+    </div>
+
+</section>
 
 
         <!-- RETOUR -->
