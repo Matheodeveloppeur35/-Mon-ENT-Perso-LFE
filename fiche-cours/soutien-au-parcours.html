@@ -411,14 +411,58 @@
 
         <section class="homework-section">
 
-            <h2>📝 Devoirs</h2>
+            <section class="homework-section">
 
-            <p>
-                Les devoirs associés à tes cours apparaîtront
-                dans les cours enregistrés.
-            </p>
+    <h2>📝 Devoirs de soutien au parcours</h2>
 
-        </section>
+    <form id="support-homework-form" class="course-form">
+
+        <div>
+            <label for="support-homework-title">📝 Devoir</label>
+            <input
+                type="text"
+                id="support-homework-title"
+                placeholder="Ex : Préparer mon projet professionnel"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="support-homework-date">📅 Date de rendu</label>
+            <input
+                type="date"
+                id="support-homework-date"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="support-homework-description">📖 Description</label>
+            <textarea
+                id="support-homework-description"
+                placeholder="Ajoute des précisions sur le devoir..."
+            ></textarea>
+        </div>
+
+        <button type="submit">
+            ➕ Ajouter le devoir
+        </button>
+
+    </form>
+
+</section>
+
+<section class="homework-section">
+
+    <h2>📋 Devoirs enregistrés</h2>
+
+    <div id="support-homework-list">
+        <p class="empty-courses">
+            Aucun devoir enregistré pour le moment.
+        </p>
+    </div>
+
+</section>
 
         <a href="../mes-cours.html" class="back-link">
             ← Retour à Mes cours
