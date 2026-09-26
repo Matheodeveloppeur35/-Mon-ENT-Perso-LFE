@@ -412,15 +412,63 @@
 
         <section class="homework-section">
 
-            <h2>📝 Travail à faire</h2>
+          <section class="homework-section">
 
-            <p>
-                Le travail à poursuivre est enregistré directement
-                avec chaque étape du projet.
-            </p>
+    <h2>📝 Travail à faire</h2>
 
-        </section>
+    <form id="project-homework-form" class="course-form">
 
+        <div>
+            <label for="project-homework-title">
+                Titre du travail
+            </label>
+
+            <input
+                type="text"
+                id="project-homework-title"
+                placeholder="Ex : Préparer la présentation du projet"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="project-homework-date">
+                Date pour le travail
+            </label>
+
+            <input
+                type="date"
+                id="project-homework-date"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="project-homework-description">
+                Description
+            </label>
+
+            <textarea
+                id="project-homework-description"
+                placeholder="Décris le travail à réaliser..."
+            ></textarea>
+        </div>
+
+        <button type="submit">
+            ➕ Ajouter le travail
+        </button>
+
+    </form>
+
+    <div id="project-homework-list">
+
+        <p>
+            Aucun travail à faire enregistré pour le moment.
+        </p>
+
+    </div>
+
+</section>
         <a href="../mes-cours.html" class="back-link">
             ← Retour à Mes cours
         </a>
