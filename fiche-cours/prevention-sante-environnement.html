@@ -411,14 +411,54 @@
 
         <section class="homework-section">
 
-            <h2>📝 Devoirs</h2>
+           <section class="homework-section">
 
-            <p>
-                Les devoirs associés à tes cours apparaîtront
-                dans les cours enregistrés.
-            </p>
+    <h2>📝 Devoirs de PSE</h2>
 
-        </section>
+    <form id="pse-homework-form" class="course-form">
+
+        <div>
+            <label for="pse-homework-title">Titre du devoir</label>
+            <input
+                type="text"
+                id="pse-homework-title"
+                placeholder="Ex : Réviser les risques professionnels"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="pse-homework-date">Date pour le devoir</label>
+            <input
+                type="date"
+                id="pse-homework-date"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="pse-homework-description">Description</label>
+            <textarea
+                id="pse-homework-description"
+                placeholder="Ajoute des précisions sur le devoir..."
+            ></textarea>
+        </div>
+
+        <button type="submit">
+            ➕ Ajouter le devoir
+        </button>
+
+    </form>
+
+    <div id="pse-homework-list">
+
+        <p>
+            Aucun devoir de PSE enregistré pour le moment.
+        </p>
+
+    </div>
+
+</section>
 
         <a href="../mes-cours.html" class="back-link">
             ← Retour à Mes cours
