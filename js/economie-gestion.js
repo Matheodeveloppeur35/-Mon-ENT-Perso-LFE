@@ -11,7 +11,19 @@ let courses = JSON.parse(
 
 
 // =========================
-// ÉLÉMENTS HTML
+// GESTION DES DEVOIRS
+// =========================
+
+const HOMEWORK_STORAGE_KEY = "mes-devoirs";
+const HOMEWORK_SUBJECT = "Économie & Gestion";
+
+let devoirs = JSON.parse(
+    localStorage.getItem(HOMEWORK_STORAGE_KEY)
+) || [];
+
+
+// =========================
+// ÉLÉMENTS HTML - COURS
 // =========================
 
 const courseForm = document.getElementById("course-form");
@@ -52,7 +64,27 @@ let courseToEdit = null;
 
 
 // =========================
-// SAUVEGARDE
+// ÉLÉMENTS HTML - DEVOIRS
+// =========================
+
+const homeworkForm =
+    document.getElementById("economy-homework-form");
+
+const homeworkTitle =
+    document.getElementById("economy-homework-title");
+
+const homeworkDate =
+    document.getElementById("economy-homework-date");
+
+const homeworkDescription =
+    document.getElementById("economy-homework-description");
+
+const homeworkList =
+    document.getElementById("economy-homework-list");
+
+
+// =========================
+// SAUVEGARDE DES COURS
 // =========================
 
 function sauvegarderCours() {
@@ -60,6 +92,20 @@ function sauvegarderCours() {
     localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(courses)
+    );
+
+}
+
+
+// =========================
+// SAUVEGARDE DES DEVOIRS
+// =========================
+
+function sauvegarderDevoirs() {
+
+    localStorage.setItem(
+        HOMEWORK_STORAGE_KEY,
+        JSON.stringify(devoirs)
     );
 
 }
@@ -331,7 +377,176 @@ function supprimerEtActualiser(index) {
 
 
 // =========================
+// AJOUTER UN DEVOIR
+// =========================
+
+homeworkForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const nouveauDevoir = {
+
+            subject: HOMEWORK_SUBJECT,
+
+            title: homeworkTitle.value.trim(),
+
+            date: homeworkDate.value,
+
+            description: homeworkDescription.value.trim(),
+
+            done: false
+
+        };
+
+        devoirs.push(nouveauDevoir);
+
+        sauvegarderDevoirs();
+
+        afficherDevoirs();
+
+        homeworkForm.reset();
+
+    }
+);
+
+
+// =========================
+// AFFICHER LES DEVOIRS
+// =========================
+
+function afficherDevoirs() {
+
+    homeworkList.innerHTML = "";
+
+    const devoirsEconomie =
+        devoirs.filter(function(devoir) {
+
+            return devoir.subject === HOMEWORK_SUBJECT;
+
+        });
+
+    if (devoirsEconomie.length === 0) {
+
+        homeworkList.innerHTML = `
+            <p>
+                Aucun devoir d'Économie & Gestion
+                enregistré pour le moment.
+            </p>
+        `;
+
+        return;
+    }
+
+    devoirsEconomie.forEach(function(devoir) {
+
+        const devoirElement =
+            document.createElement("div");
+
+        devoirElement.className = "saved-course";
+
+        const vraiIndex =
+            devoirs.indexOf(devoir);
+
+        devoirElement.innerHTML = `
+
+            <h3>
+                📝 ${echapperHTML(devoir.title)}
+            </h3>
+
+            <p>
+                📅 À faire pour le :
+                ${echapperHTML(devoir.date)}
+            </p>
+
+            ${
+                devoir.description
+                ?
+                `
+                <p>
+                    ${echapperHTML(devoir.description)
+                        .replace(/\n/g, "<br>")}
+                </p>
+                `
+                :
+                ""
+            }
+
+            <div class="course-actions">
+
+                <button
+                    class="homework-status-button"
+                    style="
+                        background:${devoir.done ? "#16a34a" : "#f59e0b"};
+                        color:white;
+                        border:none;
+                        padding:8px 12px;
+                        border-radius:8px;
+                        cursor:pointer;
+                    "
+                    onclick="changerStatutDevoir(${vraiIndex})"
+                >
+                    ${
+                        devoir.done
+                        ? "✅ Terminé"
+                        : "⏳ À faire"
+                    }
+                </button>
+
+                <button
+                    class="delete-button"
+                    onclick="supprimerDevoir(${vraiIndex})"
+                >
+                    🗑️ Supprimer
+                </button>
+
+            </div>
+
+        `;
+
+        homeworkList.appendChild(devoirElement);
+
+    });
+
+}
+
+
+// =========================
+// CHANGER LE STATUT
+// =========================
+
+function changerStatutDevoir(index) {
+
+    devoirs[index].done =
+        !devoirs[index].done;
+
+    sauvegarderDevoirs();
+
+    afficherDevoirs();
+
+}
+
+
+// =========================
+// SUPPRIMER UN DEVOIR
+// =========================
+
+function supprimerDevoir(index) {
+
+    devoirs.splice(index, 1);
+
+    sauvegarderDevoirs();
+
+    afficherDevoirs();
+
+}
+
+
+// =========================
 // AFFICHAGE INITIAL
 // =========================
 
 afficherCours();
+
+afficherDevoirs();
