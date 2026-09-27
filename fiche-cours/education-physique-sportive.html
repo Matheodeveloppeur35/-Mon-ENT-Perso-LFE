@@ -408,16 +408,63 @@
 
         </section>
 
-        <section class="homework-section">
+       <section class="homework-section">
 
-            <h2>📝 Travail à faire</h2>
+    <h2>📝 Devoirs d'EPS</h2>
 
-            <p>
-                Le travail à faire est enregistré directement
-                avec chaque séance.
-            </p>
+    <form id="eps-homework-form" class="course-form">
 
-        </section>
+        <div>
+            <label for="eps-homework-title">
+                Titre du travail
+            </label>
+
+            <input
+                type="text"
+                id="eps-homework-title"
+                placeholder="Ex : Préparer l'évaluation de badminton"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="eps-homework-date">
+                Date pour le travail
+            </label>
+
+            <input
+                type="date"
+                id="eps-homework-date"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="eps-homework-description">
+                Description
+            </label>
+
+            <textarea
+                id="eps-homework-description"
+                placeholder="Décris le travail à réaliser..."
+            ></textarea>
+        </div>
+
+        <button type="submit">
+            ➕ Ajouter le travail
+        </button>
+
+    </form>
+
+    <div id="eps-homework-list">
+
+        <p>
+            Aucun travail à faire enregistré pour le moment.
+        </p>
+
+    </div>
+
+</section>
 
         <a href="../mes-cours.html" class="back-link">
             ← Retour à Mes cours
