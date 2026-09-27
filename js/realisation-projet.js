@@ -11,7 +11,20 @@ let courses = JSON.parse(
 
 
 // =========================
-// ÉLÉMENTS HTML
+// GESTION DES DEVOIRS
+// =========================
+
+const HOMEWORK_STORAGE_KEY = "mes-devoirs";
+
+const HOMEWORK_SUBJECT = "Réalisation projet";
+
+let devoirs = JSON.parse(
+    localStorage.getItem(HOMEWORK_STORAGE_KEY)
+) || [];
+
+
+// =========================
+// ÉLÉMENTS HTML - COURS
 // =========================
 
 const courseForm =
@@ -63,7 +76,27 @@ let courseToEdit = null;
 
 
 // =========================
-// SAUVEGARDE
+// ÉLÉMENTS HTML - DEVOIRS
+// =========================
+
+const homeworkForm =
+    document.getElementById("project-homework-form");
+
+const homeworkTitle =
+    document.getElementById("project-homework-title");
+
+const homeworkDate =
+    document.getElementById("project-homework-date");
+
+const homeworkDescription =
+    document.getElementById("project-homework-description");
+
+const homeworkList =
+    document.getElementById("project-homework-list");
+
+
+// =========================
+// SAUVEGARDE DES COURS
 // =========================
 
 function sauvegarderCours() {
@@ -71,6 +104,20 @@ function sauvegarderCours() {
     localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(courses)
+    );
+
+}
+
+
+// =========================
+// SAUVEGARDE DES DEVOIRS
+// =========================
+
+function sauvegarderDevoirs() {
+
+    localStorage.setItem(
+        HOMEWORK_STORAGE_KEY,
+        JSON.stringify(devoirs)
     );
 
 }
@@ -345,8 +392,201 @@ function supprimerEtActualiser(index) {
 }
 
 
+// ==================================================
+// DEVOIRS / TRAVAUX À FAIRE
+// ==================================================
+
+
+// =========================
+// AFFICHER LES DEVOIRS
+// =========================
+
+function afficherDevoirs() {
+
+    homeworkList.innerHTML = "";
+
+    const devoirsSujet =
+        devoirs.filter(function(devoir) {
+
+            return devoir.subject === HOMEWORK_SUBJECT;
+
+        });
+
+    if (devoirsSujet.length === 0) {
+
+        homeworkList.innerHTML = `
+            <p>
+                Aucun travail à faire enregistré pour le moment.
+            </p>
+        `;
+
+        return;
+    }
+
+    devoirsSujet.forEach(function(devoir) {
+
+        const vraiIndex =
+            devoirs.indexOf(devoir);
+
+        const homeworkElement =
+            document.createElement("div");
+
+        homeworkElement.className =
+            "saved-course";
+
+        const statut =
+            devoir.done
+            ? "Terminé"
+            : "À faire";
+
+        const statutClasse =
+            devoir.done
+            ? "done"
+            : "";
+
+        homeworkElement.innerHTML = `
+
+            <h3>
+                ${echapperHTML(devoir.title)}
+            </h3>
+
+            <p>
+                📅 ${echapperHTML(devoir.date)}
+            </p>
+
+            ${
+                devoir.description
+                ?
+                `
+                <p>
+                    <strong>📝 Description :</strong>
+                </p>
+
+                <p>
+                    ${echapperHTML(devoir.description)
+                        .replace(/\n/g, "<br>")}
+                </p>
+                `
+                :
+                ""
+            }
+
+            <p>
+                <span class="homework-status ${statutClasse}">
+                    ${statut}
+                </span>
+            </p>
+
+            <div class="course-actions">
+
+                <button
+                    class="homework-status-button"
+                    onclick="changerStatutDevoir(${vraiIndex})"
+                >
+                    ${
+                        devoir.done
+                        ? "↩️ À faire"
+                        : "✅ Terminé"
+                    }
+                </button>
+
+                <button
+                    class="delete-button"
+                    onclick="supprimerDevoir(${vraiIndex})"
+                >
+                    🗑️ Supprimer
+                </button>
+
+            </div>
+        `;
+
+        homeworkList.appendChild(homeworkElement);
+
+    });
+
+}
+
+
+// =========================
+// AJOUTER UN DEVOIR
+// =========================
+
+homeworkForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const nouveauDevoir = {
+
+            subject: HOMEWORK_SUBJECT,
+
+            title: homeworkTitle.value.trim(),
+
+            date: homeworkDate.value,
+
+            description:
+                homeworkDescription.value.trim(),
+
+            done: false
+
+        };
+
+        devoirs.push(nouveauDevoir);
+
+        sauvegarderDevoirs();
+
+        afficherDevoirs();
+
+        homeworkForm.reset();
+
+    }
+);
+
+
+// =========================
+// CHANGER LE STATUT
+// =========================
+
+function changerStatutDevoir(index) {
+
+    if (!devoirs[index]) {
+        return;
+    }
+
+    devoirs[index].done =
+        !devoirs[index].done;
+
+    sauvegarderDevoirs();
+
+    afficherDevoirs();
+
+}
+
+
+// =========================
+// SUPPRIMER UN DEVOIR
+// =========================
+
+function supprimerDevoir(index) {
+
+    if (!devoirs[index]) {
+        return;
+    }
+
+    devoirs.splice(index, 1);
+
+    sauvegarderDevoirs();
+
+    afficherDevoirs();
+
+}
+
+
 // =========================
 // AFFICHAGE INITIAL
 // =========================
 
 afficherCours();
+
+afficherDevoirs();
