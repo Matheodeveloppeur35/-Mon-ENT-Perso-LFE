@@ -169,7 +169,70 @@
             padding: 30px;
             color: #64748b;
         }
+/* ============================= */
+/* TABLEAU DE BORD DES DEVOIRS */
+/* ============================= */
 
+.homework-dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    text-align: center;
+    border-top: 5px solid #2563eb;
+}
+
+.dashboard-card .dashboard-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.dashboard-card .dashboard-number {
+    font-size: 30px;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.dashboard-card .dashboard-label {
+    margin-top: 5px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.dashboard-todo {
+    border-top-color: #dc2626;
+}
+
+.dashboard-late {
+    border-top-color: #ef4444;
+}
+
+.dashboard-done {
+    border-top-color: #16a34a;
+}
+
+.dashboard-total {
+    border-top-color: #2563eb;
+}
+
+@media (max-width: 900px) {
+    .homework-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .homework-dashboard {
+        grid-template-columns: 1fr;
+    }
+}
         @media (max-width: 700px) {
 
             .tools {
