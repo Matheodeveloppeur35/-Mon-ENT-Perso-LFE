@@ -8,18 +8,123 @@
     <title>Emploi du temps - Mon ENT Perso LFE</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        /* ========================= */
+        /* FORMULAIRE EMPLOI DU TEMPS */
+        /* ========================= */
+
+        .schedule-form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .schedule-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .schedule-form .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .schedule-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .schedule-form input,
+        .schedule-form select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            font-family: inherit;
+            background: white;
+        }
+
+        .schedule-form button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 13px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .schedule-form button:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* ========================= */
+        /* BOUTON AFFICHER FORMULAIRE */
+        /* ========================= */
+
+        .add-schedule-button {
+            border: none;
+            background: #16a34a;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+
+        /* ========================= */
+        /* RESPONSIVE */
+        /* ========================= */
+
+        @media (max-width: 700px) {
+
+            .schedule-form {
+                grid-template-columns: 1fr;
+            }
+
+            .schedule-form .full-width {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
+    <!-- ========================= -->
     <!-- MENU -->
+    <!-- ========================= -->
+
     <aside class="sidebar">
 
         <div class="logo">
+
             🎓
-            <h2>Mon ENT</h2>
-            <span>Perso LFE</span>
+
+            <h2>
+                Mon ENT
+            </h2>
+
+            <span>
+                Perso LFE
+            </span>
+
         </div>
+
 
         <nav>
 
@@ -31,13 +136,13 @@
                 📅 Emploi du temps
             </a>
 
-           <a href="mes-cours.html">
+            <a href="mes-cours.html">
                 📚 Mes cours
             </a>
 
-           <a href="mes-devoirs.html">
-    📝 Mes devoirs
-</a>
+            <a href="mes-devoirs.html">
+                📝 Mes devoirs
+            </a>
 
             <a href="#">
                 📊 Mes notes
@@ -52,45 +157,357 @@
     </aside>
 
 
+    <!-- ========================= -->
     <!-- CONTENU -->
+    <!-- ========================= -->
+
     <main class="main-content">
 
+
+        <!-- EN-TÊTE -->
+
         <header>
-            <h1>📅 Emploi du temps</h1>
-            <p>Retrouve ton emploi du temps scolaire.</p>
+
+            <h1>
+                📅 Emploi du temps
+            </h1>
+
+            <p>
+                Construis et consulte ton emploi du temps.
+            </p>
+
         </header>
 
 
-        <!-- CHOIX DE LA PÉRIODE -->
+        <!-- ========================= -->
+        <!-- CHOIX Q1 / Q2 -->
+        <!-- ========================= -->
+
         <section class="welcome-card">
 
-            <h2>Mon emploi du temps</h2>
+            <h2>
+                Mon emploi du temps
+            </h2>
 
             <p>
                 Sélectionne la période que tu souhaites consulter.
             </p>
 
+
             <div class="period-buttons">
 
-                <button id="q1-button" class="selected">
+                <button
+                    id="q1-button"
+                    class="selected"
+                    type="button"
+                >
                     Q1
                 </button>
 
-                <button id="q2-button">
+
+                <button
+                    id="q2-button"
+                    type="button"
+                >
                     Q2
                 </button>
 
             </div>
 
+
+            <!-- BOUTON AJOUT -->
+
+            <button
+                id="show-add-schedule"
+                class="add-schedule-button"
+                type="button"
+            >
+                ➕ Ajouter un cours
+            </button>
+
         </section>
 
 
+        <!-- ========================= -->
+        <!-- AJOUT D'UN COURS -->
+        <!-- ========================= -->
+
+        <section
+            class="schedule-form-section"
+            id="add-schedule-section"
+            style="display: none;"
+        >
+
+            <h2>
+                ➕ Ajouter un cours
+            </h2>
+
+            <p>
+                Ajoute chaque matière individuellement à ton emploi du temps.
+            </p>
+
+
+            <form
+                id="schedule-form"
+                class="schedule-form"
+            >
+
+
+                <!-- PÉRIODE -->
+
+                <div>
+
+                    <label for="schedule-period">
+                        Période
+                    </label>
+
+                    <select
+                        id="schedule-period"
+                        required
+                    >
+
+                        <option value="Q1">
+                            Q1
+                        </option>
+
+                        <option value="Q2">
+                            Q2
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- JOUR -->
+
+                <div>
+
+                    <label for="schedule-day">
+                        Jour
+                    </label>
+
+                    <select
+                        id="schedule-day"
+                        required
+                    >
+
+                        <option value="">
+                            Sélectionner un jour
+                        </option>
+
+                        <option value="Lundi">
+                            Lundi
+                        </option>
+
+                        <option value="Mardi">
+                            Mardi
+                        </option>
+
+                        <option value="Mercredi">
+                            Mercredi
+                        </option>
+
+                        <option value="Jeudi">
+                            Jeudi
+                        </option>
+
+                        <option value="Vendredi">
+                            Vendredi
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- MATIÈRE -->
+
+                <div>
+
+                    <label for="schedule-subject">
+                        Matière
+                    </label>
+
+                    <select
+                        id="schedule-subject"
+                        required
+                    >
+
+                        <option value="">
+                            Sélectionner une matière
+                        </option>
+
+                        <option>
+                            Français / Histoire-Géo / EMC
+                        </option>
+
+                        <option>
+                            Mathématiques
+                        </option>
+
+                        <option>
+                            Anglais LV1
+                        </option>
+
+                        <option>
+                            Sciences physiques
+                        </option>
+
+                        <option>
+                            Enseignement professionnel
+                        </option>
+
+                        <option>
+                            Pratique professionnelle
+                        </option>
+
+                        <option>
+                            Arts appliqués / Culture artistique
+                        </option>
+
+                        <option>
+                            Soutien au parcours
+                        </option>
+
+                        <option>
+                            Prévention-Santé-Environnement
+                        </option>
+
+                        <option>
+                            Économie & Gestion
+                        </option>
+
+                        <option>
+                            Réalisation projet
+                        </option>
+
+                        <option>
+                            Éducation physique & sportive
+                        </option>
+
+                        <option>
+                            Co-intervention
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DÉBUT -->
+
+                <div>
+
+                    <label for="schedule-start">
+                        Heure de début
+                    </label>
+
+                    <input
+                        type="time"
+                        id="schedule-start"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- FIN -->
+
+                <div>
+
+                    <label for="schedule-end">
+                        Heure de fin
+                    </label>
+
+                    <input
+                        type="time"
+                        id="schedule-end"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PROFESSEUR -->
+
+                <div>
+
+                    <label for="schedule-teacher">
+                        Professeur
+                    </label>
+
+                    <input
+                        type="text"
+                        id="schedule-teacher"
+                        placeholder="Ex : MESLARD S."
+                    >
+
+                </div>
+
+
+                <!-- SALLE -->
+
+                <div>
+
+                    <label for="schedule-room">
+                        Salle
+                    </label>
+
+                    <input
+                        type="text"
+                        id="schedule-room"
+                        placeholder="Ex : E218"
+                    >
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="full-width">
+
+                    <label for="schedule-description">
+                        Information complémentaire
+                    </label>
+
+                    <input
+                        type="text"
+                        id="schedule-description"
+                        placeholder="Ex : Groupe A, HP, MECA..."
+                    >
+
+                </div>
+
+
+                <!-- BOUTON -->
+
+                <div class="full-width">
+
+                    <button
+                        type="submit"
+                    >
+                        💾 Ajouter le cours
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+        <!-- ========================= -->
         <!-- EMPLOI DU TEMPS -->
+        <!-- ========================= -->
+
         <section class="schedule-card">
 
             <h2 id="schedule-title">
                 Emploi du temps — Q1
             </h2>
+
 
             <div class="schedule-table-container">
 
@@ -99,17 +516,38 @@
                     <thead>
 
                         <tr>
-                            <th>Horaire</th>
-                            <th>Lundi</th>
-                            <th>Mardi</th>
-                            <th>Mercredi</th>
-                            <th>Jeudi</th>
-                            <th>Vendredi</th>
+
+                            <th>
+                                Horaire
+                            </th>
+
+                            <th>
+                                Lundi
+                            </th>
+
+                            <th>
+                                Mardi
+                            </th>
+
+                            <th>
+                                Mercredi
+                            </th>
+
+                            <th>
+                                Jeudi
+                            </th>
+
+                            <th>
+                                Vendredi
+                            </th>
+
                         </tr>
 
                     </thead>
 
+
                     <tbody id="schedule-body">
+
                     </tbody>
 
                 </table>
@@ -117,6 +555,7 @@
             </div>
 
         </section>
+
 
     </main>
 
