@@ -373,14 +373,14 @@ const emploiDuTemps = {
 
 
 // ==========================================
-// STOCKAGE DES COURS AJOUTÉS
+// STOCKAGE
 // ==========================================
 
 const STORAGE_KEY = "mon-ent-emploi-du-temps";
 
 
 // ==========================================
-// HORAIRES DU TABLEAU
+// HORAIRES
 // ==========================================
 
 const horaires = [
@@ -416,12 +416,13 @@ const jours = [
 
 
 // ==========================================
-// CONVERSION DES HEURES
+// CONVERSION HEURE
 // ==========================================
 
 function convertirMinutes(heure) {
 
-    const [heures, minutes] = heure.split(":").map(Number);
+    const [heures, minutes] =
+        heure.split(":").map(Number);
 
     return heures * 60 + minutes;
 }
@@ -442,7 +443,7 @@ function recupererCoursAjoutes() {
     } catch (erreur) {
 
         console.error(
-            "Erreur lors de la récupération des cours :",
+            "Erreur de récupération :",
             erreur
         );
 
@@ -452,7 +453,7 @@ function recupererCoursAjoutes() {
 
 
 // ==========================================
-// SAUVEGARDER LES COURS AJOUTÉS
+// SAUVEGARDER
 // ==========================================
 
 function sauvegarderCoursAjoutes(cours) {
@@ -465,7 +466,7 @@ function sauvegarderCoursAjoutes(cours) {
 
 
 // ==========================================
-// OBTENIR TOUS LES COURS D'UNE PÉRIODE
+// OBTENIR LES COURS
 // ==========================================
 
 function obtenirCours(periode, jour) {
@@ -474,11 +475,11 @@ function obtenirCours(periode, jour) {
         emploiDuTemps[periode]?.[jour] || [];
 
     const coursAjoutes =
-        recupererCoursAjoutes()
-            .filter(cours =>
+        recupererCoursAjoutes().filter(
+            cours =>
                 cours.periode === periode &&
                 cours.jour === jour
-            );
+        );
 
     return [
         ...coursDeBase,
@@ -516,11 +517,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
         const ligne =
             document.createElement("tr");
 
-
-        // ------------------------------------------
-        // HORAIRE
-        // ------------------------------------------
-
         const celluleHoraire =
             document.createElement("td");
 
@@ -532,10 +528,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
 
         ligne.appendChild(celluleHoraire);
 
-
-        // ------------------------------------------
-        // JOURS
-        // ------------------------------------------
 
         jours.forEach(jour => {
 
@@ -549,9 +541,9 @@ function afficherEmploiDuTemps(periode = "Q1") {
                 convertirMinutes(horaire[1]);
 
 
-            // --------------------------------------
-            // RÉCRÉATION
-            // --------------------------------------
+            // ======================================
+            // PAUSES
+            // ======================================
 
             if (
                 horaire[0] === "09:50" &&
@@ -566,11 +558,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                 );
             }
 
-
-            // --------------------------------------
-            // PAUSE DÉJEUNER
-            // --------------------------------------
-
             else if (
                 horaire[0] === "12:00" &&
                 horaire[1] === "13:00"
@@ -583,11 +570,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     "lunch-cell"
                 );
             }
-
-
-            // --------------------------------------
-            // PETITES PAUSES
-            // --------------------------------------
 
             else if (
                 (horaire[0] === "13:35" &&
@@ -608,11 +590,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                 );
             }
 
-
-            // --------------------------------------
-            // FIN
-            // --------------------------------------
-
             else if (
                 horaire[0] === "17:40" &&
                 horaire[1] === "17:55"
@@ -625,11 +602,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     "end-cell"
                 );
             }
-
-
-            // --------------------------------------
-            // RECHERCHE DU COURS
-            // --------------------------------------
 
             else {
 
@@ -659,10 +631,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     });
 
 
-                // ----------------------------------
-                // AFFICHAGE DU COURS
-                // ----------------------------------
-
                 if (cours) {
 
                     const estAjoute =
@@ -679,8 +647,7 @@ function afficherEmploiDuTemps(periode = "Q1") {
                                 cours.professeur
                                     ? `
                                         <span>
-                                            👨‍🏫
-                                            ${cours.professeur}
+                                            👨‍🏫 ${cours.professeur}
                                         </span>
                                       `
                                     : ""
@@ -690,8 +657,17 @@ function afficherEmploiDuTemps(periode = "Q1") {
                                 cours.salle
                                     ? `
                                         <small>
-                                            📍
-                                            ${cours.salle}
+                                            📍 ${cours.salle}
+                                        </small>
+                                      `
+                                    : ""
+                            }
+
+                            ${
+                                cours.description
+                                    ? `
+                                        <small>
+                                            📝 ${cours.description}
                                         </small>
                                       `
                                     : ""
@@ -700,13 +676,25 @@ function afficherEmploiDuTemps(periode = "Q1") {
                             ${
                                 estAjoute
                                     ? `
-                                        <button
-                                            class="delete-schedule-course"
-                                            data-id="${cours.id}"
-                                            title="Supprimer ce cours"
-                                        >
-                                            🗑️
-                                        </button>
+                                        <div class="schedule-actions">
+
+                                            <button
+                                                class="edit-schedule-course"
+                                                data-id="${cours.id}"
+                                                title="Modifier"
+                                            >
+                                                ✏️
+                                            </button>
+
+                                            <button
+                                                class="delete-schedule-course"
+                                                data-id="${cours.id}"
+                                                title="Supprimer"
+                                            >
+                                                🗑️
+                                            </button>
+
+                                        </div>
                                       `
                                     : ""
                             }
@@ -715,37 +703,63 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     `;
 
 
-                    // ----------------------------------
-                    // SUPPRESSION
-                    // ----------------------------------
+                    // ==================================
+                    // MODIFIER
+                    // ==================================
 
                     if (estAjoute) {
 
-                        const bouton =
+                        const boutonModifier =
+                            cellule.querySelector(
+                                ".edit-schedule-course"
+                            );
+
+                        if (boutonModifier) {
+
+                            boutonModifier.addEventListener(
+                                "click",
+                                evenement => {
+
+                                    evenement.stopPropagation();
+
+                                    modifierCours(
+                                        cours.id
+                                    );
+                                }
+                            );
+                        }
+
+
+                        // ==============================
+                        // SUPPRIMER
+                        // ==============================
+
+                        const boutonSupprimer =
                             cellule.querySelector(
                                 ".delete-schedule-course"
                             );
 
-                        bouton.addEventListener(
-                            "click",
-                            evenement => {
+                        if (boutonSupprimer) {
 
-                                evenement.stopPropagation();
+                            boutonSupprimer.addEventListener(
+                                "click",
+                                evenement => {
 
-                                supprimerCours(
-                                    cours.id
-                                );
-                            }
-                        );
+                                    evenement.stopPropagation();
+
+                                    supprimerCours(
+                                        cours.id
+                                    );
+                                }
+                            );
+                        }
                     }
                 }
             }
 
-
             ligne.appendChild(cellule);
 
         });
-
 
         tableau.appendChild(ligne);
 
@@ -800,10 +814,6 @@ function ajouterCours() {
         )?.value.trim();
 
 
-    // ------------------------------------------
-    // VÉRIFICATIONS
-    // ------------------------------------------
-
     if (
         !periode ||
         !jour ||
@@ -813,7 +823,7 @@ function ajouterCours() {
     ) {
 
         alert(
-            "⚠️ Merci de remplir la période, le jour, la matière, l'heure de début et l'heure de fin."
+            "⚠️ Merci de remplir les champs obligatoires."
         );
 
         return;
@@ -833,31 +843,20 @@ function ajouterCours() {
     }
 
 
-    // ------------------------------------------
-    // NOUVEAU COURS
-    // ------------------------------------------
-
     const cours = {
 
         id: Date.now(),
 
         periode,
         jour,
-
         debut,
         fin,
-
         matiere,
-
         professeur,
         salle,
         description
     };
 
-
-    // ------------------------------------------
-    // SAUVEGARDE
-    // ------------------------------------------
 
     const coursExistants =
         recupererCoursAjoutes();
@@ -869,18 +868,10 @@ function ajouterCours() {
     );
 
 
-    // ------------------------------------------
-    // RAFRAÎCHISSEMENT
-    // ------------------------------------------
-
     afficherEmploiDuTemps(
         periode
     );
 
-
-    // ------------------------------------------
-    // RÉINITIALISER LE FORMULAIRE
-    // ------------------------------------------
 
     const formulaire =
         document.querySelector(
@@ -892,15 +883,9 @@ function ajouterCours() {
     }
 
 
-    // On remet Q1 par défaut
-    const periodeForm =
-        document.querySelector(
-            "#schedule-period"
-        );
-
-    if (periodeForm) {
-        periodeForm.value = periode;
-    }
+    document.querySelector(
+        "#schedule-period"
+    ).value = periode;
 
 
     alert(
@@ -910,7 +895,302 @@ function ajouterCours() {
 
 
 // ==========================================
-// SUPPRIMER UN COURS AJOUTÉ
+// MODIFIER UN COURS
+// ==========================================
+
+function modifierCours(id) {
+
+    const cours =
+        recupererCoursAjoutes();
+
+    const index =
+        cours.findIndex(
+            cours => cours.id === id
+        );
+
+    if (index === -1) {
+        return;
+    }
+
+
+    const coursAModifier =
+        cours[index];
+
+
+    // ======================================
+    // AFFICHER LE FORMULAIRE
+    // ======================================
+
+    const section =
+        document.querySelector(
+            "#add-schedule-section"
+        );
+
+    if (section) {
+        section.style.display = "block";
+    }
+
+
+    // ======================================
+    // REMPLIR LE FORMULAIRE
+    // ======================================
+
+    document.querySelector(
+        "#schedule-period"
+    ).value = coursAModifier.periode;
+
+    document.querySelector(
+        "#schedule-day"
+    ).value = coursAModifier.jour;
+
+    document.querySelector(
+        "#schedule-subject"
+    ).value = coursAModifier.matiere;
+
+    document.querySelector(
+        "#schedule-start"
+    ).value = coursAModifier.debut;
+
+    document.querySelector(
+        "#schedule-end"
+    ).value = coursAModifier.fin;
+
+    document.querySelector(
+        "#schedule-teacher"
+    ).value = coursAModifier.professeur || "";
+
+    document.querySelector(
+        "#schedule-room"
+    ).value = coursAModifier.salle || "";
+
+    document.querySelector(
+        "#schedule-description"
+    ).value =
+        coursAModifier.description || "";
+
+
+    // ======================================
+    // MODE MODIFICATION
+    // ======================================
+
+    const formulaire =
+        document.querySelector(
+            "#schedule-form"
+        );
+
+    if (!formulaire) {
+        return;
+    }
+
+
+    formulaire.dataset.editingId =
+        id;
+
+
+    // ======================================
+    // MODIFIER LE BOUTON
+    // ======================================
+
+    const bouton =
+        formulaire.querySelector(
+            'button[type="submit"]'
+        );
+
+    if (bouton) {
+
+        bouton.textContent =
+            "💾 Enregistrer les modifications";
+    }
+
+
+    // ======================================
+    // REMONTER AU FORMULAIRE
+    // ======================================
+
+    section?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+// ==========================================
+// ENREGISTRER UNE MODIFICATION
+// ==========================================
+
+function enregistrerModification() {
+
+    const formulaire =
+        document.querySelector(
+            "#schedule-form"
+        );
+
+    if (!formulaire) {
+        return;
+    }
+
+
+    const id =
+        Number(
+            formulaire.dataset.editingId
+        );
+
+
+    const periode =
+        document.querySelector(
+            "#schedule-period"
+        ).value;
+
+    const jour =
+        document.querySelector(
+            "#schedule-day"
+        ).value;
+
+    const matiere =
+        document.querySelector(
+            "#schedule-subject"
+        ).value;
+
+    const debut =
+        document.querySelector(
+            "#schedule-start"
+        ).value;
+
+    const fin =
+        document.querySelector(
+            "#schedule-end"
+        ).value;
+
+    const professeur =
+        document.querySelector(
+            "#schedule-teacher"
+        ).value.trim();
+
+    const salle =
+        document.querySelector(
+            "#schedule-room"
+        ).value.trim();
+
+    const description =
+        document.querySelector(
+            "#schedule-description"
+        ).value.trim();
+
+
+    // ======================================
+    // VÉRIFICATIONS
+    // ======================================
+
+    if (
+        !periode ||
+        !jour ||
+        !matiere ||
+        !debut ||
+        !fin
+    ) {
+
+        alert(
+            "⚠️ Merci de remplir les champs obligatoires."
+        );
+
+        return;
+    }
+
+
+    if (
+        convertirMinutes(fin) <=
+        convertirMinutes(debut)
+    ) {
+
+        alert(
+            "⚠️ L'heure de fin doit être après l'heure de début."
+        );
+
+        return;
+    }
+
+
+    // ======================================
+    // MODIFICATION
+    // ======================================
+
+    const cours =
+        recupererCoursAjoutes();
+
+    const index =
+        cours.findIndex(
+            cours => cours.id === id
+        );
+
+    if (index === -1) {
+        return;
+    }
+
+
+    cours[index] = {
+
+        ...cours[index],
+
+        periode,
+        jour,
+        matiere,
+        debut,
+        fin,
+        professeur,
+        salle,
+        description
+    };
+
+
+    sauvegarderCoursAjoutes(
+        cours
+    );
+
+
+    // ======================================
+    // FIN DU MODE MODIFICATION
+    // ======================================
+
+    delete formulaire.dataset.editingId;
+
+
+    const bouton =
+        formulaire.querySelector(
+            'button[type="submit"]'
+        );
+
+    if (bouton) {
+
+        bouton.textContent =
+            "➕ Ajouter le cours";
+    }
+
+
+    formulaire.reset();
+
+
+    document.querySelector(
+        "#schedule-period"
+    ).value = periode;
+
+
+    // ======================================
+    // RAFRAÎCHIR
+    // ======================================
+
+    afficherEmploiDuTemps(
+        periode
+    );
+
+
+    alert(
+        `✅ ${matiere} a été modifié.`
+    );
+}
+
+
+// ==========================================
+// SUPPRIMER UN COURS
 // ==========================================
 
 function supprimerCours(id) {
@@ -938,7 +1218,6 @@ function supprimerCours(id) {
     );
 
 
-    // Récupérer la période actuellement affichée
     const boutonQ2 =
         document.querySelector(
             "#q2-button"
@@ -957,7 +1236,7 @@ function supprimerCours(id) {
 
 
 // ==========================================
-// BOUTON AFFICHER LE FORMULAIRE
+// INITIALISER LE FORMULAIRE
 // ==========================================
 
 function initialiserFormulaire() {
@@ -992,9 +1271,9 @@ function initialiserFormulaire() {
     }
 
 
-    // ------------------------------------------
+    // ======================================
     // FORMULAIRE
-    // ------------------------------------------
+    // ======================================
 
     const formulaire =
         document.querySelector(
@@ -1010,7 +1289,19 @@ function initialiserFormulaire() {
 
                 evenement.preventDefault();
 
-                ajouterCours();
+
+                // Si on est en mode modification
+                if (
+                    formulaire.dataset.editingId
+                ) {
+
+                    enregistrerModification();
+
+                } else {
+
+                    ajouterCours();
+                }
+
             }
         );
     }
@@ -1036,25 +1327,17 @@ document.addEventListener(
             );
 
 
-        // --------------------------------------
-        // FORMULAIRE
-        // --------------------------------------
-
         initialiserFormulaire();
 
-
-        // --------------------------------------
-        // AFFICHAGE INITIAL
-        // --------------------------------------
 
         afficherEmploiDuTemps(
             "Q1"
         );
 
 
-        // --------------------------------------
+        // ======================================
         // Q1
-        // --------------------------------------
+        // ======================================
 
         if (boutonQ1) {
 
@@ -1070,20 +1353,17 @@ document.addEventListener(
                         "selected"
                     );
 
-                    if (boutonQ2) {
-
-                        boutonQ2.classList.remove(
-                            "selected"
-                        );
-                    }
+                    boutonQ2?.classList.remove(
+                        "selected"
+                    );
                 }
             );
         }
 
 
-        // --------------------------------------
+        // ======================================
         // Q2
-        // --------------------------------------
+        // ======================================
 
         if (boutonQ2) {
 
@@ -1099,12 +1379,9 @@ document.addEventListener(
                         "selected"
                     );
 
-                    if (boutonQ1) {
-
-                        boutonQ1.classList.remove(
-                            "selected"
-                        );
-                    }
+                    boutonQ1?.classList.remove(
+                        "selected"
+                    );
                 }
             );
         }
