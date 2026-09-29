@@ -122,6 +122,23 @@ const cancelEdit =
 
 
 // =========================
+// COMPTEURS DU TABLEAU DE BORD
+// =========================
+
+const countTodo =
+    document.getElementById("count-todo");
+
+const countLate =
+    document.getElementById("count-late");
+
+const countDone =
+    document.getElementById("count-done");
+
+const countTotal =
+    document.getElementById("count-total");
+
+
+// =========================
 // SAUVEGARDE
 // =========================
 
@@ -190,10 +207,62 @@ function devoirEnRetard(devoir) {
 
 
 // =========================
+// METTRE À JOUR LES COMPTEURS
+// =========================
+
+function mettreAJourCompteurs() {
+
+    const total =
+        devoirs.length;
+
+    const termines =
+        devoirs.filter(function(devoir) {
+            return devoir.done;
+        }).length;
+
+    const enRetard =
+        devoirs.filter(function(devoir) {
+            return devoirEnRetard(devoir);
+        }).length;
+
+    const aFaire =
+        devoirs.filter(function(devoir) {
+            return !devoir.done &&
+                   !devoirEnRetard(devoir);
+        }).length;
+
+
+    if (countTodo) {
+        countTodo.textContent =
+            aFaire;
+    }
+
+    if (countLate) {
+        countLate.textContent =
+            enRetard;
+    }
+
+    if (countDone) {
+        countDone.textContent =
+            termines;
+    }
+
+    if (countTotal) {
+        countTotal.textContent =
+            total;
+    }
+
+}
+
+
+// =========================
 // AFFICHER LES DEVOIRS
 // =========================
 
 function afficherDevoirs() {
+
+    // Mise à jour du tableau de bord
+    mettreAJourCompteurs();
 
     homeworkList.innerHTML = "";
 
