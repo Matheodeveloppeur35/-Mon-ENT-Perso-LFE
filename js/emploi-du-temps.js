@@ -402,14 +402,15 @@ const emploiDuTemps = {
 
 
 // ==========================================
-// STOCKAGE
+// CLÉS DE STOCKAGE
 // ==========================================
 
 const STORAGE_KEY = "mon-ent-emploi-du-temps";
+const ABSENCES_KEY = "mon-ent-absences-professeurs";
 
 
 // ==========================================
-// HORAIRES EXACTS
+// HORAIRES
 // ==========================================
 
 const horaires = [
@@ -431,10 +432,6 @@ const horaires = [
 ];
 
 
-// ==========================================
-// JOURS
-// ==========================================
-
 const jours = [
     "lundi",
     "mardi",
@@ -445,7 +442,7 @@ const jours = [
 
 
 // ==========================================
-// CONVERSION HEURE
+// CONVERSION DES HEURES
 // ==========================================
 
 function convertirMinutes(heure) {
@@ -458,7 +455,7 @@ function convertirMinutes(heure) {
 
 
 // ==========================================
-// COULEURS DES MATIÈRES
+// COULEURS
 // ==========================================
 
 function obtenirClasseCouleur(matiere) {
@@ -513,21 +510,46 @@ function obtenirClasseCouleur(matiere) {
 
 
 // ==========================================
-// STOCKAGE DES COURS PERSONNALISÉS
+// STOCKAGE DES MODIFICATIONS
 // ==========================================
 
 function recupererCoursPersonnalises() {
 
     try {
 
-        return JSON.parse(
-            localStorage.getItem(STORAGE_KEY)
-        ) || [];
+        const donnees =
+            JSON.parse(
+                localStorage.getItem(STORAGE_KEY)
+            );
+
+        if (!Array.isArray(donnees)) {
+            return [];
+        }
+
+        // Garde uniquement la dernière
+        // modification de chaque cours.
+        const map = new Map();
+
+        donnees.forEach(cours => {
+
+            if (
+                cours &&
+                cours.id !== undefined
+            ) {
+
+                map.set(
+                    String(cours.id),
+                    cours
+                );
+            }
+        });
+
+        return Array.from(map.values());
 
     } catch (erreur) {
 
         console.error(
-            "Erreur de récupération :",
+            "Erreur de récupération des cours :",
             erreur
         );
 
@@ -546,7 +568,35 @@ function sauvegarderCoursPersonnalises(cours) {
 
 
 // ==========================================
-// OBTENIR LES COURS AVEC MODIFICATIONS
+// TOUS LES IDS DES COURS DE BASE
+// ==========================================
+
+function obtenirIdsCoursDeBase() {
+
+    const ids = new Set();
+
+    ["Q1", "Q2"].forEach(periode => {
+
+        jours.forEach(jour => {
+
+            const liste =
+                emploiDuTemps[periode]?.[jour] || [];
+
+            liste.forEach(cours => {
+
+                ids.add(
+                    String(cours.id)
+                );
+            });
+        });
+    });
+
+    return ids;
+}
+
+
+// ==========================================
+// OBTENIR LES COURS D'UN JOUR
 // ==========================================
 
 function obtenirCoursAvecModifications(
@@ -557,62 +607,127 @@ function obtenirCoursAvecModifications(
     const coursDeBase =
         emploiDuTemps[periode]?.[jour] || [];
 
-    const personnalises =
+    const personnalisations =
         recupererCoursPersonnalises();
 
-
-    // Cours de base visibles
-    const coursVisibles =
-        coursDeBase.filter(cours => {
-
-            const suppression =
-                personnalises.find(
-                    element =>
-                        String(element.id) ===
-                        String(cours.id) &&
-                        element.supprime === true
-                );
-
-            return !suppression;
-        });
-
-
-    // Modifications / nouveaux cours
-    const modifications =
-        personnalises.filter(
-            cours =>
-                cours.periode === periode &&
-                cours.jour === jour &&
-                !cours.supprime
+    const map =
+        new Map(
+            personnalisations.map(
+                cours => [
+                    String(cours.id),
+                    cours
+                ]
+            )
         );
 
 
-    modifications.forEach(
-        modification => {
+    const resultat = [];
 
-            const index =
-                coursVisibles.findIndex(
-                    cours =>
-                        String(cours.id) ===
-                        String(modification.id)
-                );
 
-            if (index !== -1) {
+    // ==========================================
+    // COURS DE BASE
+    // ==========================================
 
-                coursVisibles[index] =
-                    modification;
+    coursDeBase.forEach(coursBase => {
 
-            } else {
+        const modification =
+            map.get(
+                String(coursBase.id)
+            );
 
-                coursVisibles.push(
-                    modification
-                );
-            }
+
+        // Supprimé
+        if (
+            modification &&
+            modification.supprime === true
+        ) {
+
+            return;
         }
+
+
+        // Cours modifié
+        if (modification) {
+
+            // Si le cours a été déplacé
+            // ailleurs, il ne doit plus apparaître ici.
+            if (
+                modification.periode !== periode ||
+                modification.jour !== jour
+            ) {
+
+                return;
+            }
+
+
+            resultat.push(
+                modification
+            );
+
+            return;
+        }
+
+
+        // Cours normal
+        resultat.push(
+            coursBase
+        );
+    });
+
+
+    // ==========================================
+    // COURS MODIFIÉS/DÉPLACÉS
+    // ==========================================
+
+    personnalisations.forEach(cours => {
+
+        if (cours.supprime) {
+            return;
+        }
+
+
+        if (
+            cours.periode !== periode ||
+            cours.jour !== jour
+        ) {
+
+            return;
+        }
+
+
+        const existeDansLaBaseDuJour =
+            coursDeBase.some(
+                base =>
+                    String(base.id) ===
+                    String(cours.id)
+            );
+
+
+        // Si le cours n'est pas dans la base
+        // de ce jour, il s'agit soit :
+        // - d'un nouveau cours
+        // - d'un cours déplacé.
+        if (!existeDansLaBaseDuJour) {
+
+            resultat.push(
+                cours
+            );
+        }
+    });
+
+
+    // ==========================================
+    // TRI PAR HEURE
+    // ==========================================
+
+    resultat.sort(
+        (a, b) =>
+            convertirMinutes(a.debut) -
+            convertirMinutes(b.debut)
     );
 
 
-    return coursVisibles;
+    return resultat;
 }
 
 
@@ -622,25 +737,40 @@ function obtenirCoursAvecModifications(
 
 function trouverCours(id) {
 
-    const personnalises =
+    const personnalisations =
         recupererCoursPersonnalises();
 
 
-    const personnalise =
-        personnalises.find(
+    const personnalisation =
+        personnalisations.find(
             cours =>
-                String(cours.id) === String(id) &&
-                !cours.supprime
+                String(cours.id) ===
+                String(id)
         );
 
 
-    if (personnalise) {
+    if (
+        personnalisation &&
+        personnalisation.supprime
+    ) {
+
+        return null;
+    }
+
+
+    if (personnalisation) {
 
         return {
-            cours: personnalise,
+
+            cours: personnalisation,
+
             type: "personnalise",
-            periode: personnalise.periode,
-            jour: personnalise.jour
+
+            periode:
+                personnalisation.periode,
+
+            jour:
+                personnalisation.jour
         };
     }
 
@@ -663,25 +793,16 @@ function trouverCours(id) {
 
             if (index !== -1) {
 
-                const suppression =
-                    personnalises.find(
-                        element =>
-                            String(element.id) ===
-                            String(id) &&
-                            element.supprime === true
-                    );
-
-
-                if (suppression) {
-                    return null;
-                }
-
-
                 return {
+
                     cours: liste[index],
+
                     type: "base",
+
                     periode,
+
                     jour,
+
                     index
                 };
             }
@@ -694,16 +815,22 @@ function trouverCours(id) {
 
 
 // ==========================================
-// AFFICHAGE DE L'EMPLOI DU TEMPS
+// AFFICHAGE
 // ==========================================
 
-function afficherEmploiDuTemps(periode = "Q1") {
+function afficherEmploiDuTemps(
+    periode = "Q1"
+) {
 
     const tableau =
-        document.querySelector("#schedule-body");
+        document.querySelector(
+            "#schedule-body"
+        );
 
     const titre =
-        document.querySelector("#schedule-title");
+        document.querySelector(
+            "#schedule-title"
+        );
 
 
     if (!tableau) {
@@ -721,8 +848,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
     }
 
 
-    // Pour chaque jour, mémoriser les lignes
-    // déjà occupées par un rowspan
     const cellulesOccupees = {
 
         lundi: {},
@@ -739,10 +864,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
             const ligne =
                 document.createElement("tr");
 
-
-            // ======================================
-            // COLONNE DES HORAIRES
-            // ======================================
 
             const celluleHoraire =
                 document.createElement("td");
@@ -775,14 +896,8 @@ function afficherEmploiDuTemps(periode = "Q1") {
                 );
 
 
-            // ======================================
-            // JOURS
-            // ======================================
-
             jours.forEach(jour => {
 
-                // Cette cellule est déjà couverte
-                // par un cours précédent
                 if (
                     cellulesOccupees[jour]
                     [indexHoraire]
@@ -796,10 +911,7 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     document.createElement("td");
 
 
-                // ==================================
-                // PAUSES
-                // ==================================
-
+                // Pauses
                 if (
                     horaire[0] === "09:50" &&
                     horaire[1] === "10:10"
@@ -808,9 +920,8 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     cellule.innerHTML =
                         "🔔 Récréation";
 
-                    cellule.classList.add(
-                        "break-cell"
-                    );
+                    cellule.className =
+                        "break-cell";
 
                     ligne.appendChild(
                         cellule
@@ -828,9 +939,8 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     cellule.innerHTML =
                         "🍽️ Pause déjeuner";
 
-                    cellule.classList.add(
-                        "lunch-cell"
-                    );
+                    cellule.className =
+                        "lunch-cell";
 
                     ligne.appendChild(
                         cellule
@@ -858,9 +968,8 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     cellule.innerHTML =
                         "⏸️ Pause";
 
-                    cellule.classList.add(
-                        "break-cell"
-                    );
+                    cellule.className =
+                        "break-cell";
 
                     ligne.appendChild(
                         cellule
@@ -878,9 +987,8 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     cellule.innerHTML =
                         "🏁 Fin";
 
-                    cellule.classList.add(
-                        "end-cell"
-                    );
+                    cellule.className =
+                        "end-cell";
 
                     ligne.appendChild(
                         cellule
@@ -889,10 +997,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     return;
                 }
 
-
-                // ==================================
-                // RECHERCHER LE COURS
-                // ==================================
 
                 const cours =
                     obtenirCoursAvecModifications(
@@ -918,7 +1022,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                     });
 
 
-                // Aucun cours
                 if (!cours) {
 
                     ligne.appendChild(
@@ -939,10 +1042,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                         cours.fin
                     );
 
-
-                // ==================================
-                // CALCUL DU ROWSPAN
-                // ==================================
 
                 let rowspan = 1;
 
@@ -984,7 +1083,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
                         rowspan;
 
 
-                    // Marquer les lignes couvertes
                     for (
                         let i = indexHoraire + 1;
                         i <
@@ -998,19 +1096,11 @@ function afficherEmploiDuTemps(periode = "Q1") {
                 }
 
 
-                // ==================================
-                // COULEUR
-                // ==================================
-
                 const classeCouleur =
                     obtenirClasseCouleur(
                         cours.matiere
                     );
 
-
-                // ==================================
-                // CONTENU
-                // ==================================
 
                 cellule.innerHTML = `
 
@@ -1078,50 +1168,38 @@ function afficherEmploiDuTemps(periode = "Q1") {
                 `;
 
 
-                // ==================================
-                // MODIFIER
-                // ==================================
-
-                const boutonModifier =
-                    cellule.querySelector(
+                cellule
+                    .querySelector(
                         ".edit-schedule-course"
+                    )
+                    ?.addEventListener(
+                        "click",
+                        evenement => {
+
+                            evenement.stopPropagation();
+
+                            modifierCours(
+                                cours.id
+                            );
+                        }
                     );
 
 
-                boutonModifier?.addEventListener(
-                    "click",
-                    evenement => {
-
-                        evenement.stopPropagation();
-
-                        modifierCours(
-                            cours.id
-                        );
-                    }
-                );
-
-
-                // ==================================
-                // SUPPRIMER
-                // ==================================
-
-                const boutonSupprimer =
-                    cellule.querySelector(
+                cellule
+                    .querySelector(
                         ".delete-schedule-course"
+                    )
+                    ?.addEventListener(
+                        "click",
+                        evenement => {
+
+                            evenement.stopPropagation();
+
+                            supprimerCours(
+                                cours.id
+                            );
+                        }
                     );
-
-
-                boutonSupprimer?.addEventListener(
-                    "click",
-                    evenement => {
-
-                        evenement.stopPropagation();
-
-                        supprimerCours(
-                            cours.id
-                        );
-                    }
-                );
 
 
                 ligne.appendChild(
@@ -1134,7 +1212,6 @@ function afficherEmploiDuTemps(periode = "Q1") {
             tableau.appendChild(
                 ligne
             );
-
         }
     );
 }
@@ -1224,7 +1301,8 @@ function ajouterCours() {
 
     const cours = {
 
-        id: Date.now(),
+        id:
+            `perso-${Date.now()}`,
 
         periode,
         jour,
@@ -1267,19 +1345,6 @@ function ajouterCours() {
     }
 
 
-    const selectPeriode =
-        document.querySelector(
-            "#schedule-period"
-        );
-
-
-    if (selectPeriode) {
-
-        selectPeriode.value =
-            periode;
-    }
-
-
     const bouton =
         formulaire?.querySelector(
             'button[type="submit"]'
@@ -1294,7 +1359,7 @@ function ajouterCours() {
 
 
     alert(
-        `✅ ${matiere} a été ajouté à ton emploi du temps ${periode}.`
+        `✅ ${matiere} a été ajouté.`
     );
 }
 
@@ -1336,84 +1401,87 @@ function modifierCours(id) {
     }
 
 
-    const periode =
-        document.querySelector(
-            "#schedule-period"
-        );
+    const champs = {
 
-    const jour =
-        document.querySelector(
-            "#schedule-day"
-        );
+        periode:
+            document.querySelector(
+                "#schedule-period"
+            ),
 
-    const matiere =
-        document.querySelector(
-            "#schedule-subject"
-        );
+        jour:
+            document.querySelector(
+                "#schedule-day"
+            ),
 
-    const debut =
-        document.querySelector(
-            "#schedule-start"
-        );
+        matiere:
+            document.querySelector(
+                "#schedule-subject"
+            ),
 
-    const fin =
-        document.querySelector(
-            "#schedule-end"
-        );
+        debut:
+            document.querySelector(
+                "#schedule-start"
+            ),
 
-    const professeur =
-        document.querySelector(
-            "#schedule-teacher"
-        );
+        fin:
+            document.querySelector(
+                "#schedule-end"
+            ),
 
-    const salle =
-        document.querySelector(
-            "#schedule-room"
-        );
+        professeur:
+            document.querySelector(
+                "#schedule-teacher"
+            ),
 
-    const description =
-        document.querySelector(
-            "#schedule-description"
-        );
+        salle:
+            document.querySelector(
+                "#schedule-room"
+            ),
+
+        description:
+            document.querySelector(
+                "#schedule-description"
+            )
+    };
 
 
-    if (periode) {
-        periode.value =
-            resultat.periode || cours.periode;
+    if (champs.periode) {
+        champs.periode.value =
+            resultat.periode;
     }
 
-    if (jour) {
-        jour.value =
-            resultat.jour || cours.jour;
+    if (champs.jour) {
+        champs.jour.value =
+            resultat.jour;
     }
 
-    if (matiere) {
-        matiere.value =
+    if (champs.matiere) {
+        champs.matiere.value =
             cours.matiere;
     }
 
-    if (debut) {
-        debut.value =
+    if (champs.debut) {
+        champs.debut.value =
             cours.debut;
     }
 
-    if (fin) {
-        fin.value =
+    if (champs.fin) {
+        champs.fin.value =
             cours.fin;
     }
 
-    if (professeur) {
-        professeur.value =
+    if (champs.professeur) {
+        champs.professeur.value =
             cours.professeur || "";
     }
 
-    if (salle) {
-        salle.value =
+    if (champs.salle) {
+        champs.salle.value =
             cours.salle || "";
     }
 
-    if (description) {
-        description.value =
+    if (champs.description) {
+        champs.description.value =
             cours.description || "";
     }
 
@@ -1549,34 +1617,8 @@ function enregistrerModification() {
     }
 
 
-    const resultat =
-        trouverCours(id);
-
-
-    if (!resultat) {
-
-        alert(
-            "❌ Impossible de trouver ce cours."
-        );
-
-        return;
-    }
-
-
     const personnalises =
         recupererCoursPersonnalises();
-
-
-    // ======================================
-    // SAUVEGARDER LA MODIFICATION
-    // ======================================
-
-    const index =
-        personnalises.findIndex(
-            cours =>
-                String(cours.id) ===
-                String(id)
-        );
 
 
     const nouveauCours = {
@@ -1594,27 +1636,26 @@ function enregistrerModification() {
     };
 
 
-    if (index !== -1) {
-
-        personnalises[index] =
-            nouveauCours;
-
-    } else {
-
-        personnalises.push(
-            nouveauCours
+    // IMPORTANT :
+    // on supprime toutes les anciennes versions
+    // du même cours.
+    const autresCours =
+        personnalises.filter(
+            cours =>
+                String(cours.id) !==
+                String(id)
         );
-    }
 
 
-    sauvegarderCoursPersonnalises(
-        personnalises
+    autresCours.push(
+        nouveauCours
     );
 
 
-    // ======================================
-    // FIN
-    // ======================================
+    sauvegarderCoursPersonnalises(
+        autresCours
+    );
+
 
     formulaire.removeAttribute(
         "data-editing-id"
@@ -1637,15 +1678,15 @@ function enregistrerModification() {
     formulaire.reset();
 
 
-    const selectPeriode =
+    if (
         document.querySelector(
             "#schedule-period"
-        );
+        )
+    ) {
 
-
-    if (selectPeriode) {
-
-        selectPeriode.value =
+        document.querySelector(
+            "#schedule-period"
+        ).value =
             periode;
     }
 
@@ -1656,7 +1697,7 @@ function enregistrerModification() {
 
 
     alert(
-        `✅ ${matiere} a été modifié.`
+        `✅ ${matiere} a bien été modifié.`
     );
 }
 
@@ -1696,9 +1737,21 @@ function supprimerCours(id) {
         recupererCoursPersonnalises();
 
 
-    if (resultat.type === "personnalise") {
+    const idsBase =
+        obtenirIdsCoursDeBase();
 
-        const nouveauxCours =
+
+    // ==========================================
+    // COURS AJOUTÉ PERSONNELLEMENT
+    // ==========================================
+
+    if (
+        !idsBase.has(
+            String(id)
+        )
+    ) {
+
+        const nouveaux =
             personnalises.filter(
                 cours =>
                     String(cours.id) !==
@@ -1707,12 +1760,24 @@ function supprimerCours(id) {
 
 
         sauvegarderCoursPersonnalises(
-            nouveauxCours
+            nouveaux
         );
 
     } else {
 
-        personnalises.push({
+        // ======================================
+        // COURS DE BASE
+        // ======================================
+
+        const sansAncienneVersion =
+            personnalises.filter(
+                cours =>
+                    String(cours.id) !==
+                    String(id)
+            );
+
+
+        sansAncienneVersion.push({
 
             id,
 
@@ -1727,7 +1792,7 @@ function supprimerCours(id) {
 
 
         sauvegarderCoursPersonnalises(
-            personnalises
+            sansAncienneVersion
         );
     }
 
@@ -1735,11 +1800,1169 @@ function supprimerCours(id) {
     afficherEmploiDuTemps(
         resultat.periode || "Q1"
     );
+
+
+    alert(
+        "🗑️ Le cours a été supprimé."
+    );
 }
 
 
 // ==========================================
-// INITIALISER LE FORMULAIRE
+// GESTION DES ABSENCES DES PROFESSEURS
+// ==========================================
+
+function recupererAbsencesProfesseurs() {
+
+    try {
+
+        const donnees =
+            JSON.parse(
+                localStorage.getItem(
+                    ABSENCES_KEY
+                )
+            );
+
+        return Array.isArray(donnees)
+            ? donnees
+            : [];
+
+    } catch (erreur) {
+
+        console.error(
+            "Erreur absences :",
+            erreur
+        );
+
+        return [];
+    }
+}
+
+
+function sauvegarderAbsencesProfesseurs(
+    absences
+) {
+
+    localStorage.setItem(
+        ABSENCES_KEY,
+        JSON.stringify(absences)
+    );
+}
+
+
+// ==========================================
+// OBTENIR LE LUNDI D'UNE SEMAINE
+// ==========================================
+
+function obtenirLundi(date) {
+
+    const resultat =
+        new Date(date);
+
+
+    const jour =
+        resultat.getDay();
+
+
+    const difference =
+        jour === 0
+            ? -6
+            : 1 - jour;
+
+
+    resultat.setDate(
+        resultat.getDate() +
+        difference
+    );
+
+
+    return resultat;
+}
+
+
+function formatDateLocale(date) {
+
+    return date.toLocaleDateString(
+        "fr-FR",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
+}
+
+
+function obtenirCleSemaine(date) {
+
+    const lundi =
+        obtenirLundi(date);
+
+
+    return lundi
+        .toISOString()
+        .split("T")[0];
+}
+
+
+// ==========================================
+// CRÉER LA SECTION ABSENCES
+// ==========================================
+
+function creerSectionAbsences() {
+
+    if (
+        document.querySelector(
+            "#prof-absences-section"
+        )
+    ) {
+
+        return;
+    }
+
+
+    const section =
+        document.createElement("section");
+
+
+    section.id =
+        "prof-absences-section";
+
+
+    section.innerHTML = `
+
+        <div class="prof-absence-header">
+
+            <h2>
+                👨‍🏫 Absences des professeurs
+            </h2>
+
+            <p>
+                Note ici les professeurs absents chaque semaine.
+            </p>
+
+        </div>
+
+
+        <form
+            id="prof-absence-form"
+            class="prof-absence-form"
+        >
+
+            <div class="absence-field">
+
+                <label for="absence-week">
+                    📅 Semaine du
+                </label>
+
+                <input
+                    type="date"
+                    id="absence-week"
+                    required
+                >
+
+            </div>
+
+
+            <div class="absence-field">
+
+                <label for="absence-period">
+                    📚 Trimestre
+                </label>
+
+                <select id="absence-period">
+
+                    <option value="Q1">
+                        Q1
+                    </option>
+
+                    <option value="Q2">
+                        Q2
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="absence-field">
+
+                <label for="absence-day">
+                    📆 Jour
+                </label>
+
+                <select id="absence-day">
+
+                    <option value="lundi">
+                        Lundi
+                    </option>
+
+                    <option value="mardi">
+                        Mardi
+                    </option>
+
+                    <option value="mercredi">
+                        Mercredi
+                    </option>
+
+                    <option value="jeudi">
+                        Jeudi
+                    </option>
+
+                    <option value="vendredi">
+                        Vendredi
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="absence-field">
+
+                <label for="absence-course">
+                    📚 Cours
+                </label>
+
+                <select
+                    id="absence-course"
+                    required
+                ></select>
+
+            </div>
+
+
+            <div class="absence-field">
+
+                <label for="absence-replacement">
+                    🔄 Remplacement
+                </label>
+
+                <select id="absence-replacement">
+
+                    <option value="non">
+                        ❌ Pas de remplacement
+                    </option>
+
+                    <option value="oui">
+                        ✅ Professeur remplacé
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="absence-field absence-comment">
+
+                <label for="absence-comment">
+                    📝 Remarque
+                </label>
+
+                <textarea
+                    id="absence-comment"
+                    rows="3"
+                    placeholder="Ex : cours annulé, heure libre..."
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="absence-save-button"
+            >
+                ➕ Enregistrer l'absence
+            </button>
+
+        </form>
+
+
+        <div
+            id="absence-current-week"
+            class="absence-current-week"
+        ></div>
+
+
+        <div
+            id="absence-history"
+            class="absence-history"
+        ></div>
+
+    `;
+
+
+    const emploi =
+        document.querySelector(
+            "#schedule-body"
+        );
+
+
+    const tableau =
+        emploi?.closest("table");
+
+
+    if (
+        tableau &&
+        tableau.parentElement
+    ) {
+
+        tableau.parentElement.appendChild(
+            section
+        );
+
+    } else {
+
+        document.body.appendChild(
+            section
+        );
+    }
+
+
+    initialiserFormulaireAbsences();
+}
+
+
+// ==========================================
+// METTRE À JOUR LES COURS DU FORMULAIRE
+// ==========================================
+
+function mettreAJourListeCoursAbsence() {
+
+    const periode =
+        document.querySelector(
+            "#absence-period"
+        )?.value || "Q1";
+
+
+    const jour =
+        document.querySelector(
+            "#absence-day"
+        )?.value || "lundi";
+
+
+    const select =
+        document.querySelector(
+            "#absence-course"
+        );
+
+
+    if (!select) {
+        return;
+    }
+
+
+    const cours =
+        obtenirCoursAvecModifications(
+            periode,
+            jour
+        );
+
+
+    select.innerHTML = "";
+
+
+    if (cours.length === 0) {
+
+        select.innerHTML = `
+            <option value="">
+                Aucun cours ce jour
+            </option>
+        `;
+
+        return;
+    }
+
+
+    cours.forEach(coursItem => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            coursItem.id;
+
+
+        option.textContent =
+            `${coursItem.debut}–${coursItem.fin} — ${coursItem.matiere} — ${coursItem.professeur || "Professeur non indiqué"}`;
+
+
+        select.appendChild(
+            option
+        );
+    });
+}
+
+
+// ==========================================
+// ENREGISTRER UNE ABSENCE
+// ==========================================
+
+function enregistrerAbsenceProfesseur() {
+
+    const semaine =
+        document.querySelector(
+            "#absence-week"
+        )?.value;
+
+
+    const periode =
+        document.querySelector(
+            "#absence-period"
+        )?.value;
+
+
+    const jour =
+        document.querySelector(
+            "#absence-day"
+        )?.value;
+
+
+    const courseId =
+        document.querySelector(
+            "#absence-course"
+        )?.value;
+
+
+    const remplacement =
+        document.querySelector(
+            "#absence-replacement"
+        )?.value;
+
+
+    const commentaire =
+        document.querySelector(
+            "#absence-comment"
+        )?.value.trim();
+
+
+    if (
+        !semaine ||
+        !periode ||
+        !jour ||
+        !courseId
+    ) {
+
+        alert(
+            "⚠️ Merci de remplir les informations de l'absence."
+        );
+
+        return;
+    }
+
+
+    const cours =
+        obtenirCoursAvecModifications(
+            periode,
+            jour
+        ).find(
+            element =>
+                String(element.id) ===
+                String(courseId)
+        );
+
+
+    if (!cours) {
+
+        alert(
+            "❌ Impossible de trouver le cours."
+        );
+
+        return;
+    }
+
+
+    const absences =
+        recupererAbsencesProfesseurs();
+
+
+    const nouvelleAbsence = {
+
+        id:
+            `absence-${Date.now()}`,
+
+        semaine:
+            obtenirCleSemaine(semaine),
+
+        periode,
+
+        jour,
+
+        coursId:
+            courseId,
+
+        debut:
+            cours.debut,
+
+        fin:
+            cours.fin,
+
+        matiere:
+            cours.matiere,
+
+        professeur:
+            cours.professeur,
+
+        salle:
+            cours.salle,
+
+        remplacement:
+            remplacement === "oui",
+
+        commentaire,
+
+        dateCreation:
+            new Date().toISOString()
+    };
+
+
+    absences.push(
+        nouvelleAbsence
+    );
+
+
+    sauvegarderAbsencesProfesseurs(
+        absences
+    );
+
+
+    document.querySelector(
+        "#absence-comment"
+    ).value = "";
+
+
+    afficherHistoriqueAbsences();
+
+
+    alert(
+        `✅ Absence de ${cours.professeur || "professeur"} enregistrée.`
+    );
+}
+
+
+// ==========================================
+// SUPPRIMER UNE ABSENCE
+// ==========================================
+
+function supprimerAbsence(id) {
+
+    const confirmation =
+        confirm(
+            "Voulez-vous supprimer cette absence ?"
+        );
+
+
+    if (!confirmation) {
+        return;
+    }
+
+
+    const absences =
+        recupererAbsencesProfesseurs();
+
+
+    const nouvellesAbsences =
+        absences.filter(
+            absence =>
+                String(absence.id) !==
+                String(id)
+        );
+
+
+    sauvegarderAbsencesProfesseurs(
+        nouvellesAbsences
+    );
+
+
+    afficherHistoriqueAbsences();
+}
+
+
+// ==========================================
+// AFFICHER L'HISTORIQUE
+// ==========================================
+
+function afficherHistoriqueAbsences() {
+
+    const conteneur =
+        document.querySelector(
+            "#absence-history"
+        );
+
+
+    if (!conteneur) {
+        return;
+    }
+
+
+    const absences =
+        recupererAbsencesProfesseurs();
+
+
+    if (absences.length === 0) {
+
+        conteneur.innerHTML = `
+
+            <div class="absence-empty">
+
+                <h3>
+                    📋 Historique des absences
+                </h3>
+
+                <p>
+                    Aucune absence de professeur enregistrée pour le moment.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    // Regrouper par semaine
+    const semaines = {};
+
+
+    absences.forEach(absence => {
+
+        if (!semaines[absence.semaine]) {
+
+            semaines[absence.semaine] = [];
+        }
+
+
+        semaines[absence.semaine].push(
+            absence
+        );
+    });
+
+
+    const cles =
+        Object.keys(
+            semaines
+        ).sort().reverse();
+
+
+    conteneur.innerHTML = `
+
+        <h3>
+            📋 Historique des absences
+        </h3>
+
+    `;
+
+
+    cles.forEach(semaine => {
+
+        const dateLundi =
+            obtenirLundi(
+                `${semaine}T00:00:00`
+            );
+
+
+        const bloc =
+            document.createElement(
+                "div"
+            );
+
+
+        bloc.className =
+            "absence-week";
+
+
+        const nombre =
+            semaines[semaine].length;
+
+
+        bloc.innerHTML = `
+
+            <div class="absence-week-title">
+
+                <strong>
+                    📅 Semaine du
+                    ${formatDateLocale(dateLundi)}
+                </strong>
+
+                <span>
+                    ${nombre}
+                    absence${nombre > 1 ? "s" : ""}
+                </span>
+
+            </div>
+
+            <div class="absence-week-list"></div>
+
+        `;
+
+
+        const liste =
+            bloc.querySelector(
+                ".absence-week-list"
+            );
+
+
+        semaines[semaine]
+            .sort(
+                (a, b) =>
+                    jours.indexOf(a.jour) -
+                    jours.indexOf(b.jour)
+            )
+            .forEach(absence => {
+
+                const element =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                element.className =
+                    "absence-item";
+
+
+                const remplacement =
+                    absence.remplacement
+                        ? "🔄 Professeur remplacé"
+                        : "❌ Aucun remplacement";
+
+
+                element.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${absence.matiere}
+                        </strong>
+
+                        <span>
+                            ${absence.jour}
+                            •
+                            ${absence.debut}
+                            → ${absence.fin}
+                        </span>
+
+                        <span>
+                            👨‍🏫
+                            ${absence.professeur || "Professeur non indiqué"}
+                        </span>
+
+                        <span>
+                            ${remplacement}
+                        </span>
+
+                        ${
+                            absence.commentaire
+                                ? `
+                                    <small>
+                                        📝 ${absence.commentaire}
+                                    </small>
+                                  `
+                                : ""
+                        }
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="delete-absence"
+                        data-id="${absence.id}"
+                    >
+                        🗑️
+                    </button>
+
+                `;
+
+
+                element
+                    .querySelector(
+                        ".delete-absence"
+                    )
+                    ?.addEventListener(
+                        "click",
+                        () => {
+
+                            supprimerAbsence(
+                                absence.id
+                            );
+                        }
+                    );
+
+
+                liste.appendChild(
+                    element
+                );
+            });
+
+
+        conteneur.appendChild(
+            bloc
+        );
+    });
+}
+
+
+// ==========================================
+// INITIALISER LES ABSENCES
+// ==========================================
+
+function initialiserFormulaireAbsences() {
+
+    const formulaire =
+        document.querySelector(
+            "#prof-absence-form"
+        );
+
+
+    if (!formulaire) {
+        return;
+    }
+
+
+    // Semaine actuelle
+    const inputSemaine =
+        document.querySelector(
+            "#absence-week"
+        );
+
+
+    if (inputSemaine) {
+
+        const aujourdHui =
+            new Date();
+
+
+        const lundi =
+            obtenirLundi(
+                aujourdHui
+            );
+
+
+        inputSemaine.value =
+            lundi
+                .toISOString()
+                .split("T")[0];
+    }
+
+
+    document.querySelector(
+        "#absence-period"
+    )?.addEventListener(
+        "change",
+        mettreAJourListeCoursAbsence
+    );
+
+
+    document.querySelector(
+        "#absence-day"
+    )?.addEventListener(
+        "change",
+        mettreAJourListeCoursAbsence
+    );
+
+
+    formulaire.addEventListener(
+        "submit",
+        evenement => {
+
+            evenement.preventDefault();
+
+            enregistrerAbsenceProfesseur();
+        }
+    );
+
+
+    mettreAJourListeCoursAbsence();
+
+    afficherHistoriqueAbsences();
+}
+
+
+// ==========================================
+// STYLE ABSENCES
+// ==========================================
+
+function ajouterStyleAbsences() {
+
+    if (
+        document.querySelector(
+            "#style-absences-professeurs"
+        )
+    ) {
+
+        return;
+    }
+
+
+    const style =
+        document.createElement("style");
+
+
+    style.id =
+        "style-absences-professeurs";
+
+
+    style.textContent = `
+
+        #prof-absences-section {
+
+            margin-top: 30px;
+            padding: 24px;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #f5f7ff
+                );
+
+            box-shadow:
+                0 8px 25px
+                rgba(0,0,0,0.08);
+
+        }
+
+
+        #prof-absences-section h2 {
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .prof-absence-header p {
+
+            margin-top: 0;
+
+            opacity: .7;
+
+        }
+
+
+        .prof-absence-form {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(
+                        190px,
+                        1fr
+                    )
+                );
+
+            gap: 15px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .absence-field {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 6px;
+
+        }
+
+
+        .absence-field label {
+
+            font-weight: 600;
+
+        }
+
+
+        .absence-field input,
+        .absence-field select,
+        .absence-field textarea {
+
+            padding: 10px 12px;
+
+            border: 1px solid
+                #d7dbe8;
+
+            border-radius: 10px;
+
+            font: inherit;
+
+        }
+
+
+        .absence-comment {
+
+            grid-column:
+                1 / -1;
+
+        }
+
+
+        .absence-save-button {
+
+            padding: 12px 18px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+        }
+
+
+        .absence-current-week {
+
+            margin-top: 25px;
+
+        }
+
+
+        .absence-history {
+
+            margin-top: 25px;
+
+        }
+
+
+        .absence-week {
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border-radius: 14px;
+
+            background: #fff;
+
+            border: 1px solid
+                #e2e5ee;
+
+        }
+
+
+        .absence-week-title {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .absence-week-title span {
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            background: #eef1ff;
+
+            font-size: .9em;
+
+        }
+
+
+        .absence-item {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            padding: 12px;
+
+            margin-top: 8px;
+
+            border-radius: 10px;
+
+            background: #f7f8fc;
+
+        }
+
+
+        .absence-item > div {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 3px;
+
+        }
+
+
+        .absence-item span {
+
+            font-size: .9em;
+
+            opacity: .8;
+
+        }
+
+
+        .absence-item small {
+
+            margin-top: 4px;
+
+        }
+
+
+        .delete-absence {
+
+            align-self: center;
+
+            border: 0;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            font-size: 1.1em;
+
+        }
+
+
+        .absence-empty {
+
+            padding: 20px;
+
+            text-align: center;
+
+            opacity: .7;
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+}
+
+
+// ==========================================
+// FORMULAIRE EMPLOI DU TEMPS
 // ==========================================
 
 function initialiserFormulaire() {
@@ -1761,13 +2984,14 @@ function initialiserFormulaire() {
             "click",
             () => {
 
-                const estCache =
-                    section.style.display === "none" ||
+                const cache =
+                    section.style.display ===
+                        "none" ||
                     section.style.display === "";
 
 
                 section.style.display =
-                    estCache
+                    cache
                         ? "block"
                         : "none";
             }
@@ -1807,7 +3031,7 @@ function initialiserFormulaire() {
 
 
 // ==========================================
-// DOM CONTENT LOADED
+// INITIALISATION GÉNÉRALE
 // ==========================================
 
 document.addEventListener(
@@ -1828,8 +3052,12 @@ document.addEventListener(
         initialiserFormulaire();
 
 
-        // Q1 par défaut
+        // Absences
+        ajouterStyleAbsences();
+        creerSectionAbsences();
 
+
+        // Q1 par défaut
         boutonQ1?.classList.add(
             "selected"
         );
@@ -1840,60 +3068,48 @@ document.addEventListener(
         );
 
 
-        // ======================================
-        // BOUTON Q1
-        // ======================================
+        // Q1
+        boutonQ1?.addEventListener(
+            "click",
+            () => {
 
-        if (boutonQ1) {
-
-            boutonQ1.addEventListener(
-                "click",
-                () => {
-
-                    afficherEmploiDuTemps(
-                        "Q1"
-                    );
+                afficherEmploiDuTemps(
+                    "Q1"
+                );
 
 
-                    boutonQ1.classList.add(
-                        "selected"
-                    );
+                boutonQ1.classList.add(
+                    "selected"
+                );
 
 
-                    boutonQ2?.classList.remove(
-                        "selected"
-                    );
-                }
-            );
-        }
+                boutonQ2?.classList.remove(
+                    "selected"
+                );
+            }
+        );
 
 
-        // ======================================
-        // BOUTON Q2
-        // ======================================
+        // Q2
+        boutonQ2?.addEventListener(
+            "click",
+            () => {
 
-        if (boutonQ2) {
-
-            boutonQ2.addEventListener(
-                "click",
-                () => {
-
-                    afficherEmploiDuTemps(
-                        "Q2"
-                    );
+                afficherEmploiDuTemps(
+                    "Q2"
+                );
 
 
-                    boutonQ2.classList.add(
-                        "selected"
-                    );
+                boutonQ2.classList.add(
+                    "selected"
+                );
 
 
-                    boutonQ1?.classList.remove(
-                        "selected"
-                    );
-                }
-            );
-        }
+                boutonQ1?.classList.remove(
+                    "selected"
+                );
+            }
+        );
 
     }
 );
