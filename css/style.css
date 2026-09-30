@@ -553,3 +553,40 @@ header p {
     background: #1d4ed8;
     transform: translateY(-1px);
 }
+/* ==========================================
+   ACTIONS DES COURS AJOUTÉS
+   ========================================== */
+
+.schedule-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.schedule-actions button {
+    border: none;
+    border-radius: 8px;
+    padding: 6px 9px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.schedule-actions button:hover {
+    transform: translateY(-1px);
+    opacity: 0.85;
+}
+
+.edit-schedule-course {
+    background: #e8f1ff;
+    color: #2563eb;
+}
+
+.delete-schedule-course {
+    background: #ffe8e8;
+    color: #dc2626;
+}
