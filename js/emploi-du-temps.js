@@ -453,7 +453,7 @@ function convertirMinutes(heure) {
     const [heures, minutes] =
         heure.split(":").map(Number);
 
-    return heures * 55 + minutes;
+    return heures * 60 + minutes;
 }
 
 
