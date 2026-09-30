@@ -783,7 +783,7 @@ function obtenirClasseCouleur(matiere) {
                 if (cours) {
 
                     cellule.innerHTML = `
-                        <div class="course">
+                        <div class="course ${obtenirClasseCouleur(cours.matiere)}">
 
                             <strong>
                                 ${cours.matiere}
