@@ -678,23 +678,23 @@ function afficherEmploiDuTemps(periode = "Q1") {
                                     ? `
                                         <div class="schedule-actions">
 
-                                            <button
-                                                class="edit-schedule-course"
-                                                data-id="${cours.id}"
-                                                title="Modifier"
-                                            >
-                                                ✏️
-                                            </button>
+    <button
+        type="button"
+        class="edit-schedule-course"
+        data-id="${cours.id}"
+    >
+        ✏️ Modifier
+    </button>
 
-                                            <button
-                                                class="delete-schedule-course"
-                                                data-id="${cours.id}"
-                                                title="Supprimer"
-                                            >
-                                                🗑️
-                                            </button>
+    <button
+        type="button"
+        class="delete-schedule-course"
+        data-id="${cours.id}"
+    >
+        🗑️ Supprimer
+    </button>
 
-                                        </div>
+</div>
                                       `
                                     : ""
                             }
