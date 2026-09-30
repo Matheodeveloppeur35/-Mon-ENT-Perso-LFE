@@ -33,7 +33,7 @@ const emploiDuTemps = {
                 professeur: "FREVILLE C.",
                 salle: "I173 LP FCS HG"
             },
-           {
+            {
                 id: "q1-lundi-4",
                 debut: "13:40",
                 fin: "14:35",
@@ -76,7 +76,7 @@ const emploiDuTemps = {
                 professeur: "LE PAPE D. / FREVILLE C.",
                 salle: "E220/At S.30.1"
             },
-          {
+            {
                 id: "q1-mardi-4",
                 debut: "13:40",
                 fin: "14:35",
@@ -183,7 +183,7 @@ const emploiDuTemps = {
                 debut: "16:40",
                 fin: "17:40",
                 matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E./LE PAPE D.",
+                professeur: "LUCIEN E. / LE PAPE D.",
                 salle: "S.29 AEPA ou S.30"
             }
         ],
@@ -210,7 +210,7 @@ const emploiDuTemps = {
                 debut: "10:10",
                 fin: "11:10",
                 matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J. ou LUCIEN E..",
+                professeur: "LETTELIER J. ou LUCIEN E.",
                 salle: "S.29 AEPA ou S.29B AEPA"
             },
             {
@@ -409,7 +409,7 @@ const STORAGE_KEY = "mon-ent-emploi-du-temps";
 
 
 // ==========================================
-// HORAIRES
+// HORAIRES EXACTS
 // ==========================================
 
 const horaires = [
@@ -458,7 +458,62 @@ function convertirMinutes(heure) {
 
 
 // ==========================================
-// COURS MODIFIÉS / AJOUTÉS
+// COULEURS DES MATIÈRES
+// ==========================================
+
+function obtenirClasseCouleur(matiere) {
+
+    const couleurs = {
+
+        "Français / Histoire-Géo / EMC":
+            "course-francais",
+
+        "Mathématiques":
+            "course-mathematiques",
+
+        "Anglais LV1":
+            "course-anglais",
+
+        "Sciences physiques":
+            "course-sciences",
+
+        "Enseignement professionnel":
+            "course-enseignement",
+
+        "Enseignement technologique professionnel":
+            "course-enseignement",
+
+        "Pratique professionnelle":
+            "course-pratique",
+
+        "Arts appliqués / Culture artistique":
+            "course-arts",
+
+        "Soutien au parcours":
+            "course-soutien",
+
+        "Prévention-Santé-Environnement":
+            "course-pse",
+
+        "Économie & Gestion":
+            "course-economie",
+
+        "Réalisation projet":
+            "course-projet",
+
+        "Éducation physique & sportive":
+            "course-eps",
+
+        "Co-intervention":
+            "course-cointervention"
+    };
+
+    return couleurs[matiere] || "";
+}
+
+
+// ==========================================
+// STOCKAGE DES COURS PERSONNALISÉS
 // ==========================================
 
 function recupererCoursPersonnalises() {
@@ -491,25 +546,73 @@ function sauvegarderCoursPersonnalises(cours) {
 
 
 // ==========================================
-// OBTENIR LES COURS
+// OBTENIR LES COURS AVEC MODIFICATIONS
 // ==========================================
 
-function obtenirCours(periode, jour) {
+function obtenirCoursAvecModifications(
+    periode,
+    jour
+) {
 
     const coursDeBase =
         emploiDuTemps[periode]?.[jour] || [];
 
-    const coursPersonnalises =
-        recupererCoursPersonnalises().filter(
+    const personnalises =
+        recupererCoursPersonnalises();
+
+
+    // Cours de base visibles
+    const coursVisibles =
+        coursDeBase.filter(cours => {
+
+            const suppression =
+                personnalises.find(
+                    element =>
+                        String(element.id) ===
+                        String(cours.id) &&
+                        element.supprime === true
+                );
+
+            return !suppression;
+        });
+
+
+    // Modifications / nouveaux cours
+    const modifications =
+        personnalises.filter(
             cours =>
                 cours.periode === periode &&
-                cours.jour === jour
+                cours.jour === jour &&
+                !cours.supprime
         );
 
-    return [
-        ...coursDeBase,
-        ...coursPersonnalises
-    ];
+
+    modifications.forEach(
+        modification => {
+
+            const index =
+                coursVisibles.findIndex(
+                    cours =>
+                        String(cours.id) ===
+                        String(modification.id)
+                );
+
+            if (index !== -1) {
+
+                coursVisibles[index] =
+                    modification;
+
+            } else {
+
+                coursVisibles.push(
+                    modification
+                );
+            }
+        }
+    );
+
+
+    return coursVisibles;
 }
 
 
@@ -519,25 +622,29 @@ function obtenirCours(periode, jour) {
 
 function trouverCours(id) {
 
-    // Chercher dans les cours personnalisés
     const personnalises =
         recupererCoursPersonnalises();
 
+
     const personnalise =
         personnalises.find(
-            cours => String(cours.id) === String(id)
+            cours =>
+                String(cours.id) === String(id) &&
+                !cours.supprime
         );
+
 
     if (personnalise) {
 
         return {
             cours: personnalise,
-            type: "personnalise"
+            type: "personnalise",
+            periode: personnalise.periode,
+            jour: personnalise.jour
         };
     }
 
 
-    // Chercher dans les cours de base
     for (const periode of ["Q1", "Q2"]) {
 
         for (const jour of jours) {
@@ -545,13 +652,30 @@ function trouverCours(id) {
             const liste =
                 emploiDuTemps[periode]?.[jour] || [];
 
+
             const index =
                 liste.findIndex(
                     cours =>
-                        String(cours.id) === String(id)
+                        String(cours.id) ===
+                        String(id)
                 );
 
+
             if (index !== -1) {
+
+                const suppression =
+                    personnalises.find(
+                        element =>
+                            String(element.id) ===
+                            String(id) &&
+                            element.supprime === true
+                    );
+
+
+                if (suppression) {
+                    return null;
+                }
+
 
                 return {
                     cours: liste[index],
@@ -564,12 +688,13 @@ function trouverCours(id) {
         }
     }
 
+
     return null;
 }
 
 
 // ==========================================
-// AFFICHAGE
+// AFFICHAGE DE L'EMPLOI DU TEMPS
 // ==========================================
 
 function afficherEmploiDuTemps(periode = "Q1") {
@@ -580,11 +705,14 @@ function afficherEmploiDuTemps(periode = "Q1") {
     const titre =
         document.querySelector("#schedule-title");
 
+
     if (!tableau) {
         return;
     }
 
+
     tableau.innerHTML = "";
+
 
     if (titre) {
 
@@ -593,107 +721,184 @@ function afficherEmploiDuTemps(periode = "Q1") {
     }
 
 
-    horaires.forEach(horaire => {
+    // Pour chaque jour, mémoriser les lignes
+    // déjà occupées par un rowspan
+    const cellulesOccupees = {
 
-        const ligne =
-            document.createElement("tr");
-
-        const celluleHoraire =
-            document.createElement("td");
-
-        celluleHoraire.innerHTML = `
-            <strong>${horaire[0]}</strong>
-            <br>
-            ${horaire[1]}
-        `;
-
-        ligne.appendChild(celluleHoraire);
+        lundi: {},
+        mardi: {},
+        mercredi: {},
+        jeudi: {},
+        vendredi: {}
+    };
 
 
-        jours.forEach(jour => {
+    horaires.forEach(
+        (horaire, indexHoraire) => {
 
-            const cellule =
+            const ligne =
+                document.createElement("tr");
+
+
+            // ======================================
+            // COLONNE DES HORAIRES
+            // ======================================
+
+            const celluleHoraire =
                 document.createElement("td");
 
-            const debut =
-                convertirMinutes(horaire[0]);
 
-            const fin =
-                convertirMinutes(horaire[1]);
+            celluleHoraire.className =
+                "schedule-time";
+
+
+            celluleHoraire.innerHTML = `
+                <strong>${horaire[0]}</strong>
+                <br>
+                ${horaire[1]}
+            `;
+
+
+            ligne.appendChild(
+                celluleHoraire
+            );
+
+
+            const debutTranche =
+                convertirMinutes(
+                    horaire[0]
+                );
+
+            const finTranche =
+                convertirMinutes(
+                    horaire[1]
+                );
 
 
             // ======================================
-            // PAUSES
+            // JOURS
             // ======================================
 
-            if (
-                horaire[0] === "09:50" &&
-                horaire[1] === "10:10"
-            ) {
+            jours.forEach(jour => {
 
-                cellule.innerHTML =
-                    "🔔 Récréation";
+                // Cette cellule est déjà couverte
+                // par un cours précédent
+                if (
+                    cellulesOccupees[jour]
+                    [indexHoraire]
+                ) {
 
-                cellule.classList.add(
-                    "break-cell"
-                );
-            }
+                    return;
+                }
 
-            else if (
-                horaire[0] === "12:00" &&
-                horaire[1] === "13:00"
-            ) {
 
-                cellule.innerHTML =
-                    "🍽️ Pause déjeuner";
+                const cellule =
+                    document.createElement("td");
 
-                cellule.classList.add(
-                    "lunch-cell"
-                );
-            }
 
-            else if (
-                (horaire[0] === "13:35" &&
-                    horaire[1] === "13:40") ||
+                // ==================================
+                // PAUSES
+                // ==================================
 
-                (horaire[0] === "14:35" &&
-                    horaire[1] === "14:40") ||
+                if (
+                    horaire[0] === "09:50" &&
+                    horaire[1] === "10:10"
+                ) {
 
-                (horaire[0] === "15:30" &&
-                    horaire[1] === "15:45")
-            ) {
+                    cellule.innerHTML =
+                        "🔔 Récréation";
 
-                cellule.innerHTML =
-                    "⏸️ Pause";
-
-                cellule.classList.add(
-                    "break-cell"
-                );
-            }
-
-            else if (
-                horaire[0] === "17:40" &&
-                horaire[1] === "17:55"
-            ) {
-
-                cellule.innerHTML =
-                    "🏁 Fin";
-
-                cellule.classList.add(
-                    "end-cell"
-                );
-            }
-
-            else {
-
-                const coursJour =
-                    obtenirCours(
-                        periode,
-                        jour
+                    cellule.classList.add(
+                        "break-cell"
                     );
 
+                    ligne.appendChild(
+                        cellule
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    horaire[0] === "12:00" &&
+                    horaire[1] === "13:00"
+                ) {
+
+                    cellule.innerHTML =
+                        "🍽️ Pause déjeuner";
+
+                    cellule.classList.add(
+                        "lunch-cell"
+                    );
+
+                    ligne.appendChild(
+                        cellule
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    (
+                        horaire[0] === "13:35" &&
+                        horaire[1] === "13:40"
+                    ) ||
+                    (
+                        horaire[0] === "14:35" &&
+                        horaire[1] === "14:40"
+                    ) ||
+                    (
+                        horaire[0] === "15:30" &&
+                        horaire[1] === "15:45"
+                    )
+                ) {
+
+                    cellule.innerHTML =
+                        "⏸️ Pause";
+
+                    cellule.classList.add(
+                        "break-cell"
+                    );
+
+                    ligne.appendChild(
+                        cellule
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    horaire[0] === "17:40" &&
+                    horaire[1] === "17:55"
+                ) {
+
+                    cellule.innerHTML =
+                        "🏁 Fin";
+
+                    cellule.classList.add(
+                        "end-cell"
+                    );
+
+                    ligne.appendChild(
+                        cellule
+                    );
+
+                    return;
+                }
+
+
+                // ==================================
+                // RECHERCHER LE COURS
+                // ==================================
+
                 const cours =
-                    coursJour.find(cours => {
+                    obtenirCoursAvecModifications(
+                        periode,
+                        jour
+                    ).find(cours => {
 
                         const debutCours =
                             convertirMinutes(
@@ -705,134 +910,233 @@ function afficherEmploiDuTemps(periode = "Q1") {
                                 cours.fin
                             );
 
+
                         return (
-                            debutCours < fin &&
-                            finCours > debut
+                            debutCours <= debutTranche &&
+                            finCours >= finTranche
                         );
                     });
 
 
-                if (cours) {
+                // Aucun cours
+                if (!cours) {
 
-                    cellule.innerHTML = `
-                        <div class="course">
+                    ligne.appendChild(
+                        cellule
+                    );
 
-                            <strong>
-                                ${cours.matiere}
-                            </strong>
-
-                            ${
-                                cours.professeur
-                                    ? `
-                                        <span>
-                                            👨‍🏫 ${cours.professeur}
-                                        </span>
-                                      `
-                                    : ""
-                            }
-
-                            ${
-                                cours.salle
-                                    ? `
-                                        <small>
-                                            📍 ${cours.salle}
-                                        </small>
-                                      `
-                                    : ""
-                            }
-
-                            ${
-                                cours.description
-                                    ? `
-                                        <small>
-                                            📝 ${cours.description}
-                                        </small>
-                                      `
-                                    : ""
-                            }
-
-                            <div class="schedule-actions">
-
-                                <button
-                                    type="button"
-                                    class="edit-schedule-course"
-                                    data-id="${cours.id}"
-                                >
-                                    ✏️ Modifier
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="delete-schedule-course"
-                                    data-id="${cours.id}"
-                                >
-                                    🗑️ Supprimer
-                                </button>
-
-                            </div>
-
-                        </div>
-                    `;
+                    return;
+                }
 
 
-                    // ==================================
-                    // MODIFIER
-                    // ==================================
+                const debutCours =
+                    convertirMinutes(
+                        cours.debut
+                    );
 
-                    const boutonModifier =
-                        cellule.querySelector(
-                            ".edit-schedule-course"
+                const finCours =
+                    convertirMinutes(
+                        cours.fin
+                    );
+
+
+                // ==================================
+                // CALCUL DU ROWSPAN
+                // ==================================
+
+                let rowspan = 1;
+
+
+                for (
+                    let i = indexHoraire + 1;
+                    i < horaires.length;
+                    i++
+                ) {
+
+                    const prochainDebut =
+                        convertirMinutes(
+                            horaires[i][0]
                         );
 
-                    if (boutonModifier) {
-
-                        boutonModifier.addEventListener(
-                            "click",
-                            evenement => {
-
-                                evenement.stopPropagation();
-
-                                modifierCours(
-                                    cours.id
-                                );
-                            }
-                        );
-                    }
-
-
-                    // ==================================
-                    // SUPPRIMER
-                    // ==================================
-
-                    const boutonSupprimer =
-                        cellule.querySelector(
-                            ".delete-schedule-course"
+                    const prochaineFin =
+                        convertirMinutes(
+                            horaires[i][1]
                         );
 
-                    if (boutonSupprimer) {
 
-                        boutonSupprimer.addEventListener(
-                            "click",
-                            evenement => {
+                    if (
+                        prochainDebut >= debutCours &&
+                        prochaineFin <= finCours
+                    ) {
 
-                                evenement.stopPropagation();
+                        rowspan++;
 
-                                supprimerCours(
-                                    cours.id
-                                );
-                            }
-                        );
+                    } else {
+
+                        break;
                     }
                 }
-            }
 
-            ligne.appendChild(cellule);
 
-        });
+                if (rowspan > 1) {
 
-        tableau.appendChild(ligne);
+                    cellule.rowSpan =
+                        rowspan;
 
-    });
+
+                    // Marquer les lignes couvertes
+                    for (
+                        let i = indexHoraire + 1;
+                        i <
+                        indexHoraire + rowspan;
+                        i++
+                    ) {
+
+                        cellulesOccupees[jour][i] =
+                            true;
+                    }
+                }
+
+
+                // ==================================
+                // COULEUR
+                // ==================================
+
+                const classeCouleur =
+                    obtenirClasseCouleur(
+                        cours.matiere
+                    );
+
+
+                // ==================================
+                // CONTENU
+                // ==================================
+
+                cellule.innerHTML = `
+
+                    <div class="course ${classeCouleur}">
+
+                        <strong>
+                            ${cours.matiere}
+                        </strong>
+
+                        <span>
+                            🕐 ${cours.debut} → ${cours.fin}
+                        </span>
+
+                        ${
+                            cours.professeur
+                                ? `
+                                    <span>
+                                        👨‍🏫 ${cours.professeur}
+                                    </span>
+                                  `
+                                : ""
+                        }
+
+                        ${
+                            cours.salle
+                                ? `
+                                    <small>
+                                        📍 ${cours.salle}
+                                    </small>
+                                  `
+                                : ""
+                        }
+
+                        ${
+                            cours.description
+                                ? `
+                                    <small>
+                                        📝 ${cours.description}
+                                    </small>
+                                  `
+                                : ""
+                        }
+
+                        <div class="schedule-actions">
+
+                            <button
+                                type="button"
+                                class="edit-schedule-course"
+                                data-id="${cours.id}"
+                            >
+                                ✏️ Modifier
+                            </button>
+
+                            <button
+                                type="button"
+                                class="delete-schedule-course"
+                                data-id="${cours.id}"
+                            >
+                                🗑️ Supprimer
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+
+
+                // ==================================
+                // MODIFIER
+                // ==================================
+
+                const boutonModifier =
+                    cellule.querySelector(
+                        ".edit-schedule-course"
+                    );
+
+
+                boutonModifier?.addEventListener(
+                    "click",
+                    evenement => {
+
+                        evenement.stopPropagation();
+
+                        modifierCours(
+                            cours.id
+                        );
+                    }
+                );
+
+
+                // ==================================
+                // SUPPRIMER
+                // ==================================
+
+                const boutonSupprimer =
+                    cellule.querySelector(
+                        ".delete-schedule-course"
+                    );
+
+
+                boutonSupprimer?.addEventListener(
+                    "click",
+                    evenement => {
+
+                        evenement.stopPropagation();
+
+                        supprimerCours(
+                            cours.id
+                        );
+                    }
+                );
+
+
+                ligne.appendChild(
+                    cellule
+                );
+
+            });
+
+
+            tableau.appendChild(
+                ligne
+            );
+
+        }
+    );
 }
 
 
@@ -841,6 +1145,12 @@ function afficherEmploiDuTemps(periode = "Q1") {
 // ==========================================
 
 function ajouterCours() {
+
+    const formulaire =
+        document.querySelector(
+            "#schedule-form"
+        );
+
 
     const periode =
         document.querySelector(
@@ -930,7 +1240,11 @@ function ajouterCours() {
     const coursExistants =
         recupererCoursPersonnalises();
 
-    coursExistants.push(cours);
+
+    coursExistants.push(
+        cours
+    );
+
 
     sauvegarderCoursPersonnalises(
         coursExistants
@@ -942,14 +1256,10 @@ function ajouterCours() {
     );
 
 
-    const formulaire =
-        document.querySelector(
-            "#schedule-form"
-        );
+    formulaire?.reset();
+
 
     if (formulaire) {
-
-        formulaire.reset();
 
         formulaire.removeAttribute(
             "data-editing-id"
@@ -957,15 +1267,24 @@ function ajouterCours() {
     }
 
 
-    document.querySelector(
-        "#schedule-period"
-    ).value = periode;
+    const selectPeriode =
+        document.querySelector(
+            "#schedule-period"
+        );
+
+
+    if (selectPeriode) {
+
+        selectPeriode.value =
+            periode;
+    }
 
 
     const bouton =
         formulaire?.querySelector(
             'button[type="submit"]'
         );
+
 
     if (bouton) {
 
@@ -989,6 +1308,7 @@ function modifierCours(id) {
     const resultat =
         trouverCours(id);
 
+
     if (!resultat) {
 
         alert(
@@ -1008,6 +1328,7 @@ function modifierCours(id) {
             "#add-schedule-section"
         );
 
+
     if (section) {
 
         section.style.display =
@@ -1015,59 +1336,93 @@ function modifierCours(id) {
     }
 
 
-    // ======================================
-    // REMPLIR LE FORMULAIRE
-    // ======================================
+    const periode =
+        document.querySelector(
+            "#schedule-period"
+        );
 
-    document.querySelector(
-        "#schedule-period"
-    ).value =
-        resultat.periode || cours.periode;
+    const jour =
+        document.querySelector(
+            "#schedule-day"
+        );
 
-    document.querySelector(
-        "#schedule-day"
-    ).value =
-        resultat.jour || cours.jour;
+    const matiere =
+        document.querySelector(
+            "#schedule-subject"
+        );
 
-    document.querySelector(
-        "#schedule-subject"
-    ).value =
-        cours.matiere;
+    const debut =
+        document.querySelector(
+            "#schedule-start"
+        );
 
-    document.querySelector(
-        "#schedule-start"
-    ).value =
-        cours.debut;
+    const fin =
+        document.querySelector(
+            "#schedule-end"
+        );
 
-    document.querySelector(
-        "#schedule-end"
-    ).value =
-        cours.fin;
+    const professeur =
+        document.querySelector(
+            "#schedule-teacher"
+        );
 
-    document.querySelector(
-        "#schedule-teacher"
-    ).value =
-        cours.professeur || "";
+    const salle =
+        document.querySelector(
+            "#schedule-room"
+        );
 
-    document.querySelector(
-        "#schedule-room"
-    ).value =
-        cours.salle || "";
-
-    document.querySelector(
-        "#schedule-description"
-    ).value =
-        cours.description || "";
+    const description =
+        document.querySelector(
+            "#schedule-description"
+        );
 
 
-    // ======================================
-    // MODE MODIFICATION
-    // ======================================
+    if (periode) {
+        periode.value =
+            resultat.periode || cours.periode;
+    }
+
+    if (jour) {
+        jour.value =
+            resultat.jour || cours.jour;
+    }
+
+    if (matiere) {
+        matiere.value =
+            cours.matiere;
+    }
+
+    if (debut) {
+        debut.value =
+            cours.debut;
+    }
+
+    if (fin) {
+        fin.value =
+            cours.fin;
+    }
+
+    if (professeur) {
+        professeur.value =
+            cours.professeur || "";
+    }
+
+    if (salle) {
+        salle.value =
+            cours.salle || "";
+    }
+
+    if (description) {
+        description.value =
+            cours.description || "";
+    }
+
 
     const formulaire =
         document.querySelector(
             "#schedule-form"
         );
+
 
     if (!formulaire) {
         return;
@@ -1078,14 +1433,11 @@ function modifierCours(id) {
         id;
 
 
-    // ======================================
-    // BOUTON
-    // ======================================
-
     const bouton =
         formulaire.querySelector(
             'button[type="submit"]'
         );
+
 
     if (bouton) {
 
@@ -1112,6 +1464,7 @@ function enregistrerModification() {
             "#schedule-form"
         );
 
+
     if (!formulaire) {
         return;
     }
@@ -1119,6 +1472,11 @@ function enregistrerModification() {
 
     const id =
         formulaire.dataset.editingId;
+
+
+    if (!id) {
+        return;
+    }
 
 
     const periode =
@@ -1162,10 +1520,6 @@ function enregistrerModification() {
         ).value.trim();
 
 
-    // ======================================
-    // VÉRIFICATIONS
-    // ======================================
-
     if (
         !periode ||
         !jour ||
@@ -1198,6 +1552,7 @@ function enregistrerModification() {
     const resultat =
         trouverCours(id);
 
+
     if (!resultat) {
 
         alert(
@@ -1208,192 +1563,69 @@ function enregistrerModification() {
     }
 
 
+    const personnalises =
+        recupererCoursPersonnalises();
+
+
     // ======================================
-    // COURS PERSONNALISÉ
+    // SAUVEGARDER LA MODIFICATION
     // ======================================
 
-    if (resultat.type === "personnalise") {
-
-        const cours =
-            recupererCoursPersonnalises();
-
-        const index =
-            cours.findIndex(
-                element =>
-                    String(element.id) === String(id)
-            );
-
-        if (index === -1) {
-            return;
-        }
+    const index =
+        personnalises.findIndex(
+            cours =>
+                String(cours.id) ===
+                String(id)
+        );
 
 
-        cours[index] = {
+    const nouveauCours = {
 
-            ...cours[index],
+        id,
 
-            periode,
-            jour,
-            matiere,
-            debut,
-            fin,
-            professeur,
-            salle,
-            description
-        };
+        periode,
+        jour,
+        debut,
+        fin,
+        matiere,
+        professeur,
+        salle,
+        description
+    };
 
 
-        sauvegarderCoursPersonnalises(
-            cours
+    if (index !== -1) {
+
+        personnalises[index] =
+            nouveauCours;
+
+    } else {
+
+        personnalises.push(
+            nouveauCours
         );
     }
 
 
-    // ======================================
-    // COURS DE BASE
-    // ======================================
-
-    else {
-
-        const ancienPeriode =
-            resultat.periode;
-
-        const ancienJour =
-            resultat.jour;
-
-        const cours =
-            emploiDuTemps[
-                ancienPeriode
-            ][ancienJour][resultat.index];
-
-
-        cours.debut =
-            debut;
-
-        cours.fin =
-            fin;
-
-        cours.matiere =
-            matiere;
-
-        cours.professeur =
-            professeur;
-
-        cours.salle =
-            salle;
-
-        cours.description =
-            description;
-
-
-        // Si on déplace le cours vers une
-        // autre période ou un autre jour,
-        // on le retire de sa position initiale
-        // et on l'enregistre comme personnalisé.
-
-        if (
-            ancienPeriode !== periode ||
-            ancienJour !== jour
-        ) {
-
-            emploiDuTemps[
-                ancienPeriode
-            ][ancienJour].splice(
-                resultat.index,
-                1
-            );
-
-
-            const coursDeplace = {
-
-                id,
-
-                periode,
-                jour,
-                debut,
-                fin,
-                matiere,
-                professeur,
-                salle,
-                description
-            };
-
-
-            const personnalises =
-                recupererCoursPersonnalises();
-
-            personnalises.push(
-                coursDeplace
-            );
-
-            sauvegarderCoursPersonnalises(
-                personnalises
-            );
-        }
-
-        else {
-
-            // Sauvegarder aussi la modification
-            // du cours de base afin qu'elle reste
-            // après actualisation.
-
-            const personnalises =
-                recupererCoursPersonnalises();
-
-            const indexExistant =
-                personnalises.findIndex(
-                    element =>
-                        String(element.id) ===
-                        String(id)
-                );
-
-            const copie = {
-
-                id,
-
-                periode,
-                jour,
-                debut,
-                fin,
-                matiere,
-                professeur,
-                salle,
-                description
-            };
-
-
-            if (indexExistant === -1) {
-
-                personnalises.push(
-                    copie
-                );
-
-            } else {
-
-                personnalises[
-                    indexExistant
-                ] = copie;
-            }
-
-
-            sauvegarderCoursPersonnalises(
-                personnalises
-            );
-        }
-    }
+    sauvegarderCoursPersonnalises(
+        personnalises
+    );
 
 
     // ======================================
-    // FIN MODIFICATION
+    // FIN
     // ======================================
 
-    delete formulaire.dataset.editingId;
+    formulaire.removeAttribute(
+        "data-editing-id"
+    );
 
 
     const bouton =
         formulaire.querySelector(
             'button[type="submit"]'
         );
+
 
     if (bouton) {
 
@@ -1404,9 +1636,18 @@ function enregistrerModification() {
 
     formulaire.reset();
 
-    document.querySelector(
-        "#schedule-period"
-    ).value = periode;
+
+    const selectPeriode =
+        document.querySelector(
+            "#schedule-period"
+        );
+
+
+    if (selectPeriode) {
+
+        selectPeriode.value =
+            periode;
+    }
 
 
     afficherEmploiDuTemps(
@@ -1429,6 +1670,7 @@ function supprimerCours(id) {
     const resultat =
         trouverCours(id);
 
+
     if (!resultat) {
 
         alert(
@@ -1444,46 +1686,31 @@ function supprimerCours(id) {
             `Voulez-vous vraiment supprimer "${resultat.cours.matiere}" ?`
         );
 
+
     if (!confirmation) {
         return;
     }
 
 
-    // ======================================
-    // COURS PERSONNALISÉ
-    // ======================================
+    const personnalises =
+        recupererCoursPersonnalises();
+
 
     if (resultat.type === "personnalise") {
 
-        const cours =
-            recupererCoursPersonnalises();
-
         const nouveauxCours =
-            cours.filter(
-                element =>
-                    String(element.id) !==
+            personnalises.filter(
+                cours =>
+                    String(cours.id) !==
                     String(id)
             );
+
 
         sauvegarderCoursPersonnalises(
             nouveauxCours
         );
-    }
 
-
-    // ======================================
-    // COURS DE BASE
-    // ======================================
-
-    else {
-
-        const personnalises =
-            recupererCoursPersonnalises();
-
-
-        // On ajoute une instruction spéciale
-        // pour mémoriser que ce cours de base
-        // a été supprimé.
+    } else {
 
         personnalises.push({
 
@@ -1505,114 +1732,10 @@ function supprimerCours(id) {
     }
 
 
-    const boutonQ2 =
-        document.querySelector(
-            "#q2-button"
-        );
-
-    const periode =
-        boutonQ2?.classList.contains("selected")
-            ? "Q2"
-            : "Q1";
-
-
     afficherEmploiDuTemps(
-        periode
+        resultat.periode || "Q1"
     );
 }
-
-
-// ==========================================
-// OBTENIR LES COURS AVEC MODIFICATIONS
-// ==========================================
-
-function obtenirCoursAvecModifications(
-    periode,
-    jour
-) {
-
-    const coursDeBase =
-        emploiDuTemps[periode]?.[jour] || [];
-
-    const personnalises =
-        recupererCoursPersonnalises();
-
-
-    // Cours de base non supprimés
-    const coursVisibles =
-        coursDeBase.filter(
-            cours => {
-
-                const suppression =
-                    personnalises.find(
-                        element =>
-                            String(element.id) ===
-                            String(cours.id) &&
-                            element.supprime === true
-                    );
-
-                return !suppression;
-            }
-        );
-
-
-    // Modifications de cours de base
-    const modifications =
-        personnalises.filter(
-            cours =>
-                cours.periode === periode &&
-                cours.jour === jour &&
-                !cours.supprime
-        );
-
-
-    // Remplacer les cours de base
-    // lorsqu'une modification existe
-
-    modifications.forEach(
-        modification => {
-
-            const index =
-                coursVisibles.findIndex(
-                    cours =>
-                        String(cours.id) ===
-                        String(modification.id)
-                );
-
-            if (index !== -1) {
-
-                coursVisibles[index] =
-                    modification;
-            }
-        }
-    );
-
-
-    // Ajouter les nouveaux cours
-    const nouveaux =
-        modifications.filter(
-            modification =>
-                !coursDeBase.some(
-                    cours =>
-                        String(cours.id) ===
-                        String(modification.id)
-                )
-        );
-
-
-    return [
-        ...coursVisibles,
-        ...nouveaux
-    ];
-}
-
-
-// ==========================================
-// REMPLACER LA FONCTION D'AFFICHAGE
-// ==========================================
-
-const ancienneFonctionAfficher =
-    afficherEmploiDuTemps;
 
 
 // ==========================================
@@ -1641,6 +1764,7 @@ function initialiserFormulaire() {
                 const estCache =
                     section.style.display === "none" ||
                     section.style.display === "";
+
 
                 section.style.display =
                     estCache
@@ -1676,7 +1800,6 @@ function initialiserFormulaire() {
 
                     ajouterCours();
                 }
-
             }
         );
     }
@@ -1705,7 +1828,7 @@ document.addEventListener(
         initialiserFormulaire();
 
 
-        // Q1 sélectionné par défaut
+        // Q1 par défaut
 
         boutonQ1?.classList.add(
             "selected"
@@ -1718,7 +1841,7 @@ document.addEventListener(
 
 
         // ======================================
-        // Q1
+        // BOUTON Q1
         // ======================================
 
         if (boutonQ1) {
@@ -1731,9 +1854,11 @@ document.addEventListener(
                         "Q1"
                     );
 
+
                     boutonQ1.classList.add(
                         "selected"
                     );
+
 
                     boutonQ2?.classList.remove(
                         "selected"
@@ -1744,7 +1869,7 @@ document.addEventListener(
 
 
         // ======================================
-        // Q2
+        // BOUTON Q2
         // ======================================
 
         if (boutonQ2) {
@@ -1757,9 +1882,11 @@ document.addEventListener(
                         "Q2"
                     );
 
+
                     boutonQ2.classList.add(
                         "selected"
                     );
+
 
                     boutonQ1?.classList.remove(
                         "selected"
