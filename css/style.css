@@ -590,3 +590,93 @@ header p {
     background: #ffe8e8;
     color: #dc2626;
 }
+/* ==========================================
+   COULEURS DES MATIÈRES
+   ========================================== */
+
+.course {
+    border-radius: 12px;
+    padding: 10px;
+    margin: 2px;
+    color: #1f2937;
+    border-left: 5px solid;
+    box-sizing: border-box;
+}
+
+/* Français / Histoire-Géo / EMC */
+.course-francais {
+    background: #ffe4e6;
+    border-color: #e11d48;
+}
+
+/* Mathématiques */
+.course-mathematiques {
+    background: #dbeafe;
+    border-color: #2563eb;
+}
+
+/* Anglais */
+.course-anglais {
+    background: #ede9fe;
+    border-color: #7c3aed;
+}
+
+/* Sciences physiques */
+.course-sciences {
+    background: #dcfce7;
+    border-color: #16a34a;
+}
+
+/* Enseignement professionnel */
+.course-enseignement {
+    background: #fef3c7;
+    border-color: #d97706;
+}
+
+/* Pratique professionnelle */
+.course-pratique {
+    background: #ffedd5;
+    border-color: #ea580c;
+}
+
+/* Arts appliqués */
+.course-arts {
+    background: #fce7f3;
+    border-color: #db2777;
+}
+
+/* Soutien au parcours */
+.course-soutien {
+    background: #cffafe;
+    border-color: #0891b2;
+}
+
+/* PSE */
+.course-pse {
+    background: #d1fae5;
+    border-color: #059669;
+}
+
+/* Économie & Gestion */
+.course-economie {
+    background: #fef9c3;
+    border-color: #ca8a04;
+}
+
+/* Réalisation projet */
+.course-projet {
+    background: #e0e7ff;
+    border-color: #4f46e5;
+}
+
+/* EPS */
+.course-eps {
+    background: #ccfbf1;
+    border-color: #0f766e;
+}
+
+/* Co-intervention */
+.course-cointervention {
+    background: #f3f4f6;
+    border-color: #6b7280;
+}
