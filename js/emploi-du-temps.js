@@ -28,20 +28,12 @@ const emploiDuTemps = {
             {
                 id: "q1-lundi-2",
                 debut: "10:10",
-                fin: "11:10",
+                fin: "12:00",
                 matiere: "Français / Histoire-Géo / EMC",
                 professeur: "FREVILLE C.",
                 salle: "I173 LP FCS HG"
             },
-            {
-                id: "q1-lundi-3",
-                debut: "11:10",
-                fin: "12:00",
-                matiere: "Prévention-Santé-Environnement",
-                professeur: "BASSO K.",
-                salle: "E014 HP"
-            },
-            {
+           {
                 id: "q1-lundi-4",
                 debut: "13:40",
                 fin: "14:35",
@@ -71,28 +63,20 @@ const emploiDuTemps = {
             {
                 id: "q1-mardi-1",
                 debut: "08:55",
-                fin: "09:50",
+                fin: "11:35",
                 matiere: "Enseignement professionnel",
                 professeur: "LUCIEN E.",
                 salle: "S.31 info"
             },
             {
                 id: "q1-mardi-2",
-                debut: "10:10",
-                fin: "11:10",
+                debut: "11:40",
+                fin: "12:30",
                 matiere: "Co-intervention",
-                professeur: "LE PAPE D. / MESLARD S.",
-                salle: "E220"
+                professeur: "LE PAPE D. / FREVILLE C.",
+                salle: "E220/At S.30.1"
             },
-            {
-                id: "q1-mardi-3",
-                debut: "11:10",
-                fin: "12:00",
-                matiere: "Mathématiques",
-                professeur: "MESLARD S.",
-                salle: "E218 (MECA)"
-            },
-            {
+          {
                 id: "q1-mardi-4",
                 debut: "13:40",
                 fin: "14:35",
@@ -117,7 +101,7 @@ const emploiDuTemps = {
                 fin: "08:55",
                 matiere: "Éducation physique & sportive",
                 professeur: "HAMON F.",
-                salle: ""
+                salle: "Lycée ou Salle ext"
             },
             {
                 id: "q1-mercredi-2",
@@ -125,7 +109,7 @@ const emploiDuTemps = {
                 fin: "09:50",
                 matiere: "Éducation physique & sportive",
                 professeur: "HAMON F.",
-                salle: ""
+                salle: "Lycée ou Salle ext"
             },
             {
                 id: "q1-mercredi-3",
@@ -133,7 +117,7 @@ const emploiDuTemps = {
                 fin: "11:05",
                 matiere: "Anglais LV1",
                 professeur: "COLOMBEL S.",
-                salle: "I366"
+                salle: "I358"
             },
             {
                 id: "q1-mercredi-4",
@@ -199,8 +183,8 @@ const emploiDuTemps = {
                 debut: "16:40",
                 fin: "17:40",
                 matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E.",
-                salle: "S.29 AEPA"
+                professeur: "LUCIEN E./LE PAPE D.",
+                salle: "S.29 AEPA ou S.30"
             }
         ],
 
@@ -210,32 +194,32 @@ const emploiDuTemps = {
                 debut: "08:00",
                 fin: "08:55",
                 matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEPA"
+                professeur: "LETTELIER J. ou LUCIEN E.",
+                salle: "S.29 AEPA ou S.29B AEPA"
             },
             {
                 id: "q1-vendredi-2",
                 debut: "08:55",
                 fin: "09:50",
                 matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEPA"
+                professeur: "LETTELIER J. ou LUCIEN E.",
+                salle: "S.29 AEPA ou S.29B AEPA"
             },
             {
                 id: "q1-vendredi-3",
                 debut: "10:10",
                 fin: "11:10",
                 matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEPA"
+                professeur: "LETTELIER J. ou LUCIEN E..",
+                salle: "S.29 AEPA ou S.29B AEPA"
             },
             {
                 id: "q1-vendredi-4",
                 debut: "11:10",
                 fin: "12:00",
                 matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29 AEPA"
+                professeur: "LETTELIER J. ou LUCIEN E.",
+                salle: "S.29 AEPA ou S.29B AEPA"
             },
             {
                 id: "q1-vendredi-5",
@@ -251,7 +235,7 @@ const emploiDuTemps = {
                 fin: "16:40",
                 matiere: "Éducation physique & sportive",
                 professeur: "HAMON F.",
-                salle: ""
+                salle: "Lycée ou Salle ext"
             },
             {
                 id: "q1-vendredi-7",
@@ -259,7 +243,7 @@ const emploiDuTemps = {
                 fin: "17:25",
                 matiere: "Éducation physique & sportive",
                 professeur: "HAMON F.",
-                salle: ""
+                salle: "Lycée ou Salle ext"
             }
         ]
     },
@@ -275,7 +259,7 @@ const emploiDuTemps = {
             {
                 id: "q2-lundi-1",
                 debut: "08:00",
-                fin: "10:10",
+                fin: "09:50",
                 matiere: "Soutien au parcours",
                 professeur: "LE PAPE D.",
                 salle: "S.32 info"
@@ -309,19 +293,19 @@ const emploiDuTemps = {
         mardi: [
             {
                 id: "q2-mardi-1",
-                debut: "08:00",
-                fin: "10:10",
+                debut: "08:30",
+                fin: "11:10",
                 matiere: "Enseignement technologique professionnel",
                 professeur: "LUCIEN E.",
                 salle: "S.31 info"
             },
             {
                 id: "q2-mardi-2",
-                debut: "10:10",
-                fin: "12:00",
+                debut: "11:40",
+                fin: "12:30",
                 matiere: "Co-intervention",
                 professeur: "LE PAPE D. / MESLARD S.",
-                salle: "E220"
+                salle: "E218 ou Atelier"
             },
             {
                 id: "q2-mardi-3",
@@ -382,8 +366,8 @@ const emploiDuTemps = {
                 debut: "14:40",
                 fin: "17:40",
                 matiere: "Pratique professionnelle",
-                professeur: "LUCIEN E.",
-                salle: "S.29 AEPA"
+                professeur: "LUCIEN E. ou LE PAPE D.",
+                salle: "S.29 AEPA ou S.30 INFO"
             }
         ],
 
@@ -393,21 +377,21 @@ const emploiDuTemps = {
                 debut: "08:00",
                 fin: "12:00",
                 matiere: "Pratique professionnelle",
-                professeur: "LETTELIER J.",
-                salle: "S.29B AEPA"
+                professeur: "LETTELIER J. ou LUCIEN E.",
+                salle: "S.29B AEPA ou S.29 AEPA"
             },
             {
                 id: "q2-vendredi-2",
                 debut: "14:40",
-                fin: "15:40",
+                fin: "15:30",
                 matiere: "Anglais LV1",
                 professeur: "COLOMBEL S.",
                 salle: "I366"
             },
             {
                 id: "q2-vendredi-3",
-                debut: "15:40",
-                fin: "17:40",
+                debut: "15:45",
+                fin: "17:25",
                 matiere: "Éducation physique & sportive",
                 professeur: "HAMON F.",
                 salle: ""
@@ -469,7 +453,7 @@ function convertirMinutes(heure) {
     const [heures, minutes] =
         heure.split(":").map(Number);
 
-    return heures * 60 + minutes;
+    return heures * 55 + minutes;
 }
 
 
@@ -636,59 +620,7 @@ function afficherEmploiDuTemps(periode = "Q1") {
 
             const fin =
                 convertirMinutes(horaire[1]);
-// ==========================================
-// COULEUR DE CHAQUE MATIÈRE
-// ==========================================
 
-function obtenirClasseCouleur(matiere) {
-
-    const couleurs = {
-
-        "Français / Histoire-Géo / EMC":
-            "course-francais",
-
-        "Mathématiques":
-            "course-mathematiques",
-
-        "Anglais LV1":
-            "course-anglais",
-
-        "Sciences physiques":
-            "course-sciences",
-
-        "Enseignement professionnel":
-            "course-enseignement",
-
-        "Enseignement technologique professionnel":
-            "course-enseignement",
-
-        "Pratique professionnelle":
-            "course-pratique",
-
-        "Arts appliqués / Culture artistique":
-            "course-arts",
-
-        "Soutien au parcours":
-            "course-soutien",
-
-        "Prévention-Santé-Environnement":
-            "course-pse",
-
-        "Économie & Gestion":
-            "course-economie",
-
-        "Réalisation projet":
-            "course-projet",
-
-        "Éducation physique & sportive":
-            "course-eps",
-
-        "Co-intervention":
-            "course-cointervention"
-    };
-
-    return couleurs[matiere] || "course";
-}
 
             // ======================================
             // PAUSES
@@ -783,7 +715,7 @@ function obtenirClasseCouleur(matiere) {
                 if (cours) {
 
                     cellule.innerHTML = `
-                        <div class="course ${obtenirClasseCouleur(cours.matiere)}">
+                        <div class="course">
 
                             <strong>
                                 ${cours.matiere}
