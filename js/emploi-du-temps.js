@@ -636,7 +636,59 @@ function afficherEmploiDuTemps(periode = "Q1") {
 
             const fin =
                 convertirMinutes(horaire[1]);
+// ==========================================
+// COULEUR DE CHAQUE MATIÈRE
+// ==========================================
 
+function obtenirClasseCouleur(matiere) {
+
+    const couleurs = {
+
+        "Français / Histoire-Géo / EMC":
+            "course-francais",
+
+        "Mathématiques":
+            "course-mathematiques",
+
+        "Anglais LV1":
+            "course-anglais",
+
+        "Sciences physiques":
+            "course-sciences",
+
+        "Enseignement professionnel":
+            "course-enseignement",
+
+        "Enseignement technologique professionnel":
+            "course-enseignement",
+
+        "Pratique professionnelle":
+            "course-pratique",
+
+        "Arts appliqués / Culture artistique":
+            "course-arts",
+
+        "Soutien au parcours":
+            "course-soutien",
+
+        "Prévention-Santé-Environnement":
+            "course-pse",
+
+        "Économie & Gestion":
+            "course-economie",
+
+        "Réalisation projet":
+            "course-projet",
+
+        "Éducation physique & sportive":
+            "course-eps",
+
+        "Co-intervention":
+            "course-cointervention"
+    };
+
+    return couleurs[matiere] || "course";
+}
 
             // ======================================
             // PAUSES
