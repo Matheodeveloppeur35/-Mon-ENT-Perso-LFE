@@ -1235,9 +1235,9 @@ function ajouterCours() {
         )?.value;
 
     const jour =
-        document.querySelector(
-            "#schedule-day"
-        )?.value;
+    document.querySelector(
+        "#schedule-day"
+    )?.value.toLowerCase();
 
     const matiere =
         document.querySelector(
@@ -1552,10 +1552,10 @@ function enregistrerModification() {
             "#schedule-period"
         ).value;
 
-    const jour =
-        document.querySelector(
-            "#schedule-day"
-        ).value;
+   const jour =
+    document.querySelector(
+        "#schedule-day"
+    ).value.toLowerCase();
 
     const matiere =
         document.querySelector(
