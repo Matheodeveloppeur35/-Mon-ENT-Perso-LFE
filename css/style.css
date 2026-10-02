@@ -680,3 +680,141 @@ header p {
     background: #f3f4f6;
     border-color: #6b7280;
 }
+/* ==========================================
+   🎨 COULEURS DES MATIÈRES - EMPLOI DU TEMPS
+   ========================================== */
+
+.course {
+    height: 100%;
+    min-height: 55px;
+
+    padding: 10px;
+    box-sizing: border-box;
+
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 4px;
+
+    transition: transform 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+.course:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.course strong {
+    font-size: 13px;
+    line-height: 1.25;
+}
+
+.course span,
+.course small {
+    font-size: 11px;
+    opacity: 0.85;
+}
+
+
+/* =========================
+   COULEURS DES MATIÈRES
+   ========================= */
+
+.course-francais {
+    background: #fee2e2;
+    border-left: 5px solid #dc2626;
+    color: #7f1d1d;
+}
+
+.course-mathematiques {
+    background: #dbeafe;
+    border-left: 5px solid #2563eb;
+    color: #1e3a8a;
+}
+
+.course-anglais {
+    background: #ede9fe;
+    border-left: 5px solid #7c3aed;
+    color: #4c1d95;
+}
+
+.course-sciences {
+    background: #cffafe;
+    border-left: 5px solid #0891b2;
+    color: #164e63;
+}
+
+.course-enseignement {
+    background: #ffedd5;
+    border-left: 5px solid #ea580c;
+    color: #7c2d12;
+}
+
+.course-pratique {
+    background: #dcfce7;
+    border-left: 5px solid #16a34a;
+    color: #14532d;
+}
+
+.course-arts {
+    background: #fce7f3;
+    border-left: 5px solid #db2777;
+    color: #831843;
+}
+
+.course-soutien {
+    background: #fef3c7;
+    border-left: 5px solid #d97706;
+    color: #78350f;
+}
+
+.course-pse {
+    background: #d1fae5;
+    border-left: 5px solid #059669;
+    color: #064e3b;
+}
+
+.course-economie {
+    background: #e0e7ff;
+    border-left: 5px solid #4f46e5;
+    color: #312e81;
+}
+
+.course-projet {
+    background: #f3e8ff;
+    border-left: 5px solid #9333ea;
+    color: #581c87;
+}
+
+.course-eps {
+    background: #ccfbf1;
+    border-left: 5px solid #0d9488;
+    color: #134e4a;
+}
+
+.course-cointervention {
+    background: #f1f5f9;
+    border-left: 5px solid #475569;
+    color: #1e293b;
+}
+
+
+/* ==========================================
+   🕐 CELLULES DE L'EDT
+   ========================================== */
+
+.schedule-table td {
+    vertical-align: middle;
+}
+
+.schedule-table th {
+    font-weight: bold;
+}
+
+.schedule-table td:has(.course) {
+    padding: 5px;
+}
