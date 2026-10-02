@@ -287,39 +287,34 @@
                         Jour
                     </label>
 
-                    <select
-                        id="schedule-day"
-                        required
-                    >
+                   <select
+    id="schedule-day"
+    required
+>
+    <option value="">
+        Sélectionner un jour
+    </option>
 
-                        <option value="">
-                            Sélectionner un jour
-                        <option value="">
-    Sélectionner un jour
-</option>
+    <option value="lundi">
+        Lundi
+    </option>
 
-<option value="lundi">
-    Lundi
-</option>
+    <option value="mardi">
+        Mardi
+    </option>
 
-<option value="mardi">
-    Mardi
-</option>
+    <option value="mercredi">
+        Mercredi
+    </option>
 
-<option value="mercredi">
-    Mercredi
-</option>
+    <option value="jeudi">
+        Jeudi
+    </option>
 
-<option value="jeudi">
-    Jeudi
-</option>
-
-<option value="vendredi">
-    Vendredi
-</option>
-
-                    </select>
-
+    <option value="vendredi">
+        Vendredi
+    </option>
+</select>
                 </div>
 
 
@@ -558,7 +553,201 @@
 
         </section>
 
+        <!-- ========================= -->
+        <!-- ABSENCES DES PROFESSEURS -->
+        <!-- ========================= -->
 
+        <section
+            class="schedule-form-section"
+            id="prof-absences-section"
+        >
+
+            <h2>
+                🧑‍🏫 Absences et remplacements
+            </h2>
+
+            <p>
+                Consulte et enregistre les absences ou remplacements
+                des professeurs pour chaque semaine.
+            </p>
+
+            <form
+                id="absence-form"
+                class="schedule-form"
+            >
+
+                <!-- SEMAINE -->
+
+                <div>
+                    <label for="absence-week">
+                        📅 Semaine
+                    </label>
+
+                    <input
+                        type="week"
+                        id="absence-week"
+                        required
+                    >
+                </div>
+
+
+                <!-- PÉRIODE -->
+
+                <div>
+                    <label for="absence-period">
+                        📚 Période
+                    </label>
+
+                    <select
+                        id="absence-period"
+                        required
+                    >
+
+                        <option value="Q1">
+                            Q1
+                        </option>
+
+                        <option value="Q2">
+                            Q2
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- JOUR -->
+
+                <div>
+                    <label for="absence-day">
+                        📆 Jour
+                    </label>
+
+                    <select
+                        id="absence-day"
+                        required
+                    >
+
+                        <option value="">
+                            Sélectionner un jour
+                        </option>
+
+                        <option value="lundi">
+                            Lundi
+                        </option>
+
+                        <option value="mardi">
+                            Mardi
+                        </option>
+
+                        <option value="mercredi">
+                            Mercredi
+                        </option>
+
+                        <option value="jeudi">
+                            Jeudi
+                        </option>
+
+                        <option value="vendredi">
+                            Vendredi
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- COURS -->
+
+                <div>
+                    <label for="absence-course">
+                        📖 Cours concerné
+                    </label>
+
+                    <input
+                        type="text"
+                        id="absence-course"
+                        placeholder="Ex : Mathématiques — 11h10"
+                        required
+                    >
+                </div>
+
+
+                <!-- PROFESSEUR -->
+
+                <div>
+                    <label for="absence-teacher">
+                        🧑‍🏫 Professeur absent
+                    </label>
+
+                    <input
+                        type="text"
+                        id="absence-teacher"
+                        placeholder="Ex : MESLARD S."
+                        required
+                    >
+                </div>
+
+
+                <!-- REMPLAÇANT -->
+
+                <div>
+                    <label for="absence-replacement">
+                        🔄 Remplaçant
+                    </label>
+
+                    <input
+                        type="text"
+                        id="absence-replacement"
+                        placeholder="Ex : M. DUPONT"
+                    >
+                </div>
+
+
+                <!-- COMMENTAIRE -->
+
+                <div class="full-width">
+
+                    <label for="absence-comment">
+                        📝 Commentaire
+                    </label>
+
+                    <input
+                        type="text"
+                        id="absence-comment"
+                        placeholder="Ex : Cours annulé, salle modifiée..."
+                    >
+
+                </div>
+
+
+                <!-- BOUTON -->
+
+                <div class="full-width">
+
+                    <button
+                        type="submit"
+                    >
+                        💾 Enregistrer l'absence
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- HISTORIQUE -->
+
+            <div
+                id="absence-history"
+                style="margin-top: 25px;"
+            >
+
+                <h3>
+                    📋 Historique
+                </h3>
+
+            </div>
+
+        </section>
     </main>
 
 
