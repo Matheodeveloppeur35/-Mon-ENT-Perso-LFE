@@ -387,48 +387,71 @@
              OUTILS
         ========================= -->
 
-        <section class="courses-tools">
+       <section class="courses-tools">
+
+    <!-- RECHERCHE -->
+    <div class="search-box">
+
+        <span>🔎</span>
+
+        <input
+            type="search"
+            id="search-course"
+            placeholder="Rechercher une matière ou un professeur..."
+            autocomplete="off"
+        >
+
+    </div>
 
 
-            <div class="search-box">
+    <!-- FILTRE -->
+    <div class="filter-box">
 
-                <span>🔎</span>
+        <select id="course-filter">
 
-                <input
-                    type="search"
-                    id="search-course"
-                    placeholder="Rechercher une matière, un professeur..."
-                    autocomplete="off"
-                >
+            <option value="all">
+                📚 Toutes les matières
+            </option>
 
-            </div>
+            <option value="general">
+                📘 Enseignement général
+            </option>
+
+            <option value="professional">
+                🛠️ Enseignement professionnel
+            </option>
+
+            <option value="other">
+                🎨 Autres
+            </option>
+
+        </select>
+
+    </div>
 
 
-            <div class="filter-box">
+    <!-- TRI -->
+    <div class="filter-box">
 
-                <select id="course-filter">
+        <select id="course-sort">
 
-                    <option value="all">
-                        📚 Toutes les matières
-                    </option>
+            <option value="default">
+                ↕️ Ordre habituel
+            </option>
 
-                    <option value="general">
-                        📘 Enseignement général
-                    </option>
+            <option value="az">
+                🔤 A → Z
+            </option>
 
-                    <option value="professional">
-                        🛠️ Enseignement professionnel
-                    </option>
+            <option value="za">
+                🔤 Z → A
+            </option>
 
-                    <option value="other">
-                        🎨 Autres
-                    </option>
+        </select>
 
-                </select>
+    </div>
 
-            </div>
-
-        </section>
+</section>
 
 
         <div
