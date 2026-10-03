@@ -2,312 +2,50 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Accueil - Mon ENT Perso LFE</title>
 
-    <link rel="stylesheet" href="css/style.css">
-
-    <style>
-
-        /* ========================= */
-        /* ACCUEIL */
-        /* ========================= */
-
-        .dashboard-header {
-            margin-bottom: 25px;
-        }
-
-        .dashboard-header h1 {
-            margin-bottom: 8px;
-        }
-
-        .dashboard-header p {
-            color: #64748b;
-        }
-
-
-        /* ========================= */
-        /* CARTE BIENVENUE */
-        /* ========================= */
-
-        .welcome-card {
-            background: linear-gradient(
-                135deg,
-                #2563eb,
-                #4f46e5
-            );
-
-            color: white;
-
-            padding: 30px;
-
-            border-radius: 20px;
-
-            margin-bottom: 25px;
-
-            box-shadow:
-                0 10px 30px rgba(37, 99, 235, 0.20);
-        }
-
-        .welcome-card h2 {
-            margin-top: 0;
-            font-size: 26px;
-        }
-
-        .welcome-card p {
-            margin-bottom: 0;
-            opacity: 0.95;
-            line-height: 1.6;
-        }
-
-
-        /* ========================= */
-        /* STATISTIQUES */
-        /* ========================= */
-
-        .dashboard-stats {
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 15px;
-
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-
-            padding: 20px;
-
-            border-radius: 18px;
-
-            box-shadow:
-                0 5px 20px rgba(0,0,0,0.06);
-
-            text-align: center;
-
-            border-top: 5px solid #2563eb;
-        }
-
-        .stat-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .stat-number {
-            font-size: 30px;
-            font-weight: bold;
-            color: #0f172a;
-        }
-
-        .stat-label {
-            color: #64748b;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        .stat-homework {
-            border-top-color: #dc2626;
-        }
-
-        .stat-late {
-            border-top-color: #ef4444;
-        }
-
-        .stat-done {
-            border-top-color: #16a34a;
-        }
-
-        .stat-courses {
-            border-top-color: #2563eb;
-        }
-
-
-        /* ========================= */
-        /* GRILLE PRINCIPALE */
-        /* ========================= */
-
-        .dashboard-grid {
-            display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap: 25px;
-        }
-
-
-        /* ========================= */
-        /* BLOCS */
-        /* ========================= */
-
-        .dashboard-section {
-            background: white;
-
-            padding: 25px;
-
-            border-radius: 18px;
-
-            box-shadow:
-                0 5px 20px rgba(0,0,0,0.06);
-        }
-
-        .dashboard-section h2 {
-            margin-top: 0;
-
-            margin-bottom: 20px;
-
-            color: #0f172a;
-        }
-
-
-        /* ========================= */
-        /* ACCÈS RAPIDES */
-        /* ========================= */
-
-        .quick-links {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 12px;
-        }
-
-        .quick-link {
-            display: block;
-
-            padding: 16px;
-
-            background: #f8fafc;
-
-            border-radius: 12px;
-
-            text-decoration: none;
-
-            color: #0f172a;
-
-            font-weight: bold;
-
-            transition: 0.2s;
-        }
-
-        .quick-link:hover {
-            background: #eff6ff;
-
-            transform: translateY(-2px);
-        }
-
-
-        /* ========================= */
-        /* INFORMATIONS */
-        /* ========================= */
-
-        .info-item {
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            padding: 14px;
-
-            background: #f8fafc;
-
-            border-radius: 12px;
-
-            margin-bottom: 10px;
-        }
-
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .info-icon {
-            font-size: 25px;
-        }
-
-        .info-text strong {
-            display: block;
-
-            color: #0f172a;
-        }
-
-        .info-text span {
-            color: #64748b;
-
-            font-size: 14px;
-        }
-
-
-        /* ========================= */
-        /* MOBILE */
-        /* ========================= */
-
-        @media (max-width: 900px) {
-
-            .dashboard-stats {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-        @media (max-width: 500px) {
-
-            .dashboard-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .quick-links {
-                grid-template-columns: 1fr;
-            }
-
-            .welcome-card {
-                padding: 22px;
-            }
-
-        }
-
-    </style>
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 
 </head>
 
 
 <body>
 
-    <!-- ========================= -->
-    <!-- MENU -->
-    <!-- ========================= -->
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
 
     <aside class="sidebar">
 
         <div class="logo">
 
-            🎓
+            <div>🎓</div>
 
-            <h2>
-                Mon ENT
-            </h2>
+            <h2>Mon ENT</h2>
 
-            <span>
-                Perso LFE
-            </span>
+            <span>Perso LFE</span>
 
         </div>
 
 
         <nav>
 
-            <a href="index.html" class="active">
+            <a
+                href="index.html"
+                class="active"
+            >
                 🏠 Accueil
             </a>
 
@@ -336,268 +74,381 @@
     </aside>
 
 
-    <!-- ========================= -->
-    <!-- CONTENU -->
-    <!-- ========================= -->
+
+    <!-- =========================
+         CONTENU
+    ========================== -->
 
     <main class="main-content">
 
 
         <!-- EN-TÊTE -->
 
-        <header class="dashboard-header">
+        <header class="home-header">
 
-            <h1>
-                Bonjour Mathéo 👋
-            </h1>
+            <div>
 
-            <p>
-                Bienvenue sur ton espace scolaire personnel.
-            </p>
+                <h1>
+                    👋 Bienvenue sur ton ENT
+                </h1>
+
+                <p>
+                    Retrouvez rapidement toutes les informations
+                    importantes de ta scolarité.
+                </p>
+
+            </div>
+
+            <div class="home-date">
+
+                📅
+
+                <span id="current-date">
+                    Aujourd'hui
+                </span>
+
+            </div>
 
         </header>
 
 
-        <!-- ========================= -->
-        <!-- BIENVENUE -->
-        <!-- ========================= -->
 
-        <section class="welcome-card">
+        <!-- =========================
+             RACCOURCIS
+        ========================== -->
 
-            <h2>
-                🎓 Mon ENT Perso LFE
-            </h2>
+        <section class="quick-actions">
 
-            <p>
-                Retrouve rapidement tes cours, ton emploi du temps,
-                tes devoirs, tes notes et tes contrôles depuis
-                un seul espace.
-            </p>
+            <a
+                href="emploi-du-temps.html"
+                class="quick-action"
+            >
+
+                <span>📅</span>
+
+                <div>
+
+                    <strong>
+                        Emploi du temps
+                    </strong>
+
+                    <small>
+                        Voir Q1 et Q2
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="mes-cours.html"
+                class="quick-action"
+            >
+
+                <span>📚</span>
+
+                <div>
+
+                    <strong>
+                        Mes cours
+                    </strong>
+
+                    <small>
+                        Consulter tes cours
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="mes-devoirs.html"
+                class="quick-action"
+            >
+
+                <span>📝</span>
+
+                <div>
+
+                    <strong>
+                        Mes devoirs
+                    </strong>
+
+                    <small>
+                        Voir les devoirs
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="quick-action"
+            >
+
+                <span>📊</span>
+
+                <div>
+
+                    <strong>
+                        Mes notes
+                    </strong>
+
+                    <small>
+                        Bientôt disponible
+                    </small>
+
+                </div>
+
+            </a>
 
         </section>
 
 
-        <!-- ========================= -->
-        <!-- STATISTIQUES -->
-        <!-- ========================= -->
 
-        <section class="dashboard-stats">
-
-
-            <div class="stat-card stat-homework">
-
-                <div class="stat-icon">
-                    📝
-                </div>
-
-                <div
-                    class="stat-number"
-                    id="dashboard-homework"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    Devoirs à faire
-                </div>
-
-            </div>
-
-
-            <div class="stat-card stat-late">
-
-                <div class="stat-icon">
-                    🚨
-                </div>
-
-                <div
-                    class="stat-number"
-                    id="dashboard-late"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    Devoirs en retard
-                </div>
-
-            </div>
-
-
-            <div class="stat-card stat-done">
-
-                <div class="stat-icon">
-                    ✅
-                </div>
-
-                <div
-                    class="stat-number"
-                    id="dashboard-done"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    Devoirs terminés
-                </div>
-
-            </div>
-
-
-            <div class="stat-card stat-courses">
-
-                <div class="stat-icon">
-                    📚
-                </div>
-
-                <div
-                    class="stat-number"
-                    id="dashboard-courses"
-                >
-                    12
-                </div>
-
-                <div class="stat-label">
-                    Matières
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-        <!-- ========================= -->
-        <!-- BLOCS -->
-        <!-- ========================= -->
+        <!-- =========================
+             STATISTIQUES
+        ========================== -->
 
         <section class="dashboard-grid">
 
 
-            <!-- ACCÈS RAPIDES -->
+            <!-- PROCHAIN COURS -->
 
-            <div class="dashboard-section">
+            <div class="dashboard-card next-course-card">
 
-                <h2>
-                    ⚡ Accès rapides
-                </h2>
+                <div class="card-header">
 
+                    <h2>
+                        📅 Prochain cours
+                    </h2>
 
-                <div class="quick-links">
-
-                    <a
-                        href="emploi-du-temps.html"
-                        class="quick-link"
-                    >
-                        📅
-                        <br>
-                        Emploi du temps
+                    <a href="emploi-du-temps.html">
+                        Voir l'EDT
                     </a>
 
+                </div>
 
-                    <a
-                        href="mes-cours.html"
-                        class="quick-link"
-                    >
+
+                <div
+                    id="next-course"
+                    class="next-course-content"
+                >
+
+                    <div class="big-icon">
                         📚
-                        <br>
-                        Mes cours
-                    </a>
+                    </div>
 
+                    <div>
 
-                    <a
-                        href="mes-devoirs.html"
-                        class="quick-link"
-                    >
-                        📝
-                        <br>
-                        Mes devoirs
-                    </a>
+                        <strong>
+                            Consulte ton emploi du temps
+                        </strong>
 
+                        <span>
+                            Le prochain cours sera affiché ici.
+                        </span>
 
-                    <a
-                        href="#"
-                        class="quick-link"
-                    >
-                        📋
-                        <br>
-                        Mes contrôles
-                    </a>
+                    </div>
 
                 </div>
 
             </div>
 
 
+
+            <!-- DEVOIRS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>
+                        📝 Devoirs à venir
+                    </h2>
+
+                    <a href="mes-devoirs.html">
+                        Voir tout
+                    </a>
+
+                </div>
+
+
+                <div
+                    id="upcoming-homework"
+                    class="dashboard-list"
+                >
+
+                    <div class="empty-dashboard">
+
+                        <span>
+                            📝
+                        </span>
+
+                        <p>
+                            Aucun devoir à venir.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONTRÔLES -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>
+                        📋 Prochains contrôles
+                    </h2>
+
+                    <a href="#">
+                        Voir tout
+                    </a>
+
+                </div>
+
+
+                <div
+                    id="upcoming-tests"
+                    class="dashboard-list"
+                >
+
+                    <div class="empty-dashboard">
+
+                        <span>
+                            🧪
+                        </span>
+
+                        <p>
+                            Aucun contrôle enregistré.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- COURS RÉCENTS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>
+                        📚 Derniers cours
+                    </h2>
+
+                    <a href="mes-cours.html">
+                        Voir tout
+                    </a>
+
+                </div>
+
+
+                <div
+                    id="recent-courses"
+                    class="dashboard-list"
+                >
+
+                    <div class="empty-dashboard">
+
+                        <span>
+                            📚
+                        </span>
+
+                        <p>
+                            Aucun cours enregistré.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ABSENCES -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>
+                        🧑‍🏫 Absences / remplacements
+                    </h2>
+
+                    <a href="emploi-du-temps.html">
+                        Voir l'EDT
+                    </a>
+
+                </div>
+
+
+                <div
+                    id="recent-absences"
+                    class="dashboard-list"
+                >
+
+                    <div class="empty-dashboard">
+
+                        <span>
+                            👨‍🏫
+                        </span>
+
+                        <p>
+                            Aucune absence enregistrée.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
             <!-- INFORMATIONS -->
 
-            <div class="dashboard-section">
+            <div class="dashboard-card information-card">
 
-                <h2>
-                    📌 Mon espace
-                </h2>
+                <div class="card-header">
 
-
-                <div class="info-item">
-
-                    <div class="info-icon">
-                        🎓
-                    </div>
-
-                    <div class="info-text">
-
-                        <strong>
-                            Mon ENT Perso LFE
-                        </strong>
-
-                        <span>
-                            Ton espace scolaire personnel
-                        </span>
-
-                    </div>
+                    <h2>
+                        ℹ️ Mon ENT
+                    </h2>
 
                 </div>
 
 
-                <div class="info-item">
+                <div class="information-content">
 
-                    <div class="info-icon">
-                        💾
-                    </div>
+                    <p>
+                        🎓 <strong>Mon ENT Perso LFE</strong>
+                    </p>
 
-                    <div class="info-text">
+                    <p>
+                        Ton espace personnel pour centraliser
+                        tes cours, devoirs, notes, contrôles
+                        et ton emploi du temps.
+                    </p>
 
-                        <strong>
-                            Données enregistrées
-                        </strong>
-
-                        <span>
-                            Tes informations sont conservées
-                            dans ton navigateur.
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="info-item">
-
-                    <div class="info-icon">
-                        🔒
-                    </div>
-
-                    <div class="info-text">
-
-                        <strong>
-                            Espace personnel
-                        </strong>
-
-                        <span>
-                            Tes données restent sur ton appareil.
-                        </span>
-
-                    </div>
+                    <span class="offline-badge">
+                        💾 Données enregistrées localement
+                    </span>
 
                 </div>
 
@@ -610,93 +461,7 @@
     </main>
 
 
-    <!-- ========================= -->
-    <!-- SCRIPT -->
-    <!-- ========================= -->
-
-    <script>
-
-        // =========================
-        // STATISTIQUES DEVOIRS
-        // =========================
-
-        const devoirs =
-            JSON.parse(
-                localStorage.getItem("mes-devoirs")
-            ) || [];
-
-
-        const aujourdHui =
-            new Date();
-
-        aujourdHui.setHours(
-            0,
-            0,
-            0,
-            0
-        );
-
-
-        let aFaire = 0;
-        let enRetard = 0;
-        let termines = 0;
-
-
-        devoirs.forEach(function(devoir) {
-
-            if (devoir.done) {
-
-                termines++;
-
-                return;
-
-            }
-
-
-            if (devoir.date) {
-
-                const dateDevoir =
-                    new Date(
-                        devoir.date + "T00:00:00"
-                    );
-
-
-                if (dateDevoir < aujourdHui) {
-
-                    enRetard++;
-
-                }
-                else {
-
-                    aFaire++;
-
-                }
-
-            }
-            else {
-
-                aFaire++;
-
-            }
-
-        });
-
-
-        document.getElementById(
-            "dashboard-homework"
-        ).textContent = aFaire;
-
-
-        document.getElementById(
-            "dashboard-late"
-        ).textContent = enRetard;
-
-
-        document.getElementById(
-            "dashboard-done"
-        ).textContent = termines;
-
-    </script>
+    <script src="js/accueil.js"></script>
 
 </body>
 
