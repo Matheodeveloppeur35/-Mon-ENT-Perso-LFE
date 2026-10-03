@@ -1,27 +1,24 @@
-// =========================
+// ========================================
 // MES COURS
-// RECHERCHE + FILTRES
-// =========================
+// Recherche + filtres + tri
+// ========================================
 
-const searchInput =
-    document.getElementById("search-course");
+const searchInput = document.getElementById("search-course");
+const categoryFilter = document.getElementById("course-filter");
+const sortSelect = document.getElementById("course-sort");
 
-const filterSelect =
-    document.getElementById("course-filter");
+const coursesGrid = document.getElementById("courses-grid");
+const courseCards = Array.from(
+    document.querySelectorAll(".course-card")
+);
 
-const courseCards =
-    document.querySelectorAll(".course-card");
-
-const coursesCount =
-    document.getElementById("courses-count");
-
-const noResults =
-    document.getElementById("no-results");
+const coursesCount = document.getElementById("courses-count");
+const noResults = document.getElementById("no-results");
 
 
-// =========================
+// ========================================
 // FILTRER LES COURS
-// =========================
+// ========================================
 
 function filtrerCours() {
 
@@ -31,102 +28,175 @@ function filtrerCours() {
             .trim();
 
     const categorie =
-        filterSelect.value;
+        categoryFilter.value;
+
+    const tri =
+        sortSelect.value;
+
+
+    // ====================================
+    // TRI
+    // ====================================
+
+    let cartes = [...courseCards];
+
+
+    if (tri === "az") {
+
+        cartes.sort((a, b) => {
+
+            const nomA =
+                a.querySelector("h2")
+                    .textContent
+                    .trim();
+
+            const nomB =
+                b.querySelector("h2")
+                    .textContent
+                    .trim();
+
+            return nomA.localeCompare(
+                nomB,
+                "fr"
+            );
+
+        });
+
+    }
+
+
+    if (tri === "za") {
+
+        cartes.sort((a, b) => {
+
+            const nomA =
+                a.querySelector("h2")
+                    .textContent
+                    .trim();
+
+            const nomB =
+                b.querySelector("h2")
+                    .textContent
+                    .trim();
+
+            return nomB.localeCompare(
+                nomA,
+                "fr"
+            );
+
+        });
+
+    }
+
+
+    // Remettre les cartes dans le bon ordre
+    cartes.forEach(carte => {
+
+        coursesGrid.appendChild(carte);
+
+    });
+
+
+    // ====================================
+    // FILTRE
+    // ====================================
 
     let nombreVisible = 0;
 
 
-    courseCards.forEach(function(card) {
+    cartes.forEach(carte => {
 
-        const texte =
-            card.textContent.toLowerCase();
+        const nom =
+            carte.querySelector("h2")
+                .textContent
+                .toLowerCase();
 
-        const cardCategorie =
-            card.dataset.category;
+        const professeur =
+            carte.querySelector(".course-teacher")
+                .textContent
+                .toLowerCase();
+
+        const categorieCarte =
+            carte.dataset.category;
 
 
-        // Recherche
         const correspondRecherche =
-            texte.includes(recherche);
+            nom.includes(recherche) ||
+            professeur.includes(recherche);
 
 
-        // Catégorie
         const correspondCategorie =
             categorie === "all" ||
-            cardCategorie === categorie;
+            categorieCarte === categorie;
 
 
-        // Affichage
         if (
             correspondRecherche &&
             correspondCategorie
         ) {
 
-            card.style.display = "flex";
+            carte.style.display = "flex";
 
             nombreVisible++;
 
         } else {
 
-            card.style.display = "none";
+            carte.style.display = "none";
 
         }
 
     });
 
 
-    // =========================
+    // ====================================
     // COMPTEUR
-    // =========================
+    // ====================================
+
+    coursesCount.textContent =
+        nombreVisible === 1
+            ? "1 matière"
+            : `${nombreVisible} matières`;
+
+
+    // ====================================
+    // AUCUN RÉSULTAT
+    // ====================================
 
     if (nombreVisible === 0) {
 
-        coursesCount.textContent =
-            "Aucune matière trouvée";
-
-        noResults.style.display =
-            "block";
+        noResults.style.display = "block";
 
     } else {
 
-        coursesCount.textContent =
-            nombreVisible +
-            (
-                nombreVisible > 1
-                    ? " matières affichées"
-                    : " matière affichée"
-            );
-
-        noResults.style.display =
-            "none";
+        noResults.style.display = "none";
 
     }
 
 }
 
 
-// =========================
-// RECHERCHE
-// =========================
+// ========================================
+// ÉVÉNEMENTS
+// ========================================
 
 searchInput.addEventListener(
     "input",
     filtrerCours
 );
 
+categoryFilter.addEventListener(
+    "change",
+    filtrerCours
+);
 
-// =========================
-// FILTRE
-// =========================
-
-filterSelect.addEventListener(
+sortSelect.addEventListener(
     "change",
     filtrerCours
 );
 
 
-// =========================
-// AFFICHAGE INITIAL
-// =========================
+// ========================================
+// INITIALISATION
+// ========================================
 
 filtrerCours();
