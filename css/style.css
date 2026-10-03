@@ -818,3 +818,328 @@ header p {
 .schedule-table td:has(.course) {
     padding: 5px;
 }
+/* ==========================================
+   🎨 AMÉLIORATION VISUELLE DE L'EDT
+   JOURS • HORAIRES • PAUSES
+   ========================================== */
+
+
+/* ==========================================
+   📅 CONTENEUR DU TABLEAU
+   ========================================== */
+
+.schedule-table-container {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 15px;
+    margin-top: 25px;
+
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+
+    overflow-x: auto;
+}
+
+
+/* ==========================================
+   📊 TABLEAU
+   ========================================== */
+
+.schedule-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 5px;
+
+    min-width: 900px;
+}
+
+
+/* ==========================================
+   🗓️ EN-TÊTES DES JOURS
+   ========================================== */
+
+.schedule-table thead th {
+    background: #1e3a8a;
+    color: white;
+
+    padding: 14px 10px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-align: center;
+
+    box-shadow: 0 3px 8px rgba(30, 58, 138, 0.15);
+}
+
+
+/* Première colonne = horaires */
+
+.schedule-table thead th:first-child {
+    background: #172554;
+}
+
+
+/* Couleur différente pour chaque jour */
+
+.schedule-table thead th:nth-child(2) {
+    background: #2563eb;
+}
+
+.schedule-table thead th:nth-child(3) {
+    background: #059669;
+}
+
+.schedule-table thead th:nth-child(4) {
+    background: #7c3aed;
+}
+
+.schedule-table thead th:nth-child(5) {
+    background: #ea580c;
+}
+
+.schedule-table thead th:nth-child(6) {
+    background: #db2777;
+}
+
+
+/* ==========================================
+   🕐 COLONNE DES HORAIRES
+   ========================================== */
+
+.schedule-table td:first-child {
+    background: #f1f5f9;
+
+    color: #334155;
+
+    font-weight: 700;
+
+    font-size: 12px;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    padding: 10px 8px;
+
+    border-radius: 10px;
+
+    min-width: 90px;
+
+    border: 1px solid #e2e8f0;
+}
+
+
+/* ==========================================
+   📚 CELLULES DES COURS
+   ========================================== */
+
+.schedule-table td:not(:first-child) {
+    min-height: 55px;
+
+    padding: 5px;
+
+    text-align: center;
+
+    vertical-align: middle;
+
+    border-radius: 10px;
+}
+
+
+/* ==========================================
+   🔔 RÉCRÉATIONS
+   ========================================== */
+
+.schedule-table .break-cell {
+    background: linear-gradient(
+        135deg,
+        #f1f5f9,
+        #e2e8f0
+    );
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    border: 1px dashed #cbd5e1;
+
+    min-height: 35px;
+
+    position: relative;
+}
+
+
+/* Icône / texte pause */
+
+.schedule-table .break-cell::first-letter {
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   🍽️ PAUSE DÉJEUNER
+   ========================================== */
+
+.schedule-table .lunch-cell {
+    background: linear-gradient(
+        135deg,
+        #f8fafc,
+        #e2e8f0
+    );
+
+    color: #475569;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    border: 1px solid #cbd5e1;
+
+    min-height: 45px;
+}
+
+
+/* ==========================================
+   🏁 FIN DE JOURNÉE
+   ========================================== */
+
+.schedule-table .end-cell {
+    background: #f8fafc;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    border: 1px dashed #cbd5e1;
+
+    opacity: 0.9;
+}
+
+
+/* ==========================================
+   🎨 ESPACE ENTRE LES COURS
+   ========================================== */
+
+.schedule-table tbody tr {
+    transition: all 0.15s ease;
+}
+
+
+/* ==========================================
+   🖱️ SURVOL D'UNE LIGNE
+   ========================================== */
+
+.schedule-table tbody tr:hover td:first-child {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+
+/* ==========================================
+   📱 TABLEAU SUR PETIT ÉCRAN
+   ========================================== */
+
+@media (max-width: 900px) {
+
+    .schedule-table-container {
+        padding: 8px;
+        border-radius: 14px;
+    }
+
+    .schedule-table {
+        min-width: 850px;
+    }
+
+    .schedule-table thead th {
+        padding: 11px 8px;
+        font-size: 12px;
+    }
+
+    .schedule-table td:first-child {
+        font-size: 11px;
+        min-width: 75px;
+    }
+
+}
+
+
+/* ==========================================
+   ✨ PETITE AMÉLIORATION DES COURS
+   ========================================== */
+
+.schedule-table .course {
+    border-radius: 10px;
+
+    min-height: 55px;
+
+    box-shadow:
+        0 2px 5px rgba(15, 23, 42, 0.06);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.schedule-table .course:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 12px rgba(15, 23, 42, 0.12);
+}
+
+
+/* ==========================================
+   📅 TITRE "EMPLOI DU TEMPS"
+   ========================================== */
+
+.schedule-title,
+.schedule-header h2 {
+    color: #172554;
+}
+
+
+/* ==========================================
+   🔵 Q1 / Q2
+   ========================================== */
+
+.period-button {
+    border-radius: 10px;
+
+    padding: 10px 20px;
+
+    font-weight: 700;
+
+    border: 1px solid #dbeafe;
+
+    background: #eff6ff;
+
+    color: #1d4ed8;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+
+.period-button:hover {
+    background: #dbeafe;
+
+    transform: translateY(-1px);
+}
+
+
+.period-button.active {
+    background: #2563eb;
+
+    color: white;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.25);
+}
