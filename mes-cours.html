@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -26,7 +27,6 @@
         .courses-top p {
             color: #64748b;
         }
-
 
         /* =========================
            BARRE DE RECHERCHE
@@ -62,12 +62,9 @@
         .search-box input {
             width: 100%;
             box-sizing: border-box;
-
             padding: 13px 15px 13px 45px;
-
             border: 1px solid #dbe2ea;
             border-radius: 12px;
-
             font-size: 15px;
             outline: none;
         }
@@ -77,152 +74,18 @@
             box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
         }
 
-/* ========================================
-   CARTES DES MATIÈRES - VERSION AMÉLIORÉE
-======================================== */
-
-.course-card {
-    position: relative;
-    overflow: hidden;
-    border: none;
-    border-radius: 18px;
-    background: #ffffff;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.course-card::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 6px;
-    height: 100%;
-    background: var(--course-color);
-}
-
-.course-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.13);
-}
-
-/* Couleurs des matières */
-
-.course-card[data-subject="francais"] {
-    --course-color: #e74c3c;
-}
-
-.course-card[data-subject="mathematiques"] {
-    --course-color: #3498db;
-}
-
-.course-card[data-subject="anglais"] {
-    --course-color: #9b59b6;
-}
-
-.course-card[data-subject="sciences"] {
-    --course-color: #1abc9c;
-}
-
-.course-card[data-subject="enseignement"] {
-    --course-color: #f39c12;
-}
-
-.course-card[data-subject="pratique"] {
-    --course-color: #e67e22;
-}
-
-.course-card[data-subject="arts"] {
-    --course-color: #e84393;
-}
-
-.course-card[data-subject="soutien"] {
-    --course-color: #16a085;
-}
-
-.course-card[data-subject="pse"] {
-    --course-color: #27ae60;
-}
-
-.course-card[data-subject="economie"] {
-    --course-color: #2980b9;
-}
-
-.course-card[data-subject="projet"] {
-    --course-color: #8e44ad;
-}
-
-.course-card[data-subject="eps"] {
-    --course-color: #2c3e50;
-}
-
-/* Icône */
-
-.course-icon {
-    background: var(--course-color);
-    color: white;
-    border-radius: 14px;
-    padding: 12px;
-}
-
-/* Informations */
-
-.course-card h2 {
-    color: #222;
-}
-
-.course-teacher {
-    color: #666;
-}
-
-.course-category {
-    color: var(--course-color);
-    font-weight: 600;
-}
-
-/* Nombre de cours */
-
-.course-count {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-    padding: 6px 10px;
-    border-radius: 20px;
-    background: #f3f4f6;
-    color: #555;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-/* Bouton */
-
-.course-card-button {
-    background: var(--course-color);
-    color: white;
-    border: none;
-    transition: opacity 0.2s ease;
-}
-
-.course-card-button:hover {
-    opacity: 0.85;
-}
         /* =========================
-           FILTRE
+           FILTRES
         ========================= */
 
         .filter-box select {
             padding: 13px 15px;
-
             border: 1px solid #dbe2ea;
             border-radius: 12px;
-
             background: white;
-
             font-size: 15px;
             cursor: pointer;
         }
-
 
         /* =========================
            COMPTEUR
@@ -234,64 +97,115 @@
             font-size: 14px;
         }
 
-
         /* =========================
            GRILLE
         ========================= */
 
         .courses-grid {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(auto-fit, minmax(280px, 1fr));
-
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
 
+        /* =========================
+           COULEURS DES MATIÈRES
+        ========================= */
+
+        .course-card[data-subject="francais"] {
+            --course-color: #e74c3c;
+        }
+
+        .course-card[data-subject="mathematiques"] {
+            --course-color: #3498db;
+        }
+
+        .course-card[data-subject="anglais"] {
+            --course-color: #9b59b6;
+        }
+
+        .course-card[data-subject="sciences"] {
+            --course-color: #1abc9c;
+        }
+
+        .course-card[data-subject="enseignement"] {
+            --course-color: #f39c12;
+        }
+
+        .course-card[data-subject="pratique"] {
+            --course-color: #e67e22;
+        }
+
+        .course-card[data-subject="arts"] {
+            --course-color: #e84393;
+        }
+
+        .course-card[data-subject="soutien"] {
+            --course-color: #16a085;
+        }
+
+        .course-card[data-subject="pse"] {
+            --course-color: #27ae60;
+        }
+
+        .course-card[data-subject="economie"] {
+            --course-color: #2980b9;
+        }
+
+        .course-card[data-subject="projet"] {
+            --course-color: #8e44ad;
+        }
+
+        .course-card[data-subject="eps"] {
+            --course-color: #2c3e50;
+        }
 
         /* =========================
            CARTE
         ========================= */
 
         .course-card {
-
+            position: relative;
             background: white;
-
             border-radius: 18px;
-
-            padding: 22px;
-
-            box-shadow:
-                0 5px 20px rgba(0,0,0,0.06);
+            padding: 22px 22px 22px 27px;
 
             border: 1px solid #eef2f7;
 
             display: flex;
             flex-direction: column;
 
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+
             transition:
-                transform 0.2s,
-                box-shadow 0.2s;
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
 
             overflow: hidden;
         }
 
-        .course-card:hover {
+        .course-card::before {
+            content: "";
+            position: absolute;
 
-            transform: translateY(-4px);
+            left: 0;
+            top: 0;
 
-            box-shadow:
-                0 12px 30px rgba(0,0,0,0.10);
+            width: 6px;
+            height: 100%;
+
+            background: var(--course-color);
         }
 
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
 
         /* =========================
            ICÔNE
         ========================= */
 
         .course-icon {
-
             width: 55px;
             height: 55px;
 
@@ -303,62 +217,84 @@
 
             font-size: 27px;
 
-            background: #eff6ff;
+            background: var(--course-color);
+            color: white;
 
             margin-bottom: 16px;
-        }
 
+            box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+        }
 
         /* =========================
            TEXTE
         ========================= */
 
         .course-card h2 {
-
             margin: 0 0 8px;
-
             font-size: 19px;
-
             color: #172033;
         }
 
         .course-teacher {
-
             color: #64748b;
-
             font-size: 14px;
-
             margin-bottom: 10px;
         }
 
         .course-category {
-
             display: inline-block;
 
             width: fit-content;
 
-            background: #f1f5f9;
+            background: color-mix(
+                in srgb,
+                var(--course-color) 12%,
+                white
+            );
 
-            color: #475569;
+            color: var(--course-color);
 
             padding: 5px 10px;
 
             border-radius: 20px;
 
             font-size: 12px;
-
             font-weight: bold;
 
-            margin-bottom: 18px;
+            margin-bottom: 10px;
         }
 
+        /* =========================
+           NOMBRE DE COURS
+        ========================= */
+
+        .course-count {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 6px;
+
+            width: fit-content;
+
+            margin-bottom: 18px;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            background: #f3f4f6;
+
+            color: #555;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
 
         /* =========================
            BOUTON
         ========================= */
 
         .course-card-button {
-
             margin-top: auto;
 
             display: block;
@@ -367,7 +303,7 @@
 
             text-decoration: none;
 
-            background: #2563eb;
+            background: var(--course-color);
 
             color: white;
 
@@ -383,19 +319,15 @@
         }
 
         .course-card-button:hover {
-
-            background: #1d4ed8;
-
+            opacity: 0.85;
             transform: translateY(-1px);
         }
-
 
         /* =========================
            AUCUN RÉSULTAT
         ========================= */
 
         .no-results {
-
             display: none;
 
             background: white;
@@ -410,7 +342,6 @@
 
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
-
 
         /* =========================
            MOBILE
@@ -443,7 +374,6 @@
 
 <body>
 
-
     <!-- =========================
          MENU
     ========================= -->
@@ -460,7 +390,6 @@
 
         </div>
 
-
         <nav>
 
             <a href="index.html">
@@ -475,9 +404,9 @@
                 📚 Mes cours
             </a>
 
-          <a href="mes-devoirs.html">
-    📝 Mes devoirs
-</a>
+            <a href="mes-devoirs.html">
+                📝 Mes devoirs
+            </a>
 
             <a href="#">
                 📊 Mes notes
@@ -498,7 +427,6 @@
 
     <main class="main-content">
 
-
         <header class="courses-top">
 
             <h1>
@@ -516,71 +444,68 @@
              OUTILS
         ========================= -->
 
-       <section class="courses-tools">
+        <section class="courses-tools">
 
-    <!-- RECHERCHE -->
-    <div class="search-box">
+            <div class="search-box">
 
-        <span>🔎</span>
+                <span>🔎</span>
 
-        <input
-            type="search"
-            id="search-course"
-            placeholder="Rechercher une matière ou un professeur..."
-            autocomplete="off"
-        >
+                <input
+                    type="search"
+                    id="search-course"
+                    placeholder="Rechercher une matière ou un professeur..."
+                    autocomplete="off"
+                >
 
-    </div>
-
-
-    <!-- FILTRE -->
-    <div class="filter-box">
-
-        <select id="course-filter">
-
-            <option value="all">
-                📚 Toutes les matières
-            </option>
-
-            <option value="general">
-                📘 Enseignement général
-            </option>
-
-            <option value="professional">
-                🛠️ Enseignement professionnel
-            </option>
-
-            <option value="other">
-                🎨 Autres
-            </option>
-
-        </select>
-
-    </div>
+            </div>
 
 
-    <!-- TRI -->
-    <div class="filter-box">
+            <div class="filter-box">
 
-        <select id="course-sort">
+                <select id="course-filter">
 
-            <option value="default">
-                ↕️ Ordre habituel
-            </option>
+                    <option value="all">
+                        📚 Toutes les matières
+                    </option>
 
-            <option value="az">
-                🔤 A → Z
-            </option>
+                    <option value="general">
+                        📘 Enseignement général
+                    </option>
 
-            <option value="za">
-                🔤 Z → A
-            </option>
+                    <option value="professional">
+                        🛠️ Enseignement professionnel
+                    </option>
 
-        </select>
+                    <option value="other">
+                        🎨 Autres
+                    </option>
 
-    </div>
+                </select>
 
-</section>
+            </div>
+
+
+            <div class="filter-box">
+
+                <select id="course-sort">
+
+                    <option value="default">
+                        ↕️ Ordre habituel
+                    </option>
+
+                    <option value="az">
+                        🔤 A → Z
+                    </option>
+
+                    <option value="za">
+                        🔤 Z → A
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
 
 
         <div
@@ -600,12 +525,12 @@
             id="courses-grid"
         >
 
-
             <!-- FRANÇAIS -->
 
             <article
                 class="course-card"
                 data-category="general"
+                data-subject="francais"
             >
 
                 <div class="course-icon">
@@ -624,6 +549,10 @@
                     Enseignement général
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/francais-histoire-geo.html"
                     class="course-card-button"
@@ -634,11 +563,12 @@
             </article>
 
 
-            <!-- MATHS -->
+            <!-- MATHÉMATIQUES -->
 
             <article
                 class="course-card"
                 data-category="general"
+                data-subject="mathematiques"
             >
 
                 <div class="course-icon">
@@ -657,6 +587,10 @@
                     Enseignement général
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/mathematiques.html"
                     class="course-card-button"
@@ -672,6 +606,7 @@
             <article
                 class="course-card"
                 data-category="general"
+                data-subject="anglais"
             >
 
                 <div class="course-icon">
@@ -690,6 +625,10 @@
                     Enseignement général
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/anglais.html"
                     class="course-card-button"
@@ -705,6 +644,7 @@
             <article
                 class="course-card"
                 data-category="general"
+                data-subject="sciences"
             >
 
                 <div class="course-icon">
@@ -723,6 +663,10 @@
                     Enseignement général
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/sciences-physiques.html"
                     class="course-card-button"
@@ -733,11 +677,12 @@
             </article>
 
 
-            <!-- ENSEIGNEMENT PRO -->
+            <!-- ENSEIGNEMENT PROFESSIONNEL -->
 
             <article
                 class="course-card"
                 data-category="professional"
+                data-subject="enseignement"
             >
 
                 <div class="course-icon">
@@ -756,6 +701,10 @@
                     Enseignement professionnel
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/enseignement-professionnel.html"
                     class="course-card-button"
@@ -766,11 +715,12 @@
             </article>
 
 
-            <!-- PRATIQUE PRO -->
+            <!-- PRATIQUE PROFESSIONNELLE -->
 
             <article
                 class="course-card"
                 data-category="professional"
+                data-subject="pratique"
             >
 
                 <div class="course-icon">
@@ -789,6 +739,10 @@
                     Enseignement professionnel
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/pratique-professionnelle.html"
                     class="course-card-button"
@@ -804,6 +758,7 @@
             <article
                 class="course-card"
                 data-category="other"
+                data-subject="arts"
             >
 
                 <div class="course-icon">
@@ -822,6 +777,10 @@
                     Arts
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/arts-appliques.html"
                     class="course-card-button"
@@ -837,6 +796,7 @@
             <article
                 class="course-card"
                 data-category="other"
+                data-subject="soutien"
             >
 
                 <div class="course-icon">
@@ -855,6 +815,10 @@
                     Accompagnement
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/soutien-au-parcours.html"
                     class="course-card-button"
@@ -870,6 +834,7 @@
             <article
                 class="course-card"
                 data-category="other"
+                data-subject="pse"
             >
 
                 <div class="course-icon">
@@ -888,6 +853,10 @@
                     Prévention / Santé
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/prevention-sante-environnement.html"
                     class="course-card-button"
@@ -903,6 +872,7 @@
             <article
                 class="course-card"
                 data-category="professional"
+                data-subject="economie"
             >
 
                 <div class="course-icon">
@@ -921,6 +891,10 @@
                     Enseignement professionnel
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/economie-gestion.html"
                     class="course-card-button"
@@ -936,6 +910,7 @@
             <article
                 class="course-card"
                 data-category="professional"
+                data-subject="projet"
             >
 
                 <div class="course-icon">
@@ -954,6 +929,10 @@
                     Projet
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/realisation-projet.html"
                     class="course-card-button"
@@ -969,6 +948,7 @@
             <article
                 class="course-card"
                 data-category="other"
+                data-subject="eps"
             >
 
                 <div class="course-icon">
@@ -987,6 +967,10 @@
                     Sport
                 </span>
 
+                <div class="course-count">
+                    📚 <span class="course-count-number">0</span> cours enregistrés
+                </div>
+
                 <a
                     href="fiche-cours/education-physique-sportive.html"
                     class="course-card-button"
@@ -995,7 +979,6 @@
                 </a>
 
             </article>
-
 
         </section>
 
@@ -1021,7 +1004,6 @@
 
         </div>
 
-
     </main>
 
 
@@ -1030,3 +1012,4 @@
 </body>
 
 </html>
+```
