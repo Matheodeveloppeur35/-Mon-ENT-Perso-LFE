@@ -77,7 +77,136 @@
             box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
         }
 
+/* ========================================
+   CARTES DES MATIÈRES - VERSION AMÉLIORÉE
+======================================== */
 
+.course-card {
+    position: relative;
+    overflow: hidden;
+    border: none;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.course-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--course-color);
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.13);
+}
+
+/* Couleurs des matières */
+
+.course-card[data-subject="francais"] {
+    --course-color: #e74c3c;
+}
+
+.course-card[data-subject="mathematiques"] {
+    --course-color: #3498db;
+}
+
+.course-card[data-subject="anglais"] {
+    --course-color: #9b59b6;
+}
+
+.course-card[data-subject="sciences"] {
+    --course-color: #1abc9c;
+}
+
+.course-card[data-subject="enseignement"] {
+    --course-color: #f39c12;
+}
+
+.course-card[data-subject="pratique"] {
+    --course-color: #e67e22;
+}
+
+.course-card[data-subject="arts"] {
+    --course-color: #e84393;
+}
+
+.course-card[data-subject="soutien"] {
+    --course-color: #16a085;
+}
+
+.course-card[data-subject="pse"] {
+    --course-color: #27ae60;
+}
+
+.course-card[data-subject="economie"] {
+    --course-color: #2980b9;
+}
+
+.course-card[data-subject="projet"] {
+    --course-color: #8e44ad;
+}
+
+.course-card[data-subject="eps"] {
+    --course-color: #2c3e50;
+}
+
+/* Icône */
+
+.course-icon {
+    background: var(--course-color);
+    color: white;
+    border-radius: 14px;
+    padding: 12px;
+}
+
+/* Informations */
+
+.course-card h2 {
+    color: #222;
+}
+
+.course-teacher {
+    color: #666;
+}
+
+.course-category {
+    color: var(--course-color);
+    font-weight: 600;
+}
+
+/* Nombre de cours */
+
+.course-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #f3f4f6;
+    color: #555;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Bouton */
+
+.course-card-button {
+    background: var(--course-color);
+    color: white;
+    border: none;
+    transition: opacity 0.2s ease;
+}
+
+.course-card-button:hover {
+    opacity: 0.85;
+}
         /* =========================
            FILTRE
         ========================= */
