@@ -1,6 +1,13 @@
+```javascript
 // ========================================
-// MES COURS
+// 📚 MES COURS
 // Recherche + filtres + tri
+// Compteur automatique des cours
+// ========================================
+
+
+// ========================================
+// ÉLÉMENTS DE LA PAGE
 // ========================================
 
 const searchInput = document.getElementById("search-course");
@@ -8,6 +15,7 @@ const categoryFilter = document.getElementById("course-filter");
 const sortSelect = document.getElementById("course-sort");
 
 const coursesGrid = document.getElementById("courses-grid");
+
 const courseCards = Array.from(
     document.querySelectorAll(".course-card")
 );
@@ -17,29 +25,155 @@ const noResults = document.getElementById("no-results");
 
 
 // ========================================
-// FILTRER LES COURS
+// CORRESPONDANCE MATIÈRE → LOCALSTORAGE
+// ========================================
+
+const storageKeys = {
+
+    francais:
+        "cours-francais-histoire-geo",
+
+    mathematiques:
+        "cours-mathematiques",
+
+    anglais:
+        "cours-anglais",
+
+    sciences:
+        "cours-sciences-physiques",
+
+    enseignement:
+        "cours-enseignement-professionnel",
+
+    pratique:
+        "cours-pratique-professionnelle",
+
+    arts:
+        "cours-arts-appliques",
+
+    soutien:
+        "cours-soutien-au-parcours",
+
+    pse:
+        "cours-prevention-sante-environnement",
+
+    economie:
+        "cours-economie-gestion",
+
+    projet:
+        "cours-realisation-projet",
+
+    eps:
+        "cours-education-physique-sportive"
+
+};
+
+
+// ========================================
+// OBTENIR LE NOMBRE DE COURS
+// ========================================
+
+function obtenirNombreCours(sujet) {
+
+    const storageKey = storageKeys[sujet];
+
+    if (!storageKey) {
+        return 0;
+    }
+
+    try {
+
+        const donnees =
+            localStorage.getItem(storageKey);
+
+        if (!donnees) {
+            return 0;
+        }
+
+        const cours =
+            JSON.parse(donnees);
+
+        if (Array.isArray(cours)) {
+            return cours.length;
+        }
+
+        return 0;
+
+    } catch (erreur) {
+
+        console.error(
+            "Erreur lors de la lecture des cours :",
+            sujet,
+            erreur
+        );
+
+        return 0;
+    }
+}
+
+
+// ========================================
+// METTRE À JOUR LES COMPTEURS
+// ========================================
+
+function mettreAJourCompteurs() {
+
+    courseCards.forEach(carte => {
+
+        const sujet =
+            carte.dataset.subject;
+
+        const compteur =
+            carte.querySelector(
+                ".course-count-number"
+            );
+
+        if (!compteur) {
+            return;
+        }
+
+        const nombre =
+            obtenirNombreCours(sujet);
+
+        compteur.textContent =
+            nombre;
+
+    });
+
+}
+
+
+// ========================================
+// FILTRER ET TRIER LES COURS
 // ========================================
 
 function filtrerCours() {
 
     const recherche =
-        searchInput.value
-            .toLowerCase()
-            .trim();
+        searchInput
+            ? searchInput.value
+                .toLowerCase()
+                .trim()
+            : "";
 
     const categorie =
-        categoryFilter.value;
+        categoryFilter
+            ? categoryFilter.value
+            : "all";
 
     const tri =
-        sortSelect.value;
+        sortSelect
+            ? sortSelect.value
+            : "default";
+
+
+    let cartes =
+        [...courseCards];
 
 
     // ====================================
-    // TRI
+    // TRI A → Z
     // ====================================
-
-    let cartes = [...courseCards];
-
 
     if (tri === "az") {
 
@@ -65,6 +199,10 @@ function filtrerCours() {
     }
 
 
+    // ====================================
+    // TRI Z → A
+    // ====================================
+
     if (tri === "za") {
 
         cartes.sort((a, b) => {
@@ -89,7 +227,10 @@ function filtrerCours() {
     }
 
 
-    // Remettre les cartes dans le bon ordre
+    // ====================================
+    // RÉORGANISER LES CARTES
+    // ====================================
+
     cartes.forEach(carte => {
 
         coursesGrid.appendChild(carte);
@@ -98,7 +239,7 @@ function filtrerCours() {
 
 
     // ====================================
-    // FILTRE
+    // RECHERCHE + FILTRE
     // ====================================
 
     let nombreVisible = 0;
@@ -112,7 +253,9 @@ function filtrerCours() {
                 .toLowerCase();
 
         const professeur =
-            carte.querySelector(".course-teacher")
+            carte.querySelector(
+                ".course-teacher"
+            )
                 .textContent
                 .toLowerCase();
 
@@ -149,26 +292,36 @@ function filtrerCours() {
 
 
     // ====================================
-    // COMPTEUR
+    // COMPTEUR DES MATIÈRES AFFICHÉES
     // ====================================
 
-    coursesCount.textContent =
-        nombreVisible === 1
-            ? "1 matière"
-            : `${nombreVisible} matières`;
+    if (coursesCount) {
+
+        coursesCount.textContent =
+            nombreVisible === 1
+                ? "1 matière"
+                : `${nombreVisible} matières`;
+
+    }
 
 
     // ====================================
-    // AUCUN RÉSULTAT
+    // MESSAGE AUCUN RÉSULTAT
     // ====================================
 
-    if (nombreVisible === 0) {
+    if (noResults) {
 
-        noResults.style.display = "block";
+        if (nombreVisible === 0) {
 
-    } else {
+            noResults.style.display =
+                "block";
 
-        noResults.style.display = "none";
+        } else {
+
+            noResults.style.display =
+                "none";
+
+        }
 
     }
 
@@ -179,24 +332,48 @@ function filtrerCours() {
 // ÉVÉNEMENTS
 // ========================================
 
-searchInput.addEventListener(
-    "input",
-    filtrerCours
-);
+if (searchInput) {
 
-categoryFilter.addEventListener(
-    "change",
-    filtrerCours
-);
+    searchInput.addEventListener(
+        "input",
+        filtrerCours
+    );
 
-sortSelect.addEventListener(
-    "change",
-    filtrerCours
-);
+}
+
+
+if (categoryFilter) {
+
+    categoryFilter.addEventListener(
+        "change",
+        filtrerCours
+    );
+
+}
+
+
+if (sortSelect) {
+
+    sortSelect.addEventListener(
+        "change",
+        filtrerCours
+    );
+
+}
 
 
 // ========================================
 // INITIALISATION
 // ========================================
 
-filtrerCours();
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        mettreAJourCompteurs();
+
+        filtrerCours();
+
+    }
+);
+```
