@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mes notes - Mon ENT Perso LFE</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #0f172a;
+            color: white;
+
+            padding: 25px 15px;
+
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h2 {
+            margin-top: 8px;
+            font-size: 22px;
+        }
+
+        .logo span {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+
+            padding: 13px 15px;
+
+            border-radius: 10px;
+
+            transition: 0.2s;
+        }
+
+        .sidebar nav a:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        .sidebar nav a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* =========================
+           CONTENU
+        ========================= */
+
+        .main-content {
+            margin-left: 250px;
+            padding: 35px;
+            max-width: 1500px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #64748b;
+        }
+
+        /* =========================
+           STATISTIQUES
+        ========================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.05);
+
+            border-left: 5px solid #2563eb;
+        }
+
+        .stat-card:nth-child(2) {
+            border-left-color: #16a34a;
+        }
+
+        .stat-card:nth-child(3) {
+            border-left-color: #f59e0b;
+        }
+
+        .stat-card:nth-child(4) {
+            border-left-color: #7c3aed;
+        }
+
+        .stat-icon {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .stat-title {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* =========================
+           OUTILS
+        ========================= */
+
+        .tools {
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 16px;
+
+            display: flex;
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .search-box {
+            flex: 1;
+        }
+
+        .search-box input,
+        .tools select {
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            background: white;
+        }
+
+        .tools select {
+            max-width: 300px;
+        }
+
+        /* =========================
+           FORMULAIRE
+        ========================= */
+
+        .content-card {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            margin-bottom: 30px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .content-card h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+        }
+
+        .save-button {
+            margin-top: 20px;
+
+            border: none;
+
+            background: #2563eb;
+            color: white;
+
+            padding: 13px 20px;
+
+            border-radius: 10px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-top: 20px;
+            margin-left: 10px;
+
+            border: none;
+
+            background: #64748b;
+            color: white;
+
+            padding: 13px 20px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        /* =========================
+           MATIÈRES
+        ========================= */
+
+        .subjects-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .subject-card {
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.05);
+
+            border-top: 4px solid #2563eb;
+        }
+
+        .subject-card h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .subject-average {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .subject-count {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* =========================
+           NOTES
+        ========================= */
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .note-card {
+            border: 1px solid #e2e8f0;
+
+            border-radius: 13px;
+
+            padding: 17px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .note-info {
+            flex: 1;
+        }
+
+        .note-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .note-details {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .note-value {
+            min-width: 100px;
+
+            text-align: center;
+
+            font-size: 24px;
+
+            font-weight: bold;
+        }
+
+        .note-coefficient {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .edit-button,
+        .delete-button {
+            border: none;
+
+            padding: 9px 12px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            cursor: pointer;
+        }
+
+        .edit-button {
+            background: #2563eb;
+        }
+
+        .delete-button {
+            background: #dc2626;
+        }
+
+        .empty-message {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #64748b;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .subjects-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .tools {
+                flex-direction: column;
+            }
+
+            .tools select {
+                max-width: none;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .note-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .note-value {
+                text-align: left;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         MENU
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            🎓
+
+            <h2>Mon ENT</h2>
+
+            <span>Perso LFE</span>
+
+        </div>
+
+
+        <nav>
+
+            <a href="index.html">
+                🏠 Accueil
+            </a>
+
+            <a href="emploi-du-temps.html">
+                📅 Emploi du temps
+            </a>
+
+            <a href="mes-cours.html">
+                📚 Mes cours
+            </a>
+
+            <a href="mes-devoirs.html">
+                📝 Mes devoirs
+            </a>
+
+            <a href="mes-notes.html" class="active">
+                📊 Mes notes
+            </a>
+
+            <a href="#">
+                📋 Mes contrôles
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =========================
+         CONTENU
+    ========================= -->
+
+    <main class="main-content">
+
+
+        <header class="page-header">
+
+            <h1>
+                📊 Mes notes
+            </h1>
+
+            <p>
+                Gère tes notes et suis tes moyennes dans toutes tes matières.
+            </p>
+
+        </header>
+
+
+        <!-- =========================
+             STATISTIQUES
+        ========================= -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📝
+                </div>
+
+                <div class="stat-title">
+                    Nombre de notes
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="total-notes"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⭐
+                </div>
+
+                <div class="stat-title">
+                    Moyenne générale
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="general-average"
+                >
+                    — /20
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏆
+                </div>
+
+                <div class="stat-title">
+                    Meilleure note
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="best-note"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+                <div class="stat-title">
+                    Matières notées
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="subjects-count"
+                >
+                    0 / 12
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             OUTILS
+        ========================= -->
+
+        <section class="tools">
+
+            <div class="search-box">
+
+                <input
+                    type="search"
+                    id="search-note"
+                    placeholder="🔎 Rechercher une note..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <select id="subject-filter">
+
+                <option value="all">
+                    📚 Toutes les matières
+                </option>
+
+                <option value="Français / Histoire-Géo / EMC">
+                    Français / Histoire-Géo / EMC
+                </option>
+
+                <option value="Mathématiques">
+                    Mathématiques
+                </option>
+
+                <option value="Anglais LV1">
+                    Anglais LV1
+                </option>
+
+                <option value="Sciences physiques">
+                    Sciences physiques
+                </option>
+
+                <option value="Enseignement professionnel">
+                    Enseignement professionnel
+                </option>
+
+                <option value="Pratique professionnelle">
+                    Pratique professionnelle
+                </option>
+
+                <option value="Arts appliqués / Culture artistique">
+                    Arts appliqués / Culture artistique
+                </option>
+
+                <option value="Soutien au parcours">
+                    Soutien au parcours
+                </option>
+
+                <option value="Prévention-Santé-Environnement">
+                    Prévention-Santé-Environnement
+                </option>
+
+                <option value="Économie & Gestion">
+                    Économie & Gestion
+                </option>
+
+                <option value="Réalisation projet">
+                    Réalisation projet
+                </option>
+
+                <option value="Éducation physique & sportive">
+                    Éducation physique & sportive
+                </option>
+
+            </select>
+
+        </section>
+
+
+        <!-- =========================
+             AJOUTER UNE NOTE
+        ========================= -->
+
+        <section class="content-card">
+
+            <h2>
+                ➕ Ajouter une note
+            </h2>
+
+            <form id="note-form">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="note-subject">
+                            📚 Matière
+                        </label>
+
+                        <select
+                            id="note-subject"
+                            required
+                        >
+
+                            <option value="">
+                                Choisir une matière
+                            </option>
+
+                            <option>
+                                Français / Histoire-Géo / EMC
+                            </option>
+
+                            <option>
+                                Mathématiques
+                            </option>
+
+                            <option>
+                                Anglais LV1
+                            </option>
+
+                            <option>
+                                Sciences physiques
+                            </option>
+
+                            <option>
+                                Enseignement professionnel
+                            </option>
+
+                            <option>
+                                Pratique professionnelle
+                            </option>
+
+                            <option>
+                                Arts appliqués / Culture artistique
+                            </option>
+
+                            <option>
+                                Soutien au parcours
+                            </option>
+
+                            <option>
+                                Prévention-Santé-Environnement
+                            </option>
+
+                            <option>
+                                Économie & Gestion
+                            </option>
+
+                            <option>
+                                Réalisation projet
+                            </option>
+
+                            <option>
+                                Éducation physique & sportive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="note-title">
+                            📝 Évaluation
+                        </label>
+
+                        <input
+                            type="text"
+                            id="note-title"
+                            placeholder="Ex : Contrôle chapitre 2"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="note-value">
+                            🔢 Note /20
+                        </label>
+
+                        <input
+                            type="number"
+                            id="note-value"
+                            min="0"
+                            max="20"
+                            step="0.01"
+                            placeholder="Ex : 15,5"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="note-coefficient">
+                            ⚖️ Coefficient
+                        </label>
+
+                        <input
+                            type="number"
+                            id="note-coefficient"
+                            min="0.1"
+                            step="0.1"
+                            value="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="note-date">
+                            📅 Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="note-date"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    💾 Enregistrer la note
+                </button>
+
+
+                <button
+                    type="button"
+                    id="cancel-edit"
+                    class="cancel-button"
+                    style="display:none;"
+                >
+                    Annuler
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- =========================
+             MOYENNES PAR MATIÈRE
+        ========================= -->
+
+        <section class="content-card">
+
+            <h2>
+                📚 Mes moyennes par matière
+            </h2>
+
+            <div
+                class="subjects-grid"
+                id="subjects-grid"
+            ></div>
+
+        </section>
+
+
+        <!-- =========================
+             LISTE DES NOTES
+        ========================= -->
+
+        <section class="content-card">
+
+            <h2>
+                📝 Mes notes enregistrées
+            </h2>
+
+            <div
+                class="notes-list"
+                id="notes-list"
+            >
+
+                <p class="empty-message">
+                    Aucune note enregistrée pour le moment.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <script src="js/mes-notes.js"></script>
+
+</body>
+
+</html>
