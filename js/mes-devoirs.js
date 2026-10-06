@@ -8,63 +8,6 @@ let devoirs = JSON.parse(
     localStorage.getItem(STORAGE_KEY)
 ) || [];
 
-
-// =========================
-// IMPORTER LES DEVOIRS
-// DES FICHES DE MATIÈRES
-// =========================
-
-const sourcesMatieres = [
-    {
-        cle: "cours-mathematiques",
-        matiere: "Mathématiques"
-    },
-    {
-        cle: "cours-anglais",
-        matiere: "Anglais LV1"
-    },
-    {
-        cle: "cours-francais-histoire-geo",
-        matiere: "Français / Histoire-Géo / EMC"
-    },
-    {
-        cle: "cours-sciences-physiques",
-        matiere: "Sciences physiques"
-    },
-    {
-        cle: "cours-enseignement-professionnel",
-        matiere: "Enseignement professionnel"
-    },
-    {
-        cle: "cours-pratique-professionnelle",
-        matiere: "Pratique professionnelle"
-    },
-    {
-        cle: "cours-arts-appliques",
-        matiere: "Arts appliqués / Culture artistique"
-    },
-    {
-        cle: "cours-soutien-au-parcours",
-        matiere: "Soutien au parcours"
-    },
-    {
-        cle: "cours-prevention-sante-environnement",
-        matiere: "Prévention-Santé-Environnement"
-    },
-    {
-        cle: "cours-economie-gestion",
-        matiere: "Économie & Gestion"
-    },
-    {
-        cle: "cours-realisation-projet",
-        matiere: "Réalisation projet"
-    },
-    {
-        cle: "cours-education-physique-sportive",
-        matiere: "Éducation physique & sportive"
-    }
-];
-
 let devoirEnModification = null;
 
 
@@ -99,43 +42,58 @@ const statusFilter =
 const subjectFilter =
     document.getElementById("subject-filter");
 
+const dateSort =
+    document.getElementById("date-sort");
+
+const homeworkCount =
+    document.getElementById("homework-count");
+
+const statTotal =
+    document.getElementById("stat-total");
+
+const statTodo =
+    document.getElementById("stat-todo");
+
+const statDone =
+    document.getElementById("stat-done");
+
+const statLate =
+    document.getElementById("stat-late");
+
 const editSection =
-    document.getElementById("edit-homework-section");
+    document.getElementById(
+        "edit-homework-section"
+    );
 
 const editForm =
-    document.getElementById("edit-homework-form");
+    document.getElementById(
+        "edit-homework-form"
+    );
 
 const editSubject =
-    document.getElementById("edit-homework-subject");
+    document.getElementById(
+        "edit-homework-subject"
+    );
 
 const editTitle =
-    document.getElementById("edit-homework-title");
+    document.getElementById(
+        "edit-homework-title"
+    );
 
 const editDate =
-    document.getElementById("edit-homework-date");
+    document.getElementById(
+        "edit-homework-date"
+    );
 
 const editDescription =
-    document.getElementById("edit-homework-description");
+    document.getElementById(
+        "edit-homework-description"
+    );
 
 const cancelEdit =
-    document.getElementById("cancel-homework-edit");
-
-
-// =========================
-// COMPTEURS DU TABLEAU DE BORD
-// =========================
-
-const countTodo =
-    document.getElementById("count-todo");
-
-const countLate =
-    document.getElementById("count-late");
-
-const countDone =
-    document.getElementById("count-done");
-
-const countTotal =
-    document.getElementById("count-total");
+    document.getElementById(
+        "cancel-homework-edit"
+    );
 
 
 // =========================
@@ -162,20 +120,35 @@ function echapperHTML(texte) {
         return "";
     }
 
-    return texte
+    return String(texte)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }
 
 
 // =========================
-// VÉRIFIER SI UN DEVOIR
-// EST EN RETARD
+// DATE
 // =========================
+
+function creerDateLocale(date) {
+
+    if (!date) {
+        return null;
+    }
+
+    const resultat =
+        new Date(date + "T00:00:00");
+
+    if (Number.isNaN(resultat.getTime())) {
+        return null;
+    }
+
+    return resultat;
+}
+
 
 function devoirEnRetard(devoir) {
 
@@ -183,7 +156,10 @@ function devoirEnRetard(devoir) {
         return false;
     }
 
-    if (!devoir.date) {
+    const dateDevoir =
+        creerDateLocale(devoir.date);
+
+    if (!dateDevoir) {
         return false;
     }
 
@@ -197,60 +173,72 @@ function devoirEnRetard(devoir) {
         0
     );
 
-    const dateDevoir =
-        new Date(
-            devoir.date + "T00:00:00"
-        );
-
     return dateDevoir < aujourdHui;
 }
 
 
 // =========================
-// METTRE À JOUR LES COMPTEURS
+// FORMAT DATE
 // =========================
 
-function mettreAJourCompteurs() {
+function formaterDate(date) {
+
+    const dateObjet =
+        creerDateLocale(date);
+
+    if (!dateObjet) {
+        return "Date inconnue";
+    }
+
+    return dateObjet.toLocaleDateString(
+        "fr-FR",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
+}
+
+
+// =========================
+// STATISTIQUES
+// =========================
+
+function mettreAJourStatistiques() {
 
     const total =
         devoirs.length;
 
     const termines =
-        devoirs.filter(function(devoir) {
-            return devoir.done;
-        }).length;
+        devoirs.filter(
+            devoir => devoir.done
+        ).length;
 
     const enRetard =
-        devoirs.filter(function(devoir) {
-            return devoirEnRetard(devoir);
-        }).length;
+        devoirs.filter(
+            devoir => devoirEnRetard(devoir)
+        ).length;
 
     const aFaire =
-        devoirs.filter(function(devoir) {
-            return !devoir.done &&
-                   !devoirEnRetard(devoir);
-        }).length;
+        devoirs.filter(
+            devoir =>
+                !devoir.done &&
+                !devoirEnRetard(devoir)
+        ).length;
 
 
-    if (countTodo) {
-        countTodo.textContent =
-            aFaire;
-    }
+    statTotal.textContent =
+        total;
 
-    if (countLate) {
-        countLate.textContent =
-            enRetard;
-    }
+    statDone.textContent =
+        termines;
 
-    if (countDone) {
-        countDone.textContent =
-            termines;
-    }
+    statLate.textContent =
+        enRetard;
 
-    if (countTotal) {
-        countTotal.textContent =
-            total;
-    }
+    statTodo.textContent =
+        aFaire;
 
 }
 
@@ -261,10 +249,8 @@ function mettreAJourCompteurs() {
 
 function afficherDevoirs() {
 
-    // Mise à jour du tableau de bord
-    mettreAJourCompteurs();
-
     homeworkList.innerHTML = "";
+
 
     const recherche =
         searchHomework.value
@@ -277,90 +263,144 @@ function afficherDevoirs() {
     const matiere =
         subjectFilter.value;
 
+    const ordre =
+        dateSort.value;
+
 
     // =========================
     // FILTRAGE
     // =========================
 
-    const devoirsFiltres =
-        devoirs.filter(function(devoir) {
+    let devoirsFiltres =
+        devoirs.filter(
+            function(devoir) {
 
-            const texte = (
-                devoir.title +
-                " " +
-                devoir.subject +
-                " " +
-                devoir.description
-            ).toLowerCase();
+                const texte = (
 
-            const correspondRecherche =
-                texte.includes(recherche);
+                    (devoir.title || "") +
+                    " " +
+                    (devoir.subject || "") +
+                    " " +
+                    (devoir.description || "")
 
-
-            const estEnRetard =
-                devoirEnRetard(devoir);
+                ).toLowerCase();
 
 
-            const correspondStatut =
-                statut === "all" ||
-                (statut === "todo" &&
-                    !devoir.done &&
-                    !estEnRetard) ||
-                (statut === "done" &&
-                    devoir.done) ||
-                (statut === "late" &&
-                    estEnRetard);
+                const correspondRecherche =
+                    texte.includes(
+                        recherche
+                    );
 
 
-            const correspondMatiere =
-                matiere === "all" ||
-                devoir.subject === matiere;
+                const estEnRetard =
+                    devoirEnRetard(devoir);
 
 
-            return (
-                correspondRecherche &&
-                correspondStatut &&
-                correspondMatiere
-            );
+                let correspondStatut =
+                    true;
 
-        });
+
+                if (statut === "todo") {
+
+                    correspondStatut =
+                        !devoir.done &&
+                        !estEnRetard;
+
+                }
+
+                if (statut === "done") {
+
+                    correspondStatut =
+                        devoir.done;
+
+                }
+
+                if (statut === "late") {
+
+                    correspondStatut =
+                        estEnRetard;
+
+                }
+
+
+                const correspondMatiere =
+                    matiere === "all" ||
+                    devoir.subject === matiere;
+
+
+                return (
+
+                    correspondRecherche &&
+                    correspondStatut &&
+                    correspondMatiere
+
+                );
+
+            }
+        );
 
 
     // =========================
     // TRI PAR DATE
     // =========================
 
-    devoirsFiltres.sort(function(a, b) {
+    devoirsFiltres.sort(
+        function(a, b) {
 
-        if (!a.date && !b.date) {
-            return 0;
+            if (!a.date && !b.date) {
+                return 0;
+            }
+
+            if (!a.date) {
+                return 1;
+            }
+
+            if (!b.date) {
+                return -1;
+            }
+
+            if (ordre === "desc") {
+
+                return b.date.localeCompare(
+                    a.date
+                );
+
+            }
+
+            return a.date.localeCompare(
+                b.date
+            );
+
         }
+    );
 
-        if (!a.date) {
-            return 1;
-        }
 
-        if (!b.date) {
-            return -1;
-        }
+    // =========================
+    // COMPTEUR
+    // =========================
 
-        return a.date.localeCompare(
-            b.date
+    homeworkCount.textContent =
+        devoirsFiltres.length +
+        (
+            devoirsFiltres.length > 1
+                ? " devoirs"
+                : " devoir"
         );
-
-    });
 
 
     // =========================
     // AUCUN RÉSULTAT
     // =========================
 
-    if (devoirsFiltres.length === 0) {
+    if (
+        devoirsFiltres.length === 0
+    ) {
 
         homeworkList.innerHTML = `
+
             <div class="empty-message">
 
-                <div style="font-size:40px;">
+                <div class="empty-message-icon">
                     📭
                 </div>
 
@@ -374,6 +414,7 @@ function afficherDevoirs() {
                 </p>
 
             </div>
+
         `;
 
         return;
@@ -384,156 +425,204 @@ function afficherDevoirs() {
     // AFFICHAGE
     // =========================
 
-    devoirsFiltres.forEach(function(devoir) {
+    devoirsFiltres.forEach(
+        function(devoir) {
 
-        const index =
-            devoirs.indexOf(devoir);
+            const index =
+                devoirs.indexOf(devoir);
 
-        const estEnRetard =
-            devoirEnRetard(devoir);
-
-        const card =
-            document.createElement("article");
+            const estEnRetard =
+                devoirEnRetard(devoir);
 
 
-        card.className =
-            "homework-card" +
-            (devoir.done
-                ? " done"
-                : "") +
-            (estEnRetard
-                ? " overdue"
-                : "");
+            const card =
+                document.createElement(
+                    "article"
+                );
 
 
-        // =========================
-        // BADGE STATUT
-        // =========================
-
-        let badgeStatut = "";
-
-
-        if (devoir.done) {
-
-            badgeStatut = `
-                <span class="badge badge-done">
-                    🟢 Terminé
-                </span>
-            `;
-
-        }
-        else if (estEnRetard) {
-
-            badgeStatut = `
-                <span
-                    class="badge"
-                    style="
-                        background:#fee2e2;
-                        color:#b91c1c;
-                    "
-                >
-                    🚨 En retard
-                </span>
-            `;
-
-        }
-        else {
-
-            badgeStatut = `
-                <span class="badge badge-todo">
-                    🔴 À faire
-                </span>
-            `;
-
-        }
+            card.className =
+                "homework-card" +
+                (
+                    devoir.done
+                        ? " done"
+                        : ""
+                ) +
+                (
+                    estEnRetard
+                        ? " overdue"
+                        : ""
+                );
 
 
-        // =========================
-        // CARTE
-        // =========================
+            // =========================
+            // STATUT
+            // =========================
 
-        card.innerHTML = `
-
-            <h3>
-                ${echapperHTML(devoir.title)}
-            </h3>
-
-            <div class="homework-info">
-
-                <span class="badge">
-                    📚
-                    ${echapperHTML(devoir.subject)}
-                </span>
-
-                <span class="badge badge-date">
-                    📅
-                    ${echapperHTML(devoir.date)}
-                </span>
-
-                ${badgeStatut}
-
-            </div>
+            let badgeStatut = "";
 
 
-            ${
-                devoir.description
-                    ? `
-                        <p>
-                            ${echapperHTML(
-                                devoir.description
-                            ).replace(
-                                /\n/g,
-                                "<br>"
-                            )}
-                        </p>
-                    `
-                    : ""
+            if (devoir.done) {
+
+                badgeStatut = `
+
+                    <span
+                        class="badge badge-done"
+                    >
+                        🟢 Terminé
+                    </span>
+
+                `;
+
+            }
+
+            else if (estEnRetard) {
+
+                badgeStatut = `
+
+                    <span
+                        class="badge badge-late"
+                    >
+                        🚨 En retard
+                    </span>
+
+                `;
+
+            }
+
+            else {
+
+                badgeStatut = `
+
+                    <span
+                        class="badge badge-todo"
+                    >
+                        🔴 À faire
+                    </span>
+
+                `;
+
             }
 
 
-            <div class="homework-actions">
+            // =========================
+            // CARTE
+            // =========================
 
-                <button
-                    class="complete-button"
-                    onclick="changerStatut(${index})"
-                >
-                    ${
-                        devoir.done
-                            ? "↩️ À refaire"
-                            : "✅ Terminé"
-                    }
-                </button>
+            card.innerHTML = `
 
-
-                <button
-                    class="edit-button"
-                    onclick="modifierDevoir(${index})"
-                >
-                    ✏️ Modifier
-                </button>
+                <h3>
+                    ${echapperHTML(
+                        devoir.title
+                    )}
+                </h3>
 
 
-                <button
-                    class="delete-button"
-                    onclick="supprimerDevoir(${index})"
-                >
-                    🗑️ Supprimer
-                </button>
+                <div class="homework-info">
 
-            </div>
+                    <span class="badge">
 
-        `;
+                        📚
+                        ${echapperHTML(
+                            devoir.subject
+                        )}
+
+                    </span>
 
 
-        homeworkList.appendChild(card);
+                    <span class="badge badge-date">
 
-    });
+                        📅
+                        ${formaterDate(
+                            devoir.date
+                        )}
+
+                    </span>
+
+
+                    ${badgeStatut}
+
+                </div>
+
+
+                ${
+                    devoir.description
+                        ? `
+
+                            <p
+                                class="homework-description"
+                            >
+                                ${echapperHTML(
+                                    devoir.description
+                                ).replace(
+                                    /\n/g,
+                                    "<br>"
+                                )}
+                            </p>
+
+                        `
+                        : ""
+                }
+
+
+                <div class="homework-actions">
+
+                    <button
+                        class="complete-button"
+                        onclick="
+                            changerStatut(${index})
+                        "
+                    >
+
+                        ${
+                            devoir.done
+                                ? "↩️ À refaire"
+                                : "✅ Terminé"
+                        }
+
+                    </button>
+
+
+                    <button
+                        class="edit-button"
+                        onclick="
+                            modifierDevoir(${index})
+                        "
+                    >
+
+                        ✏️ Modifier
+
+                    </button>
+
+
+                    <button
+                        class="delete-button"
+                        onclick="
+                            supprimerDevoir(${index})
+                        "
+                    >
+
+                        🗑️ Supprimer
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            homeworkList.appendChild(
+                card
+            );
+
+        }
+    );
 
 }
 
 
 // =========================
-// AJOUTER
+// AJOUTER UN DEVOIR
 // =========================
 
 homeworkForm.addEventListener(
@@ -541,6 +630,7 @@ homeworkForm.addEventListener(
     function(event) {
 
         event.preventDefault();
+
 
         const nouveauDevoir = {
 
@@ -569,9 +659,11 @@ homeworkForm.addEventListener(
 
         sauvegarderDevoirs();
 
-        afficherDevoirs();
-
         homeworkForm.reset();
+
+        mettreAJourStatistiques();
+
+        afficherDevoirs();
 
     }
 );
@@ -587,21 +679,26 @@ function modifierDevoir(index) {
         devoirs[index];
 
 
+    if (!devoir) {
+        return;
+    }
+
+
     devoirEnModification =
         index;
 
 
     editSubject.value =
-        devoir.subject;
+        devoir.subject || "";
 
     editTitle.value =
-        devoir.title;
+        devoir.title || "";
 
     editDate.value =
-        devoir.date;
+        devoir.date || "";
 
     editDescription.value =
-        devoir.description;
+        devoir.description || "";
 
 
     editSection.style.display =
@@ -609,7 +706,8 @@ function modifierDevoir(index) {
 
 
     editSection.scrollIntoView({
-        behavior: "smooth"
+        behavior: "smooth",
+        block: "start"
     });
 
 }
@@ -629,8 +727,16 @@ editForm.addEventListener(
         if (
             devoirEnModification === null
         ) {
+
             return;
+
         }
+
+
+        const ancienDevoir =
+            devoirs[
+                devoirEnModification
+            ];
 
 
         devoirs[
@@ -650,16 +756,12 @@ editForm.addEventListener(
                 editDescription.value.trim(),
 
             done:
-                devoirs[
-                    devoirEnModification
-                ].done
+                ancienDevoir.done
 
         };
 
 
         sauvegarderDevoirs();
-
-        afficherDevoirs();
 
 
         devoirEnModification =
@@ -671,6 +773,11 @@ editForm.addEventListener(
 
         editSection.style.display =
             "none";
+
+
+        mettreAJourStatistiques();
+
+        afficherDevoirs();
 
     }
 );
@@ -702,10 +809,18 @@ cancelEdit.addEventListener(
 
 function changerStatut(index) {
 
+    if (!devoirs[index]) {
+        return;
+    }
+
+
     devoirs[index].done =
         !devoirs[index].done;
 
+
     sauvegarderDevoirs();
+
+    mettreAJourStatistiques();
 
     afficherDevoirs();
 
@@ -718,12 +833,31 @@ function changerStatut(index) {
 
 function supprimerDevoir(index) {
 
+    if (!devoirs[index]) {
+        return;
+    }
+
+
+    const confirmation =
+        confirm(
+            "Supprimer ce devoir ?"
+        );
+
+
+    if (!confirmation) {
+        return;
+    }
+
+
     devoirs.splice(
         index,
         1
     );
 
+
     sauvegarderDevoirs();
+
+    mettreAJourStatistiques();
 
     afficherDevoirs();
 
@@ -749,9 +883,16 @@ subjectFilter.addEventListener(
     afficherDevoirs
 );
 
+dateSort.addEventListener(
+    "change",
+    afficherDevoirs
+);
+
 
 // =========================
-// AFFICHAGE INITIAL
+// INITIALISATION
 // =========================
+
+mettreAJourStatistiques();
 
 afficherDevoirs();
