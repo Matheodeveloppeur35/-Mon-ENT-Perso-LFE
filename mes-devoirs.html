@@ -2,6 +2,7 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,252 +12,567 @@
 
     <style>
 
+        /* =========================
+           EN-TÊTE
+        ========================= */
+
         .page-header {
             margin-bottom: 25px;
         }
 
         .page-header p {
             color: #64748b;
+            margin-top: 5px;
         }
+
+
+        /* =========================
+           STATISTIQUES
+        ========================= */
+
+        .homework-stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+
+        }
+
+        .stat-card span {
+
+            display: block;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+        .stat-card strong {
+
+            font-size: 27px;
+
+            color: #172033;
+        }
+
+        .stat-card.todo strong {
+            color: #dc2626;
+        }
+
+        .stat-card.done strong {
+            color: #16a34a;
+        }
+
+        .stat-card.late strong {
+            color: #ea580c;
+        }
+
+
+        /* =========================
+           BLOCS
+        ========================= */
 
         .tools,
         .add-homework,
         .edit-homework,
         .homework-section {
+
             background: white;
+
             padding: 25px;
+
             border-radius: 18px;
+
             margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
         }
+
+
+        /* =========================
+           OUTILS
+        ========================= */
 
         .tools {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
 
-        .search-box {
-            flex: 1;
-            min-width: 250px;
+            display: grid;
+
+            grid-template-columns:
+                minmax(220px, 1fr)
+                180px
+                220px
+                180px;
+
+            gap: 12px;
+
         }
 
         .search-box input,
-        .tools select,
-        .homework-form input,
-        .homework-form textarea,
-        .homework-form select {
+        .tools select {
+
             width: 100%;
+
             box-sizing: border-box;
+
             padding: 12px;
-            border: 1px solid #dbe2ea;
+
+            border:
+                1px solid #dbe2ea;
+
             border-radius: 10px;
+
             font-family: inherit;
+
+            background: white;
+
         }
 
-        .tools select {
-            width: auto;
-            min-width: 180px;
+        .search-box input:focus,
+        .tools select:focus {
+
+            outline: none;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37,99,235,0.1);
+
         }
+
+
+        /* =========================
+           FORMULAIRE
+        ========================= */
 
         .homework-form {
+
             display: grid;
+
             gap: 15px;
         }
 
         .homework-form label {
+
             display: block;
+
             font-weight: bold;
+
             margin-bottom: 6px;
         }
 
+        .homework-form input,
+        .homework-form textarea,
+        .homework-form select {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 12px;
+
+            border:
+                1px solid #dbe2ea;
+
+            border-radius: 10px;
+
+            font-family: inherit;
+
+        }
+
         .homework-form textarea {
+
             min-height: 100px;
+
             resize: vertical;
         }
 
         .homework-form button {
+
             border: none;
+
             background: #2563eb;
+
             color: white;
-            padding: 12px;
+
+            padding: 13px;
+
             border-radius: 10px;
+
             font-weight: bold;
+
             cursor: pointer;
+
+            transition: 0.2s;
         }
 
+        .homework-form button:hover {
+
+            background: #1d4ed8;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           TITRE LISTE
+        ========================= */
+
+        .homework-section-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+        .homework-section-header h2 {
+            margin: 0;
+        }
+
+        .homework-count {
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           LISTE
+        ========================= */
+
         .homework-list {
+
             display: grid;
+
             gap: 15px;
         }
 
+
+        /* =========================
+           CARTE
+        ========================= */
+
         .homework-card {
-            border-left: 5px solid #2563eb;
+
+            position: relative;
+
+            border-left:
+                5px solid #2563eb;
+
             background: #f8fafc;
+
             padding: 20px;
+
             border-radius: 12px;
+
+            transition: 0.2s;
+        }
+
+        .homework-card:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 6px 18px
+                rgba(0,0,0,0.07);
         }
 
         .homework-card.done {
+
             border-left-color: #16a34a;
+
             opacity: 0.75;
         }
 
-        .homework-card h3 {
-            margin-top: 0;
+        .homework-card.overdue {
+
+            border-left-color: #dc2626;
+
+            background: #fff7f7;
         }
 
+        .homework-card h3 {
+
+            margin-top: 0;
+
+            margin-bottom: 10px;
+
+            color: #172033;
+        }
+
+
+        /* =========================
+           INFORMATIONS
+        ========================= */
+
         .homework-info {
+
             display: flex;
+
             flex-wrap: wrap;
+
             gap: 8px;
+
             margin: 12px 0;
         }
 
         .badge {
+
             background: #e2e8f0;
+
             padding: 5px 10px;
+
             border-radius: 20px;
+
             font-size: 12px;
+
             font-weight: bold;
         }
 
         .badge-date {
+
             background: #dbeafe;
+
             color: #1d4ed8;
         }
 
         .badge-done {
+
             background: #dcfce7;
+
             color: #15803d;
         }
 
         .badge-todo {
+
+            background: #fef3c7;
+
+            color: #b45309;
+        }
+
+        .badge-late {
+
             background: #fee2e2;
+
             color: #b91c1c;
         }
 
+
+        /* =========================
+           DESCRIPTION
+        ========================= */
+
+        .homework-description {
+
+            color: #475569;
+
+            line-height: 1.6;
+
+            margin: 12px 0;
+        }
+
+
+        /* =========================
+           BOUTONS
+        ========================= */
+
         .homework-actions {
+
             display: flex;
+
             gap: 10px;
+
             flex-wrap: wrap;
+
             margin-top: 15px;
         }
 
         .homework-actions button {
+
             border: none;
+
             color: white;
+
             padding: 9px 13px;
+
             border-radius: 8px;
+
             cursor: pointer;
+
             font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+        .homework-actions button:hover {
+
+            transform: translateY(-1px);
+
+            opacity: 0.9;
         }
 
         .complete-button {
+
             background: #16a34a;
         }
 
         .edit-button {
+
             background: #2563eb;
         }
 
         .delete-button {
+
             background: #dc2626;
         }
 
+
+        /* =========================
+           AUCUN RÉSULTAT
+        ========================= */
+
         .empty-message {
+
             text-align: center;
-            padding: 30px;
+
+            padding: 40px 20px;
+
             color: #64748b;
         }
-/* ============================= */
-/* TABLEAU DE BORD DES DEVOIRS */
-/* ============================= */
 
-.homework-dashboard {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
-}
+        .empty-message-icon {
 
-.dashboard-card {
-    background: white;
-    padding: 20px;
-    border-radius: 18px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    text-align: center;
-    border-top: 5px solid #2563eb;
-}
+            font-size: 45px;
 
-.dashboard-card .dashboard-icon {
-    font-size: 28px;
-    margin-bottom: 8px;
-}
+            margin-bottom: 10px;
+        }
 
-.dashboard-card .dashboard-number {
-    font-size: 30px;
-    font-weight: bold;
-    color: #0f172a;
-}
 
-.dashboard-card .dashboard-label {
-    margin-top: 5px;
-    color: #64748b;
-    font-weight: 600;
-}
+        /* =========================
+           MOBILE
+        ========================= */
 
-.dashboard-todo {
-    border-top-color: #dc2626;
-}
+        @media (max-width: 900px) {
 
-.dashboard-late {
-    border-top-color: #ef4444;
-}
+            .homework-stats {
 
-.dashboard-done {
-    border-top-color: #16a34a;
-}
-
-.dashboard-total {
-    border-top-color: #2563eb;
-}
-
-@media (max-width: 900px) {
-    .homework-dashboard {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 500px) {
-    .homework-dashboard {
-        grid-template-columns: 1fr;
-    }
-}
-        @media (max-width: 700px) {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
 
             .tools {
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .homework-stats {
+
+                grid-template-columns: 1fr 1fr;
+
+            }
+
+            .tools {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .homework-section-header {
+
+                align-items: flex-start;
+
                 flex-direction: column;
             }
 
-            .tools select {
+            .homework-actions {
+
+                flex-direction: column;
+            }
+
+            .homework-actions button {
+
                 width: 100%;
             }
 
         }
 
+        @media (max-width: 450px) {
+
+            .homework-stats {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
     </style>
+
 </head>
 
+
 <body>
+
+
+    <!-- =========================
+         MENU
+    ========================= -->
 
     <aside class="sidebar">
 
         <div class="logo">
+
             🎓
+
             <h2>Mon ENT</h2>
+
             <span>Perso LFE</span>
+
         </div>
+
 
         <nav>
 
@@ -272,7 +588,10 @@
                 📚 Mes cours
             </a>
 
-            <a href="mes-devoirs.html" class="active">
+            <a
+                href="mes-devoirs.html"
+                class="active"
+            >
                 📝 Mes devoirs
             </a>
 
@@ -288,103 +607,90 @@
 
     </aside>
 
+
+    <!-- =========================
+         CONTENU
+    ========================= -->
+
     <main class="main-content">
+
 
         <header class="page-header">
 
-            <h1>📝 Mes devoirs</h1>
+            <h1>
+                📝 Mes devoirs
+            </h1>
 
             <p>
                 Retrouve et organise tous tes devoirs.
             </p>
 
         </header>
-<!-- TABLEAU DE BORD -->
-
-<section class="homework-dashboard">
-
-    <div class="dashboard-card dashboard-todo">
-
-        <div class="dashboard-icon">
-            🔴
-        </div>
-
-        <div
-            class="dashboard-number"
-            id="count-todo"
-        >
-            0
-        </div>
-
-        <div class="dashboard-label">
-            À faire
-        </div>
-
-    </div>
 
 
-    <div class="dashboard-card dashboard-late">
+        <!-- =========================
+             STATISTIQUES
+        ========================= -->
 
-        <div class="dashboard-icon">
-            🚨
-        </div>
+        <section class="homework-stats">
 
-        <div
-            class="dashboard-number"
-            id="count-late"
-        >
-            0
-        </div>
+            <div class="stat-card">
 
-        <div class="dashboard-label">
-            En retard
-        </div>
+                <span>
+                    📚 Total
+                </span>
 
-    </div>
+                <strong id="stat-total">
+                    0
+                </strong>
 
-
-    <div class="dashboard-card dashboard-done">
-
-        <div class="dashboard-icon">
-            🟢
-        </div>
-
-        <div
-            class="dashboard-number"
-            id="count-done"
-        >
-            0
-        </div>
-
-        <div class="dashboard-label">
-            Terminés
-        </div>
-
-    </div>
+            </div>
 
 
-    <div class="dashboard-card dashboard-total">
+            <div class="stat-card todo">
 
-        <div class="dashboard-icon">
-            📊
-        </div>
+                <span>
+                    🔴 À faire
+                </span>
 
-        <div
-            class="dashboard-number"
-            id="count-total"
-        >
-            0
-        </div>
+                <strong id="stat-todo">
+                    0
+                </strong>
 
-        <div class="dashboard-label">
-            Total
-        </div>
+            </div>
 
-    </div>
 
-</section>
+            <div class="stat-card done">
 
-        <!-- OUTILS -->
+                <span>
+                    🟢 Terminés
+                </span>
+
+                <strong id="stat-done">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card late">
+
+                <span>
+                    🚨 En retard
+                </span>
+
+                <strong id="stat-late">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             OUTILS
+        ========================= -->
 
         <section class="tools">
 
@@ -398,10 +704,11 @@
 
             </div>
 
+
             <select id="status-filter">
 
                 <option value="all">
-                    📋 Tous les devoirs
+                    📋 Tous
                 </option>
 
                 <option value="todo">
@@ -411,8 +718,13 @@
                 <option value="done">
                     🟢 Terminés
                 </option>
-<option value="late">🚨 En retard</option>
+
+                <option value="late">
+                    🚨 En retard
+                </option>
+
             </select>
+
 
             <select id="subject-filter">
 
@@ -420,52 +732,30 @@
                     📚 Toutes les matières
                 </option>
 
-                <option value="Mathématiques">
-                    Mathématiques
+                <option>Mathématiques</option>
+                <option>Anglais LV1</option>
+                <option>Français / Histoire-Géo / EMC</option>
+                <option>Sciences physiques</option>
+                <option>Enseignement professionnel</option>
+                <option>Pratique professionnelle</option>
+                <option>Arts appliqués / Culture artistique</option>
+                <option>Soutien au parcours</option>
+                <option>Prévention-Santé-Environnement</option>
+                <option>Économie & Gestion</option>
+                <option>Réalisation projet</option>
+                <option>Éducation physique & sportive</option>
+
+            </select>
+
+
+            <select id="date-sort">
+
+                <option value="asc">
+                    📅 Plus proches
                 </option>
 
-                <option value="Anglais LV1">
-                    Anglais LV1
-                </option>
-
-                <option value="Français / Histoire-Géo / EMC">
-                    Français / Histoire-Géo / EMC
-                </option>
-
-                <option value="Sciences physiques">
-                    Sciences physiques
-                </option>
-
-                <option value="Enseignement professionnel">
-                    Enseignement professionnel
-                </option>
-
-                <option value="Pratique professionnelle">
-                    Pratique professionnelle
-                </option>
-
-                <option value="Arts appliqués / Culture artistique">
-                    Arts appliqués / Culture artistique
-                </option>
-
-                <option value="Soutien au parcours">
-                    Soutien au parcours
-                </option>
-
-                <option value="Prévention-Santé-Environnement">
-                    Prévention-Santé-Environnement
-                </option>
-
-                <option value="Économie & Gestion">
-                    Économie & Gestion
-                </option>
-
-                <option value="Réalisation projet">
-                    Réalisation projet
-                </option>
-
-                <option value="Éducation physique & sportive">
-                    Éducation physique & sportive
+                <option value="desc">
+                    📅 Plus lointains
                 </option>
 
             </select>
@@ -473,13 +763,21 @@
         </section>
 
 
-        <!-- AJOUT -->
+        <!-- =========================
+             AJOUT
+        ========================= -->
 
         <section class="add-homework">
 
-            <h2>➕ Ajouter un devoir</h2>
+            <h2>
+                ➕ Ajouter un devoir
+            </h2>
 
-            <form id="homework-form" class="homework-form">
+
+            <form
+                id="homework-form"
+                class="homework-form"
+            >
 
                 <div>
 
@@ -487,7 +785,10 @@
                         Matière
                     </label>
 
-                    <select id="homework-subject" required>
+                    <select
+                        id="homework-subject"
+                        required
+                    >
 
                         <option value="">
                             Sélectionner une matière
@@ -510,6 +811,7 @@
 
                 </div>
 
+
                 <div>
 
                     <label for="homework-title">
@@ -525,6 +827,7 @@
 
                 </div>
 
+
                 <div>
 
                     <label for="homework-date">
@@ -539,6 +842,7 @@
 
                 </div>
 
+
                 <div>
 
                     <label for="homework-description">
@@ -552,6 +856,7 @@
 
                 </div>
 
+
                 <button type="submit">
                     💾 Enregistrer le devoir
                 </button>
@@ -561,7 +866,9 @@
         </section>
 
 
-        <!-- MODIFICATION -->
+        <!-- =========================
+             MODIFICATION
+        ========================= -->
 
         <section
             class="edit-homework"
@@ -569,7 +876,10 @@
             style="display:none;"
         >
 
-            <h2>✏️ Modifier le devoir</h2>
+            <h2>
+                ✏️ Modifier le devoir
+            </h2>
+
 
             <form
                 id="edit-homework-form"
@@ -582,7 +892,10 @@
                         Matière
                     </label>
 
-                    <select id="edit-homework-subject" required>
+                    <select
+                        id="edit-homework-subject"
+                        required
+                    >
 
                         <option>Mathématiques</option>
                         <option>Anglais LV1</option>
@@ -601,6 +914,7 @@
 
                 </div>
 
+
                 <div>
 
                     <label for="edit-homework-title">
@@ -614,6 +928,7 @@
                     >
 
                 </div>
+
 
                 <div>
 
@@ -629,6 +944,7 @@
 
                 </div>
 
+
                 <div>
 
                     <label for="edit-homework-description">
@@ -641,9 +957,11 @@
 
                 </div>
 
+
                 <button type="submit">
                     💾 Enregistrer les modifications
                 </button>
+
 
                 <button
                     type="button"
@@ -658,11 +976,27 @@
         </section>
 
 
-        <!-- LISTE -->
+        <!-- =========================
+             LISTE
+        ========================= -->
 
         <section class="homework-section">
 
-            <h2>📚 Mes devoirs</h2>
+            <div class="homework-section-header">
+
+                <h2>
+                    📚 Mes devoirs
+                </h2>
+
+                <span
+                    class="homework-count"
+                    id="homework-count"
+                >
+                    0 devoir
+                </span>
+
+            </div>
+
 
             <div
                 class="homework-list"
@@ -670,6 +1004,7 @@
             ></div>
 
         </section>
+
 
     </main>
 
