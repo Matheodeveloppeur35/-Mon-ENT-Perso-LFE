@@ -1,16 +1,191 @@
-// ==========================================
-// 🏠 ACCUEIL - MON ENT PERSO LFE
-// ==========================================
+const courseSources = [
+
+    ["cours-francais-histoire-geo", "Français / Histoire-Géo / EMC"],
+    ["cours-mathematiques", "Mathématiques"],
+    ["cours-anglais", "Anglais LV1"],
+    ["cours-sciences-physiques", "Sciences physiques"],
+    ["cours-enseignement-professionnel", "Enseignement professionnel"],
+    ["cours-pratique-professionnelle", "Pratique professionnelle"],
+    ["cours-arts-appliques", "Arts appliqués / Culture artistique"],
+    ["cours-soutien-au-parcours", "Soutien au parcours"],
+    ["cours-prevention-sante-environnement", "Prévention-Santé-Environnement"],
+    ["cours-economie-gestion", "Économie & Gestion"],
+    ["cours-realisation-projet", "Réalisation projet"],
+    ["cours-education-physique-sportive", "Éducation physique & sportive"]
+
+];
 
 
-// ==========================================
-// 📅 DATE DU JOUR
-// ==========================================
+function chargerDonnees(cle) {
+
+    try {
+
+        return JSON.parse(localStorage.getItem(cle)) || [];
+
+    } catch (erreur) {
+
+        console.error("Erreur de lecture :", cle, erreur);
+
+        return [];
+
+    }
+
+}
+
+
+function echapperHTML(valeur) {
+
+    return String(valeur ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+}
+
+
+function convertirDate(date, heure = "00:00") {
+
+    if (!date) {
+        return null;
+    }
+
+    const resultat = new Date(`${date}T${heure}:00`);
+
+    return isNaN(resultat) ? null : resultat;
+
+}
+
+
+function formaterDate(date) {
+
+    if (!date) {
+        return "";
+    }
+
+    const resultat = new Date(`${date}T12:00:00`);
+
+    if (isNaN(resultat)) {
+        return date;
+    }
+
+    return resultat.toLocaleDateString("fr-FR");
+}
+
+
+/* ================================
+   DATE DU JOUR
+================================ */
 
 function afficherDate() {
 
-    const element =
-        document.getElementById("current-date");
+    const element = document.getElementById("current-date");
+
+    if (!element) {
+        return;
+    }
+
+    const aujourdHui = new Date();
+
+    element.textContent =
+        new Intl.DateTimeFormat("fr-FR", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }).format(aujourdHui);
+
+}
+
+
+/* ================================
+   DEVOIRS
+================================ */
+
+function afficherDevoirs() {
+
+    const element = document.getElementById("next-homework");
+
+    if (!element) {
+        return;
+    }
+
+    const aujourdHui = new Date();
+
+    aujourdHui.setHours(0, 0, 0, 0);
+
+
+    const devoirs = chargerDonnees("mes-devoirs")
+        .filter(devoir => {
+
+            const termine =
+                devoir.termine === true ||
+                devoir.done === true ||
+                devoir.statut === "done";
+
+            if (termine) {
+                return false;
+            }
+
+            const dateDevoir = convertirDate(devoir.date);
+
+            return dateDevoir && dateDevoir >= aujourdHui;
+
+        })
+        .sort((a, b) => {
+
+            return convertirDate(a.date) - convertirDate(b.date);
+
+        });
+
+
+    if (devoirs.length === 0) {
+
+        element.innerHTML =
+            `<span class="muted">
+                Aucun devoir à venir.
+            </span>`;
+
+        return;
+
+    }
+
+
+    const devoir = devoirs[0];
+
+
+    element.innerHTML = `
+
+        <div class="item">
+
+            <strong>
+                ${echapperHTML(devoir.matiere)}
+            </strong>
+
+            <br>
+
+            ${echapperHTML(devoir.titre)}
+
+            <br>
+
+            <span class="muted">
+                Pour le ${formaterDate(devoir.date)}
+            </span>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ================================
+   CONTROLES
+================================ */
+
+function afficherControles() {
+
+    const element = document.getElementById("next-control");
 
     if (!element) {
         return;
@@ -20,676 +195,332 @@ function afficherDate() {
     const maintenant = new Date();
 
 
-    const date = maintenant.toLocaleDateString(
-        "fr-FR",
-        {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        }
-    );
+    const controles = chargerDonnees("mes-controles")
+        .map(controle => {
+
+            return {
+                ...controle,
+                dateObjet:
+                    convertirDate(
+                        controle.date,
+                        controle.time || "00:00"
+                    )
+            };
+
+        })
+        .filter(controle => {
+
+            return controle.dateObjet &&
+                   controle.dateObjet >= maintenant;
+
+        })
+        .sort((a, b) => {
+
+            return a.dateObjet - b.dateObjet;
+
+        });
 
 
-    element.textContent =
-        date.charAt(0).toUpperCase() +
-        date.slice(1);
-}
+    if (controles.length === 0) {
 
-
-
-// ==========================================
-// 📝 DEVOIRS
-// ==========================================
-
-function afficherDevoirs() {
-
-    const container =
-        document.getElementById(
-            "upcoming-homework"
-        );
-
-    if (!container) {
-        return;
-    }
-
-
-    let devoirs = [];
-
-
-    try {
-
-        devoirs = JSON.parse(
-            localStorage.getItem("mes-devoirs")
-        ) || [];
-
-    } catch (erreur) {
-
-        devoirs = [];
-
-    }
-
-
-    if (devoirs.length === 0) {
+        element.innerHTML =
+            `<span class="muted">
+                Aucun contrôle programmé.
+            </span>`;
 
         return;
 
     }
 
 
-    const aujourdHui =
-        new Date();
-
-    aujourdHui.setHours(
-        0,
-        0,
-        0,
-        0
-    );
+    const controle = controles[0];
 
 
-    const devoirsAVenir =
-        devoirs
-            .filter(devoir => {
+    element.innerHTML = `
 
-                if (!devoir.date) {
-                    return false;
-                }
+        <div class="item">
 
-                const date =
-                    new Date(
-                        devoir.date
-                    );
+            <strong>
+                ${echapperHTML(controle.matiere)}
+            </strong>
 
-                return date >= aujourdHui;
+            <br>
 
-            })
-            .sort(
-                (a, b) =>
-                    new Date(a.date) -
-                    new Date(b.date)
-            )
-            .slice(0, 3);
+            ${echapperHTML(controle.titre)}
 
+            <br>
 
-    if (devoirsAVenir.length === 0) {
-        return;
-    }
+            <span class="muted">
 
+                ${formaterDate(controle.date)}
 
-    container.innerHTML = "";
+                ${controle.time
+                    ? " à " + echapperHTML(controle.time)
+                    : ""}
 
+            </span>
 
-    devoirsAVenir.forEach(
-        devoir => {
+        </div>
 
-            const date =
-                new Date(
-                    devoir.date
-                );
-
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-            element.className =
-                "dashboard-item";
-
-
-            element.innerHTML = `
-
-                <div class="dashboard-item-icon">
-                    📝
-                </div>
-
-                <div class="dashboard-item-content">
-
-                    <strong>
-                        ${echapperHTML(
-                            devoir.titre ||
-                            devoir.title ||
-                            "Devoir"
-                        )}
-                    </strong>
-
-                    <span>
-                        📅 ${date.toLocaleDateString(
-                            "fr-FR"
-                        )}
-                    </span>
-
-                </div>
-
-            `;
-
-
-            container.appendChild(
-                element
-            );
-
-        }
-    );
+    `;
 
 }
 
 
+/* ================================
+   NOTES
+================================ */
 
-// ==========================================
-// 📚 COURS RÉCENTS
-// ==========================================
+function afficherNotes() {
+
+    const element = document.getElementById("notes-summary");
+
+    if (!element) {
+        return;
+    }
+
+
+    const notes = chargerDonnees("mes-notes");
+
+
+    if (notes.length === 0) {
+
+        element.innerHTML =
+            `<span class="muted">
+                Aucune note enregistrée.
+            </span>`;
+
+        return;
+
+    }
+
+
+    let totalPoints = 0;
+    let totalCoefficients = 0;
+
+
+    notes.forEach(note => {
+
+        const valeur = Number(note.note) || 0;
+        const coefficient = Number(note.coefficient) || 1;
+
+        totalPoints += valeur * coefficient;
+        totalCoefficients += coefficient;
+
+    });
+
+
+    const moyenne =
+        totalCoefficients > 0
+            ? totalPoints / totalCoefficients
+            : 0;
+
+
+    element.innerHTML = `
+
+        <strong>
+            ${moyenne.toFixed(2)}/20
+        </strong>
+
+        <br>
+
+        <span class="muted">
+
+            ${notes.length}
+            note${notes.length > 1 ? "s" : ""}
+
+        </span>
+
+    `;
+
+}
+
+
+/* ================================
+   DERNIERS COURS
+================================ */
 
 function afficherCoursRecents() {
 
-    const container =
-        document.getElementById(
-            "recent-courses"
-        );
+    const element = document.getElementById("recent-courses");
 
-    if (!container) {
+    if (!element) {
         return;
     }
-
-
-    const sources = [
-
-        {
-            cle: "cours-mathematiques",
-            matiere: "Mathématiques"
-        },
-
-        {
-            cle: "cours-anglais",
-            matiere: "Anglais LV1"
-        },
-
-        {
-            cle: "cours-francais-histoire-geo",
-            matiere:
-                "Français / Histoire-Géo / EMC"
-        },
-
-        {
-            cle: "cours-sciences-physiques",
-            matiere:
-                "Sciences physiques"
-        },
-
-        {
-            cle:
-                "cours-enseignement-professionnel",
-            matiere:
-                "Enseignement professionnel"
-        },
-
-        {
-            cle:
-                "cours-pratique-professionnelle",
-            matiere:
-                "Pratique professionnelle"
-        },
-
-        {
-            cle:
-                "cours-arts-appliques",
-            matiere:
-                "Arts appliqués"
-        },
-
-        {
-            cle:
-                "cours-soutien-au-parcours",
-            matiere:
-                "Soutien au parcours"
-        },
-
-        {
-            cle:
-                "cours-prevention-sante-environnement",
-            matiere:
-                "PSE"
-        },
-
-        {
-            cle:
-                "cours-economie-gestion",
-            matiere:
-                "Économie & Gestion"
-        },
-
-        {
-            cle:
-                "cours-realisation-projet",
-            matiere:
-                "Réalisation projet"
-        },
-
-        {
-            cle:
-                "cours-education-physique-sportive",
-            matiere:
-                "EPS"
-        }
-
-    ];
 
 
     let tousLesCours = [];
 
 
-    sources.forEach(source => {
+    courseSources.forEach(([cle, matiere]) => {
 
-        try {
-
-            const cours =
-                JSON.parse(
-                    localStorage.getItem(
-                        source.cle
-                    )
-                ) || [];
+        const cours = chargerDonnees(cle);
 
 
-            cours.forEach(coursItem => {
+        cours.forEach(coursItem => {
 
-                tousLesCours.push({
+            tousLesCours.push({
 
-                    ...coursItem,
+                ...coursItem,
 
-                    matiere:
-                        source.matiere
-
-                });
+                matiere: matiere
 
             });
 
-        } catch (erreur) {
-
-            console.error(erreur);
-
-        }
+        });
 
     });
 
 
-    if (tousLesCours.length === 0) {
-        return;
-    }
+    tousLesCours.sort((a, b) => {
 
+        return new Date(b.date || 0) -
+               new Date(a.date || 0);
 
-    tousLesCours.sort(
-        (a, b) => {
-
-            const dateA =
-                new Date(
-                    a.date || 0
-                );
-
-            const dateB =
-                new Date(
-                    b.date || 0
-                );
-
-            return dateB - dateA;
-
-        }
-    );
+    });
 
 
     const derniersCours =
         tousLesCours.slice(0, 3);
 
 
-    container.innerHTML = "";
+    if (derniersCours.length === 0) {
+
+        element.innerHTML =
+            `<span class="muted">
+                Aucun cours enregistré.
+            </span>`;
+
+        return;
+
+    }
 
 
-    derniersCours.forEach(
-        cours => {
+    element.innerHTML = derniersCours
+        .map(cours => {
 
-            const element =
-                document.createElement(
-                    "div"
-                );
+            return `
 
-            element.className =
-                "dashboard-item";
-
-
-            element.innerHTML = `
-
-                <div class="dashboard-item-icon">
-                    📚
-                </div>
-
-                <div class="dashboard-item-content">
+                <div class="item">
 
                     <strong>
-                        ${echapperHTML(
-                            cours.title ||
-                            cours.titre ||
-                            "Cours"
-                        )}
+                        ${echapperHTML(cours.matiere)}
                     </strong>
 
-                    <span>
-                        ${echapperHTML(
-                            cours.matiere
-                        )}
-                    </span>
+                    <br>
+
+                    ${echapperHTML(
+                        cours.titre || "Cours"
+                    )}
+
+                    ${
+                        cours.date
+                            ? `<br>
+                               <span class="muted">
+                                   ${formaterDate(cours.date)}
+                               </span>`
+                            : ""
+                    }
 
                 </div>
 
             `;
 
-
-            container.appendChild(
-                element
-            );
-
-        }
-    );
+        })
+        .join("");
 
 }
 
 
-
-// ==========================================
-// 🧑‍🏫 ABSENCES
-// ==========================================
+/* ================================
+   ABSENCES
+================================ */
 
 function afficherAbsences() {
 
-    const container =
-        document.getElementById(
-            "recent-absences"
-        );
+    const element =
+        document.getElementById("absence-summary");
 
-    if (!container) {
+
+    if (!element) {
         return;
     }
 
 
-    let absences = [];
-
-
-    try {
-
-        absences = JSON.parse(
-            localStorage.getItem(
-                "mon-ent-absences-professeurs"
-            )
-        ) || [];
-
-    } catch (erreur) {
-
-        absences = [];
-
-    }
+    const absences =
+        chargerDonnees("mon-ent-absences-professeurs");
 
 
     if (absences.length === 0) {
+
+        element.innerHTML =
+            `<span class="muted">
+                Aucune absence signalée.
+            </span>`;
+
         return;
+
     }
 
 
-    const dernieresAbsences =
-        absences.slice(-3).reverse();
+    const derniere =
+        absences[absences.length - 1];
 
 
-    container.innerHTML = "";
+    const professeur =
+        derniere.teacher ||
+        derniere.professeur ||
+        "Professeur";
 
 
-    dernieresAbsences.forEach(
-        absence => {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-            element.className =
-                "dashboard-item";
+    const remplacement =
+        derniere.replacement ||
+        derniere.remplacement ||
+        "Absence signalée";
 
 
-            element.innerHTML = `
+    element.innerHTML = `
 
-                <div class="dashboard-item-icon">
-                    🔄
-                </div>
+        <div class="item">
 
-                <div class="dashboard-item-content">
+            <strong>
+                ${echapperHTML(professeur)}
+            </strong>
 
-                    <strong>
-                        ${echapperHTML(
-                            absence.teacher ||
-                            absence.professeur ||
-                            "Professeur"
-                        )}
-                    </strong>
+            <br>
 
-                    <span>
-                        ${echapperHTML(
-                            absence.replacement ||
-                            absence.remplacement ||
-                            "Absence"
-                        )}
-                    </span>
+            ${echapperHTML(remplacement)}
 
-                </div>
+        </div>
 
-            `;
-
-
-            container.appendChild(
-                element
-            );
-
-        }
-    );
+    `;
 
 }
 
 
+/* ================================
+   INITIALISATION
+================================ */
 
-// ==========================================
-// 🧪 CONTRÔLES
-// ==========================================
+function initialiserAccueil() {
 
-function afficherControles() {
-
-    const container =
-        document.getElementById(
-            "upcoming-tests"
-        );
-
-    if (!container) {
-        return;
-    }
-
-
-    let controles = [];
-
-
-    try {
-
-        controles = JSON.parse(
-            localStorage.getItem(
-                "mes-controles"
-            )
-        ) || [];
-
-    } catch (erreur) {
-
-        controles = [];
-
-    }
-
-
-    if (controles.length === 0) {
-        return;
-    }
-
-
-    const aujourdHui =
-        new Date();
-
-    aujourdHui.setHours(
-        0,
-        0,
-        0,
-        0
-    );
-
-
-    const prochains =
-        controles
-            .filter(controle => {
-
-                if (!controle.date) {
-                    return false;
-                }
-
-                return new Date(
-                    controle.date
-                ) >= aujourdHui;
-
-            })
-            .sort(
-                (a, b) =>
-                    new Date(a.date) -
-                    new Date(b.date)
-            )
-            .slice(0, 3);
-
-
-    if (prochains.length === 0) {
-        return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    prochains.forEach(
-        controle => {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-            element.className =
-                "dashboard-item";
-
-
-            const date =
-                new Date(
-                    controle.date
-                );
-
-
-            element.innerHTML = `
-
-                <div class="dashboard-item-icon">
-                    🧪
-                </div>
-
-                <div class="dashboard-item-content">
-
-                    <strong>
-                        ${echapperHTML(
-                            controle.titre ||
-                            controle.title ||
-                            "Contrôle"
-                        )}
-                    </strong>
-
-                    <span>
-                        📅 ${date.toLocaleDateString(
-                            "fr-FR"
-                        )}
-                    </span>
-
-                </div>
-
-            `;
-
-
-            container.appendChild(
-                element
-            );
-
-        }
-    );
+    afficherDate();
+    afficherDevoirs();
+    afficherControles();
+    afficherNotes();
+    afficherCoursRecents();
+    afficherAbsences();
 
 }
 
-
-
-// ==========================================
-// 🔐 PROTECTION HTML
-// ==========================================
-
-function echapperHTML(texte) {
-
-    if (
-        texte === undefined ||
-        texte === null
-    ) {
-
-        return "";
-
-    }
-
-
-    return String(texte)
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-
-// ==========================================
-// 🚀 INITIALISATION
-// ==========================================
 
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
+    initialiserAccueil
+);
 
-        afficherDate();
 
-        afficherDevoirs();
-
-        afficherCoursRecents();
-
-        afficherAbsences();
-
-        afficherControles();
-
-    }
+window.addEventListener(
+    "pageshow",
+    initialiserAccueil
 );
