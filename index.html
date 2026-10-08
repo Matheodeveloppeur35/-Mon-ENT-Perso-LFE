@@ -1,467 +1,195 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Mon ENT Perso LFE</title>
 
-    <title>Accueil - Mon ENT Perso LFE</title>
+    <link rel="stylesheet" href="css/style.css">
 
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
+    <style>
+        .dashboard-grid,
+        .stats,
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
 
+        .dashboard-card,
+        .welcome-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 18px 0;
+        }
+
+        .quick-actions a {
+            background: #2563eb;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .item {
+            padding: 9px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .muted {
+            color: #64748b;
+        }
+
+        @media (max-width: 700px) {
+            .quick-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 
-
 <body>
-
-
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
 
     <aside class="sidebar">
 
         <div class="logo">
-
-            <div>🎓</div>
-
+            🎓
             <h2>Mon ENT</h2>
-
             <span>Perso LFE</span>
-
         </div>
 
-
         <nav>
-<nav>
-
-    <a href="index.html">
-        🏠 Accueil
-    </a>
-
-    <a href="emploi-du-temps.html">
-        📅 Emploi du temps
-    </a>
-
-    <a href="mes-cours.html">
-        📚 Mes cours
-    </a>
-
-    <a href="mes-devoirs.html">
-        📝 Mes devoirs
-    </a>
-
-    <a href="mes-notes.html">
-        📊 Mes notes
-    </a>
-
-    <a href="mes-controles.html">
-        📋 Mes contrôles
-    </a>
-
-</nav>
+            <a href="index.html">🏠 Accueil</a>
+            <a href="emploi-du-temps.html">📅 Emploi du temps</a>
+            <a href="mes-cours.html">📚 Mes cours</a>
+            <a href="mes-devoirs.html">📝 Mes devoirs</a>
+            <a href="mes-notes.html">📊 Mes notes</a>
+            <a href="mes-controles.html">📋 Mes contrôles</a>
         </nav>
 
     </aside>
 
-
-
-    <!-- =========================
-         CONTENU
-    ========================== -->
-
     <main class="main-content">
 
-
-        <!-- EN-TÊTE -->
-
-        <header class="home-header">
-
-            <div>
-
-                <h1>
-                    👋 Bienvenue sur ton ENT
-                </h1>
-
-                <p>
-                    Retrouvez rapidement toutes les informations
-                    importantes de ta scolarité.
-                </p>
-
-            </div>
-
-            <div class="home-date">
-
-                📅
-
-                <span id="current-date">
-                    Aujourd'hui
-                </span>
-
-            </div>
-
+        <header>
+            <h1>🎓 Mon ENT Perso LFE</h1>
+            <p>Ton espace scolaire personnel.</p>
         </header>
 
+        <section class="welcome-card">
 
+            <h2>👋 Bienvenue</h2>
 
-        <!-- =========================
-             RACCOURCIS
-        ========================== -->
+            <p id="current-date" class="muted"></p>
 
-        <section class="quick-actions">
+            <div class="quick-actions">
 
-            <a
-                href="emploi-du-temps.html"
-                class="quick-action"
-            >
+                <a href="emploi-du-temps.html">
+                    📅 Emploi du temps
+                </a>
 
-                <span>📅</span>
+                <a href="mes-cours.html">
+                    📚 Mes cours
+                </a>
 
-                <div>
+                <a href="mes-devoirs.html">
+                    📝 Mes devoirs
+                </a>
 
-                    <strong>
-                        Emploi du temps
-                    </strong>
+                <a href="mes-notes.html">
+                    📊 Mes notes
+                </a>
 
-                    <small>
-                        Voir Q1 et Q2
-                    </small>
+                <a href="mes-controles.html">
+                    📋 Mes contrôles
+                </a>
 
-                </div>
-
-            </a>
-
-
-            <a
-                href="mes-cours.html"
-                class="quick-action"
-            >
-
-                <span>📚</span>
-
-                <div>
-
-                    <strong>
-                        Mes cours
-                    </strong>
-
-                    <small>
-                        Consulter tes cours
-                    </small>
-
-                </div>
-
-            </a>
-
-
-            <a
-                href="mes-devoirs.html"
-                class="quick-action"
-            >
-
-                <span>📝</span>
-
-                <div>
-
-                    <strong>
-                        Mes devoirs
-                    </strong>
-
-                    <small>
-                        Voir les devoirs
-                    </small>
-
-                </div>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="quick-action"
-            >
-
-                <span>📊</span>
-
-                <div>
-
-                    <strong>
-                        Mes notes
-                    </strong>
-
-                    <small>
-                        Bientôt disponible
-                    </small>
-
-                </div>
-
-            </a>
+            </div>
 
         </section>
-
-
-
-        <!-- =========================
-             STATISTIQUES
-        ========================== -->
 
         <section class="dashboard-grid">
 
-
-            <!-- PROCHAIN COURS -->
-
-            <div class="dashboard-card next-course-card">
-
-                <div class="card-header">
-
-                    <h2>
-                        📅 Prochain cours
-                    </h2>
-
-                    <a href="emploi-du-temps.html">
-                        Voir l'EDT
-                    </a>
-
+            <div class="dashboard-card">
+                <h2>📅 Prochain cours</h2>
+                <div id="next-course">
+                    Voir l'emploi du temps.
                 </div>
-
-
-                <div
-                    id="next-course"
-                    class="next-course-content"
-                >
-
-                    <div class="big-icon">
-                        📚
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            Consulte ton emploi du temps
-                        </strong>
-
-                        <span>
-                            Le prochain cours sera affiché ici.
-                        </span>
-
-                    </div>
-
-                </div>
-
             </div>
-
-
-
-            <!-- DEVOIRS -->
 
             <div class="dashboard-card">
+                <h2>📝 Devoirs à venir</h2>
 
-                <div class="card-header">
-
-                    <h2>
-                        📝 Devoirs à venir
-                    </h2>
-
-                    <a href="mes-devoirs.html">
-                        Voir tout
-                    </a>
-
+                <div id="next-homework">
+                    Chargement...
                 </div>
 
+                <br>
 
-                <div
-                    id="upcoming-homework"
-                    class="dashboard-list"
-                >
-
-                    <div class="empty-dashboard">
-
-                        <span>
-                            📝
-                        </span>
-
-                        <p>
-                            Aucun devoir à venir.
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <a href="mes-devoirs.html">
+                    Gérer mes devoirs →
+                </a>
             </div>
-
-
-
-            <!-- CONTRÔLES -->
 
             <div class="dashboard-card">
+                <h2>📋 Prochain contrôle</h2>
 
-                <div class="card-header">
-
-                    <h2>
-                        📋 Prochains contrôles
-                    </h2>
-
-                    <a href="#">
-                        Voir tout
-                    </a>
-
+                <div id="next-control">
+                    Chargement...
                 </div>
 
+                <br>
 
-                <div
-                    id="upcoming-tests"
-                    class="dashboard-list"
-                >
-
-                    <div class="empty-dashboard">
-
-                        <span>
-                            🧪
-                        </span>
-
-                        <p>
-                            Aucun contrôle enregistré.
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <a href="mes-controles.html">
+                    Gérer mes contrôles →
+                </a>
             </div>
-
-
-
-            <!-- COURS RÉCENTS -->
 
             <div class="dashboard-card">
+                <h2>📊 Mes notes</h2>
 
-                <div class="card-header">
-
-                    <h2>
-                        📚 Derniers cours
-                    </h2>
-
-                    <a href="mes-cours.html">
-                        Voir tout
-                    </a>
-
+                <div id="notes-summary">
+                    Chargement...
                 </div>
 
+                <br>
 
-                <div
-                    id="recent-courses"
-                    class="dashboard-list"
-                >
-
-                    <div class="empty-dashboard">
-
-                        <span>
-                            📚
-                        </span>
-
-                        <p>
-                            Aucun cours enregistré.
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <a href="mes-notes.html">
+                    Voir mes notes →
+                </a>
             </div>
-
-
-
-            <!-- ABSENCES -->
 
             <div class="dashboard-card">
+                <h2>📚 Derniers cours</h2>
 
-                <div class="card-header">
-
-                    <h2>
-                        🧑‍🏫 Absences / remplacements
-                    </h2>
-
-                    <a href="emploi-du-temps.html">
-                        Voir l'EDT
-                    </a>
-
+                <div id="recent-courses">
+                    Chargement...
                 </div>
-
-
-                <div
-                    id="recent-absences"
-                    class="dashboard-list"
-                >
-
-                    <div class="empty-dashboard">
-
-                        <span>
-                            👨‍🏫
-                        </span>
-
-                        <p>
-                            Aucune absence enregistrée.
-                        </p>
-
-                    </div>
-
-                </div>
-
             </div>
 
+            <div class="dashboard-card">
+                <h2>🔔 Absences</h2>
 
-
-            <!-- INFORMATIONS -->
-
-            <div class="dashboard-card information-card">
-
-                <div class="card-header">
-
-                    <h2>
-                        ℹ️ Mon ENT
-                    </h2>
-
+                <div id="absence-summary">
+                    Chargement...
                 </div>
-
-
-                <div class="information-content">
-
-                    <p>
-                        🎓 <strong>Mon ENT Perso LFE</strong>
-                    </p>
-
-                    <p>
-                        Ton espace personnel pour centraliser
-                        tes cours, devoirs, notes, contrôles
-                        et ton emploi du temps.
-                    </p>
-
-                    <span class="offline-badge">
-                        💾 Données enregistrées localement
-                    </span>
-
-                </div>
-
             </div>
-
 
         </section>
 
-
     </main>
-
 
     <script src="js/accueil.js"></script>
 
 </body>
-
 </html>
