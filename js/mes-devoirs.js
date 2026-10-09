@@ -1,898 +1,319 @@
-// =========================
-// MES DEVOIRS
-// =========================
 
-const STORAGE_KEY = "mes-devoirs";
-
-let devoirs = JSON.parse(
-    localStorage.getItem(STORAGE_KEY)
-) || [];
-
-let devoirEnModification = null;
-
-
-// =========================
-// ÉLÉMENTS
-// =========================
-
-const homeworkForm =
-    document.getElementById("homework-form");
-
-const homeworkSubject =
-    document.getElementById("homework-subject");
-
-const homeworkTitle =
-    document.getElementById("homework-title");
-
-const homeworkDate =
-    document.getElementById("homework-date");
-
-const homeworkDescription =
-    document.getElementById("homework-description");
-
-const homeworkList =
-    document.getElementById("homework-list");
-
-const searchHomework =
-    document.getElementById("search-homework");
-
-const statusFilter =
-    document.getElementById("status-filter");
-
-const subjectFilter =
-    document.getElementById("subject-filter");
-
-const dateSort =
-    document.getElementById("date-sort");
-
-const homeworkCount =
-    document.getElementById("homework-count");
-
-const statTotal =
-    document.getElementById("stat-total");
-
-const statTodo =
-    document.getElementById("stat-todo");
-
-const statDone =
-    document.getElementById("stat-done");
-
-const statLate =
-    document.getElementById("stat-late");
-
-const editSection =
-    document.getElementById(
-        "edit-homework-section"
-    );
-
-const editForm =
-    document.getElementById(
-        "edit-homework-form"
-    );
-
-const editSubject =
-    document.getElementById(
-        "edit-homework-subject"
-    );
-
-const editTitle =
-    document.getElementById(
-        "edit-homework-title"
-    );
-
-const editDate =
-    document.getElementById(
-        "edit-homework-date"
-    );
-
-const editDescription =
-    document.getElementById(
-        "edit-homework-description"
-    );
-
-const cancelEdit =
-    document.getElementById(
-        "cancel-homework-edit"
-    );
-
-
-// =========================
-// SAUVEGARDE
-// =========================
-
-function sauvegarderDevoirs() {
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(devoirs)
-    );
-
-}
-
-
-// =========================
-// PROTECTION HTML
-// =========================
-
-function echapperHTML(texte) {
-
-    if (!texte) {
-        return "";
-    }
-
-    return String(texte)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-// =========================
-// DATE
-// =========================
-
-function creerDateLocale(date) {
-
-    if (!date) {
-        return null;
-    }
-
-    const resultat =
-        new Date(date + "T00:00:00");
-
-    if (Number.isNaN(resultat.getTime())) {
-        return null;
-    }
-
-    return resultat;
-}
-
-
-function devoirEnRetard(devoir) {
-
-    if (devoir.done) {
-        return false;
-    }
-
-    const dateDevoir =
-        creerDateLocale(devoir.date);
-
-    if (!dateDevoir) {
-        return false;
-    }
-
-    const aujourdHui =
-        new Date();
-
-    aujourdHui.setHours(
-        0,
-        0,
-        0,
-        0
-    );
-
-    return dateDevoir < aujourdHui;
-}
-
-
-// =========================
-// FORMAT DATE
-// =========================
-
-function formaterDate(date) {
-
-    const dateObjet =
-        creerDateLocale(date);
-
-    if (!dateObjet) {
-        return "Date inconnue";
-    }
-
-    return dateObjet.toLocaleDateString(
-        "fr-FR",
-        {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        }
-    );
-}
-
-
-// =========================
-// STATISTIQUES
-// =========================
-
-function mettreAJourStatistiques() {
-
-    const total =
-        devoirs.length;
-
-    const termines =
-        devoirs.filter(
-            devoir => devoir.done
-        ).length;
-
-    const enRetard =
-        devoirs.filter(
-            devoir => devoirEnRetard(devoir)
-        ).length;
-
-    const aFaire =
-        devoirs.filter(
-            devoir =>
-                !devoir.done &&
-                !devoirEnRetard(devoir)
-        ).length;
-
-
-    statTotal.textContent =
-        total;
-
-    statDone.textContent =
-        termines;
-
-    statLate.textContent =
-        enRetard;
-
-    statTodo.textContent =
-        aFaire;
-
-}
-
-
-// =========================
-// AFFICHER LES DEVOIRS
-// =========================
-
-function afficherDevoirs() {
-
-    homeworkList.innerHTML = "";
-
-
-    const recherche =
-        searchHomework.value
-            .toLowerCase()
-            .trim();
-
-    const statut =
-        statusFilter.value;
-
-    const matiere =
-        subjectFilter.value;
-
-    const ordre =
-        dateSort.value;
-
-
-    // =========================
-    // FILTRAGE
-    // =========================
-
-    let devoirsFiltres =
-        devoirs.filter(
-            function(devoir) {
-
-                const texte = (
-
-                    (devoir.title || "") +
-                    " " +
-                    (devoir.subject || "") +
-                    " " +
-                    (devoir.description || "")
-
-                ).toLowerCase();
-
-
-                const correspondRecherche =
-                    texte.includes(
-                        recherche
-                    );
-
-
-                const estEnRetard =
-                    devoirEnRetard(devoir);
-
-
-                let correspondStatut =
-                    true;
-
-
-                if (statut === "todo") {
-
-                    correspondStatut =
-                        !devoir.done &&
-                        !estEnRetard;
-
-                }
-
-                if (statut === "done") {
-
-                    correspondStatut =
-                        devoir.done;
-
-                }
-
-                if (statut === "late") {
-
-                    correspondStatut =
-                        estEnRetard;
-
-                }
-
-
-                const correspondMatiere =
-                    matiere === "all" ||
-                    devoir.subject === matiere;
-
-
-                return (
-
-                    correspondRecherche &&
-                    correspondStatut &&
-                    correspondMatiere
-
-                );
-
-            }
-        );
-
-
-    // =========================
-    // TRI PAR DATE
-    // =========================
-
-    devoirsFiltres.sort(
-        function(a, b) {
-
-            if (!a.date && !b.date) {
-                return 0;
-            }
-
-            if (!a.date) {
-                return 1;
-            }
-
-            if (!b.date) {
-                return -1;
-            }
-
-            if (ordre === "desc") {
-
-                return b.date.localeCompare(
-                    a.date
-                );
-
-            }
-
-            return a.date.localeCompare(
-                b.date
-            );
-
-        }
-    );
-
-
-    // =========================
-    // COMPTEUR
-    // =========================
-
-    homeworkCount.textContent =
-        devoirsFiltres.length +
-        (
-            devoirsFiltres.length > 1
-                ? " devoirs"
-                : " devoir"
-        );
-
-
-    // =========================
-    // AUCUN RÉSULTAT
-    // =========================
+document.addEventListener("DOMContentLoaded", () => {
+    const STORAGE_KEY = "mes-devoirs";
+
+    const form = document.getElementById("homework-form");
+    const subjectInput = document.getElementById("homework-subject");
+    const dateInput = document.getElementById("homework-date");
+    const titleInput = document.getElementById("homework-title");
+    const descriptionInput = document.getElementById("homework-description");
+    const submitButton = document.getElementById("homework-submit");
+    const cancelButton = document.getElementById("cancel-homework-edit");
+    const formHeading = document.getElementById("homework-form-heading");
+
+    const searchInput = document.getElementById("search-homework");
+    const statusFilter = document.getElementById("status-filter");
+    const subjectFilter = document.getElementById("subject-filter");
+    const homeworkList = document.getElementById("homework-list");
+    const emptyMessage = document.getElementById("homework-empty");
+    const countElement = document.getElementById("homework-count");
 
     if (
-        devoirsFiltres.length === 0
+        !form || !subjectInput || !dateInput || !titleInput ||
+        !descriptionInput || !submitButton || !cancelButton ||
+        !searchInput || !statusFilter || !subjectFilter ||
+        !homeworkList || !emptyMessage || !countElement
     ) {
+        console.error("Mon ENT : un élément de la page Mes devoirs est manquant.");
+        return;
+    }
 
-        homeworkList.innerHTML = `
+    let devoirs = chargerDevoirs();
+    let devoirEnModification = null;
 
-            <div class="empty-message">
+    function chargerDevoirs() {
+        try {
+            const donnees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+            if (!Array.isArray(donnees)) return [];
 
-                <div class="empty-message-icon">
-                    📭
-                </div>
+            return donnees
+                .filter((devoir) => devoir && typeof devoir === "object")
+                .map((devoir, index) => ({
+                    id: String(devoir.id ?? `devoir-${index}-${Date.now()}`),
+                    matiere: String(devoir.matiere ?? ""),
+                    titre: String(devoir.titre ?? ""),
+                    date: String(devoir.date ?? ""),
+                    description: String(devoir.description ?? ""),
+                    termine: devoir.termine === true ||
+                        devoir.done === true ||
+                        devoir.statut === "termine"
+                }));
+        } catch (erreur) {
+            console.error("Impossible de lire les devoirs enregistrés.", erreur);
+            return [];
+        }
+    }
 
-                <h3>
-                    Aucun devoir trouvé
-                </h3>
+    function sauvegarderDevoirs() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(devoirs));
+            return true;
+        } catch (erreur) {
+            alert("Impossible d'enregistrer les devoirs dans ce navigateur.");
+            console.error(erreur);
+            return false;
+        }
+    }
 
-                <p>
-                    Aucun devoir ne correspond
-                    aux filtres sélectionnés.
-                </p>
+    function echapperHTML(valeur) {
+        return String(valeur).replace(/[&<>"']/g, (caractere) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[caractere]);
+    }
 
+    function normaliser(texte) {
+        return String(texte)
+            .toLocaleLowerCase("fr")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    function dateAujourdhui() {
+        const maintenant = new Date();
+        const annee = maintenant.getFullYear();
+        const mois = String(maintenant.getMonth() + 1).padStart(2, "0");
+        const jour = String(maintenant.getDate()).padStart(2, "0");
+        return `${annee}-${mois}-${jour}`;
+    }
+
+    function formaterDate(date) {
+        if (!date) return "Date non renseignée";
+
+        const resultat = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+        if (!resultat) return echapperHTML(date);
+
+        return `${resultat[3]}/${resultat[2]}/${resultat[1]}`;
+    }
+
+    function estEnRetard(devoir) {
+        return !devoir.termine && devoir.date && devoir.date < dateAujourdhui();
+    }
+
+    function reinitialiserFormulaire() {
+        devoirEnModification = null;
+        form.reset();
+        formHeading.textContent = "➕ Ajouter un devoir";
+        submitButton.textContent = "Ajouter le devoir";
+        cancelButton.hidden = true;
+    }
+
+    function commencerModification(id) {
+        const devoir = devoirs.find((element) => element.id === id);
+        if (!devoir) return;
+
+        devoirEnModification = id;
+        subjectInput.value = devoir.matiere;
+        dateInput.value = devoir.date;
+        titleInput.value = devoir.titre;
+        descriptionInput.value = devoir.description;
+
+        formHeading.textContent = "✏️ Modifier le devoir";
+        submitButton.textContent = "Enregistrer les modifications";
+        cancelButton.hidden = false;
+
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
+        titleInput.focus();
+    }
+
+    function creerCarte(devoir) {
+        const carte = document.createElement("article");
+        carte.className = "homework-card";
+
+        if (devoir.termine) carte.classList.add("is-done");
+        else if (estEnRetard(devoir)) carte.classList.add("is-late");
+
+        const statut = devoir.termine
+            ? "✅ Terminé"
+            : estEnRetard(devoir)
+                ? "⚠️ En retard"
+                : "📝 À faire";
+
+        carte.innerHTML = `
+            <h3>${echapperHTML(devoir.titre || "Devoir sans titre")}</h3>
+            <div class="homework-meta">
+                ${echapperHTML(devoir.matiere)} ·
+                À rendre le ${formaterDate(devoir.date)} · ${statut}
             </div>
-
+            <div class="homework-description">${echapperHTML(devoir.description || "Aucune consigne ajoutée.")}</div>
+            <div class="homework-actions">
+                <button class="homework-button primary-button"
+                    type="button" data-action="toggle" data-id="${echapperHTML(devoir.id)}">
+                    ${devoir.termine ? "↩️ Remettre à faire" : "✅ Marquer terminé"}
+                </button>
+                <button class="homework-button secondary-button"
+                    type="button" data-action="edit" data-id="${echapperHTML(devoir.id)}">
+                    ✏️ Modifier
+                </button>
+                <button class="homework-button danger-button"
+                    type="button" data-action="delete" data-id="${echapperHTML(devoir.id)}">
+                    🗑️ Supprimer
+                </button>
+            </div>
         `;
 
-        return;
+        return carte;
     }
 
-
-    // =========================
-    // AFFICHAGE
-    // =========================
-
-    devoirsFiltres.forEach(
-        function(devoir) {
-
-            const index =
-                devoirs.indexOf(devoir);
-
-            const estEnRetard =
-                devoirEnRetard(devoir);
-
-
-            const card =
-                document.createElement(
-                    "article"
-                );
-
-
-            card.className =
-                "homework-card" +
-                (
-                    devoir.done
-                        ? " done"
-                        : ""
-                ) +
-                (
-                    estEnRetard
-                        ? " overdue"
-                        : ""
-                );
-
-
-            // =========================
-            // STATUT
-            // =========================
-
-            let badgeStatut = "";
-
-
-            if (devoir.done) {
-
-                badgeStatut = `
-
-                    <span
-                        class="badge badge-done"
-                    >
-                        🟢 Terminé
-                    </span>
-
-                `;
-
-            }
-
-            else if (estEnRetard) {
-
-                badgeStatut = `
-
-                    <span
-                        class="badge badge-late"
-                    >
-                        🚨 En retard
-                    </span>
-
-                `;
-
-            }
-
-            else {
-
-                badgeStatut = `
-
-                    <span
-                        class="badge badge-todo"
-                    >
-                        🔴 À faire
-                    </span>
-
-                `;
-
-            }
-
-
-            // =========================
-            // CARTE
-            // =========================
-
-            card.innerHTML = `
-
-                <h3>
-                    ${echapperHTML(
-                        devoir.title
-                    )}
-                </h3>
-
-
-                <div class="homework-info">
-
-                    <span class="badge">
-
-                        📚
-                        ${echapperHTML(
-                            devoir.subject
-                        )}
-
-                    </span>
-
-
-                    <span class="badge badge-date">
-
-                        📅
-                        ${formaterDate(
-                            devoir.date
-                        )}
-
-                    </span>
-
-
-                    ${badgeStatut}
-
-                </div>
-
-
-                ${
-                    devoir.description
-                        ? `
-
-                            <p
-                                class="homework-description"
-                            >
-                                ${echapperHTML(
-                                    devoir.description
-                                ).replace(
-                                    /\n/g,
-                                    "<br>"
-                                )}
-                            </p>
-
-                        `
-                        : ""
-                }
-
-
-                <div class="homework-actions">
-
-                    <button
-                        class="complete-button"
-                        onclick="
-                            changerStatut(${index})
-                        "
-                    >
-
-                        ${
-                            devoir.done
-                                ? "↩️ À refaire"
-                                : "✅ Terminé"
-                        }
-
-                    </button>
-
-
-                    <button
-                        class="edit-button"
-                        onclick="
-                            modifierDevoir(${index})
-                        "
-                    >
-
-                        ✏️ Modifier
-
-                    </button>
-
-
-                    <button
-                        class="delete-button"
-                        onclick="
-                            supprimerDevoir(${index})
-                        "
-                    >
-
-                        🗑️ Supprimer
-
-                    </button>
-
-                </div>
-
-            `;
-
-
-            homeworkList.appendChild(
-                card
+    function afficherDevoirs() {
+        const recherche = normaliser(searchInput.value);
+        const statutChoisi = statusFilter.value;
+        const matiereChoisie = subjectFilter.value;
+
+        const filtres = devoirs.filter((devoir) => {
+            const texte = normaliser(
+                `${devoir.titre} ${devoir.matiere} ${devoir.description}`
             );
 
-        }
-    );
+            const correspondRecherche = texte.includes(recherche);
+            const correspondMatiere =
+                matiereChoisie === "all" || devoir.matiere === matiereChoisie;
 
-}
+            let correspondStatut = true;
 
+            if (statutChoisi === "todo") correspondStatut = !devoir.termine;
+            if (statutChoisi === "done") correspondStatut = devoir.termine;
+            if (statutChoisi === "late") correspondStatut = estEnRetard(devoir);
 
-// =========================
-// AJOUTER UN DEVOIR
-// =========================
+            return correspondRecherche && correspondMatiere && correspondStatut;
+        });
 
-homeworkForm.addEventListener(
-    "submit",
-    function(event) {
+        filtres.sort((a, b) => {
+            if (!a.date) return 1;
+            if (!b.date) return -1;
+            return a.date.localeCompare(b.date);
+        });
 
-        event.preventDefault();
-
-
-        const nouveauDevoir = {
-
-            subject:
-                homeworkSubject.value,
-
-            title:
-                homeworkTitle.value.trim(),
-
-            date:
-                homeworkDate.value,
-
-            description:
-                homeworkDescription.value.trim(),
-
-            done:
-                false
-
-        };
-
-
-        devoirs.push(
-            nouveauDevoir
+        homeworkList.replaceChildren(
+            ...filtres.map((devoir) => creerCarte(devoir))
         );
 
+        countElement.textContent =
+            `${filtres.length} devoir${filtres.length > 1 ? "s" : ""} affiché${filtres.length > 1 ? "s" : ""}`;
 
-        sauvegarderDevoirs();
+        emptyMessage.hidden = filtres.length !== 0;
+    }
 
-        homeworkForm.reset();
+    form.addEventListener("submit", (evenement) => {
+        evenement.preventDefault();
 
-        mettreAJourStatistiques();
+        const matiere = subjectInput.value.trim();
+        const date = dateInput.value;
+        const titre = titleInput.value.trim();
+        const description = descriptionInput.value.trim();
 
+        if (!matiere || !date || !titre) {
+            alert("Renseigne la matière, la date et le titre du devoir.");
+            return;
+        }
+
+        const donnees = { matiere, date, titre, description };
+
+        if (devoirEnModification !== null) {
+            const index = devoirs.findIndex(
+                (devoir) => devoir.id === devoirEnModification
+            );
+
+            if (index === -1) {
+                alert("Ce devoir n'a pas été retrouvé.");
+                reinitialiserFormulaire();
+                return;
+            }
+
+            const anciensDonnees = devoirs[index];
+            devoirs[index] = { ...anciensDonnees, ...donnees };
+
+            if (!sauvegarderDevoirs()) {
+                devoirs[index] = anciensDonnees;
+                return;
+            }
+        } else {
+            const nouveauDevoir = {
+                id: (window.crypto && crypto.randomUUID)
+                    ? crypto.randomUUID()
+                    : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                ...donnees,
+                termine: false
+            };
+
+            devoirs.push(nouveauDevoir);
+
+            if (!sauvegarderDevoirs()) {
+                devoirs.pop();
+                return;
+            }
+        }
+
+        reinitialiserFormulaire();
         afficherDevoirs();
-
-    }
-);
-
-
-// =========================
-// MODIFIER
-// =========================
-
-function modifierDevoir(index) {
-
-    const devoir =
-        devoirs[index];
-
-
-    if (!devoir) {
-        return;
-    }
-
-
-    devoirEnModification =
-        index;
-
-
-    editSubject.value =
-        devoir.subject || "";
-
-    editTitle.value =
-        devoir.title || "";
-
-    editDate.value =
-        devoir.date || "";
-
-    editDescription.value =
-        devoir.description || "";
-
-
-    editSection.style.display =
-        "block";
-
-
-    editSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
     });
 
-}
+    cancelButton.addEventListener("click", reinitialiserFormulaire);
 
+    searchInput.addEventListener("input", afficherDevoirs);
+    statusFilter.addEventListener("change", afficherDevoirs);
+    subjectFilter.addEventListener("change", afficherDevoirs);
 
-// =========================
-// ENREGISTRER MODIFICATION
-// =========================
+    homeworkList.addEventListener("click", (evenement) => {
+        const bouton = evenement.target.closest("button[data-action]");
+        if (!bouton) return;
 
-editForm.addEventListener(
-    "submit",
-    function(event) {
+        const id = bouton.dataset.id;
+        const action = bouton.dataset.action;
+        const index = devoirs.findIndex((devoir) => devoir.id === id);
 
-        event.preventDefault();
+        if (index === -1) return;
 
-
-        if (
-            devoirEnModification === null
-        ) {
-
+        if (action === "edit") {
+            commencerModification(id);
             return;
-
         }
 
+        if (action === "toggle") {
+            const ancienneValeur = devoirs[index].termine;
+            devoirs[index].termine = !ancienneValeur;
 
-        const ancienDevoir =
-            devoirs[
-                devoirEnModification
-            ];
+            if (!sauvegarderDevoirs()) {
+                devoirs[index].termine = ancienneValeur;
+                return;
+            }
 
+            afficherDevoirs();
+            return;
+        }
 
-        devoirs[
-            devoirEnModification
-        ] = {
+        if (action === "delete") {
+            const confirmation = confirm(
+                `Supprimer le devoir « ${devoirs[index].titre} » ?`
+            );
 
-            subject:
-                editSubject.value,
+            if (!confirmation) return;
 
-            title:
-                editTitle.value.trim(),
+            const devoirSupprime = devoirs.splice(index, 1)[0];
 
-            date:
-                editDate.value,
+            if (!sauvegarderDevoirs()) {
+                devoirs.splice(index, 0, devoirSupprime);
+                return;
+            }
 
-            description:
-                editDescription.value.trim(),
-
-            done:
-                ancienDevoir.done
-
-        };
-
-
-        sauvegarderDevoirs();
-
-
-        devoirEnModification =
-            null;
-
-
-        editForm.reset();
-
-
-        editSection.style.display =
-            "none";
-
-
-        mettreAJourStatistiques();
-
-        afficherDevoirs();
-
-    }
-);
-
-
-// =========================
-// ANNULER
-// =========================
-
-cancelEdit.addEventListener(
-    "click",
-    function() {
-
-        devoirEnModification =
-            null;
-
-        editForm.reset();
-
-        editSection.style.display =
-            "none";
-
-    }
-);
-
-
-// =========================
-// TERMINER / ROUVRIR
-// =========================
-
-function changerStatut(index) {
-
-    if (!devoirs[index]) {
-        return;
-    }
-
-
-    devoirs[index].done =
-        !devoirs[index].done;
-
-
-    sauvegarderDevoirs();
-
-    mettreAJourStatistiques();
+            if (devoirEnModification === id) reinitialiserFormulaire();
+            afficherDevoirs();
+        }
+    });
 
     afficherDevoirs();
-
-}
-
-
-// =========================
-// SUPPRIMER
-// =========================
-
-function supprimerDevoir(index) {
-
-    if (!devoirs[index]) {
-        return;
-    }
-
-
-    const confirmation =
-        confirm(
-            "Supprimer ce devoir ?"
-        );
-
-
-    if (!confirmation) {
-        return;
-    }
-
-
-    devoirs.splice(
-        index,
-        1
-    );
-
-
-    sauvegarderDevoirs();
-
-    mettreAJourStatistiques();
-
-    afficherDevoirs();
-
-}
-
-
-// =========================
-// FILTRES
-// =========================
-
-searchHomework.addEventListener(
-    "input",
-    afficherDevoirs
-);
-
-statusFilter.addEventListener(
-    "change",
-    afficherDevoirs
-);
-
-subjectFilter.addEventListener(
-    "change",
-    afficherDevoirs
-);
-
-dateSort.addEventListener(
-    "change",
-    afficherDevoirs
-);
-
-
-// =========================
-// INITIALISATION
-// =========================
-
-mettreAJourStatistiques();
-
-afficherDevoirs();
+});
