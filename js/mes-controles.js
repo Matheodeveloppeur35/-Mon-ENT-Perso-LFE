@@ -1,864 +1,334 @@
-// =========================
-// MES CONTRÔLES
-// =========================
 
-const STORAGE_KEY = "mes-controles";
+"use strict";
 
-let controles = JSON.parse(
-    localStorage.getItem(STORAGE_KEY)
-) || [];
+document.addEventListener("DOMContentLoaded", () => {
+    const STORAGE_KEY = "mes-controles";
 
-let controleEnModification = null;
+    const form = document.getElementById("control-form");
+    const subjectInput = document.getElementById("control-subject");
+    const dateInput = document.getElementById("control-date");
+    const titleInput = document.getElementById("control-title");
+    const timeInput = document.getElementById("control-time");
+    const roomInput = document.getElementById("control-room");
+    const chapterInput = document.getElementById("control-chapter");
+    const descriptionInput = document.getElementById("control-description");
 
+    const submitButton = document.getElementById("control-submit");
+    const cancelButton = document.getElementById("control-cancel");
+    const formHeading = document.getElementById("control-form-heading");
 
-// =========================
-// MATIÈRES
-// =========================
+    const searchInput = document.getElementById("search-control");
+    const filterInput = document.getElementById("control-filter");
+    const controlsList = document.getElementById("controls-list");
+    const emptyMessage = document.getElementById("controls-empty");
+    const countElement = document.getElementById("controls-count");
 
-const matieres = [
-    "Mathématiques",
-    "Anglais LV1",
-    "Français / Histoire-Géo / EMC",
-    "Sciences physiques",
-    "Enseignement professionnel",
-    "Pratique professionnelle",
-    "Arts appliqués / Culture artistique",
-    "Soutien au parcours",
-    "Prévention-Santé-Environnement",
-    "Économie & Gestion",
-    "Réalisation projet",
-    "Éducation physique & sportive"
-];
+    const totalElement = document.getElementById("controls-total");
+    const upcomingElement = document.getElementById("controls-upcoming");
+    const todayElement = document.getElementById("controls-today");
+    const pastElement = document.getElementById("controls-past");
 
+    let controls = loadControls();
+    let editingId = null;
 
-// =========================
-// ÉLÉMENTS
-// =========================
+    function localDateString(date = new Date()) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
 
-const controlForm =
-    document.getElementById("control-form");
-
-const controlSubject =
-    document.getElementById("control-subject");
-
-const controlTitle =
-    document.getElementById("control-title");
-
-const controlDate =
-    document.getElementById("control-date");
-
-const controlTime =
-    document.getElementById("control-time");
-
-const controlRoom =
-    document.getElementById("control-room");
-
-const controlChapter =
-    document.getElementById("control-chapter");
-
-const controlDescription =
-    document.getElementById("control-description");
-
-const controlsList =
-    document.getElementById("controls-list");
-
-const searchControl =
-    document.getElementById("search-control");
-
-const subjectFilter =
-    document.getElementById("subject-filter");
-
-const statusFilter =
-    document.getElementById("status-filter");
-
-const editSection =
-    document.getElementById("edit-control-section");
-
-const editForm =
-    document.getElementById("edit-control-form");
-
-const editSubject =
-    document.getElementById("edit-control-subject");
-
-const editTitle =
-    document.getElementById("edit-control-title");
-
-const editDate =
-    document.getElementById("edit-control-date");
-
-const editTime =
-    document.getElementById("edit-control-time");
-
-const editRoom =
-    document.getElementById("edit-control-room");
-
-const editChapter =
-    document.getElementById("edit-control-chapter");
-
-const editDescription =
-    document.getElementById("edit-control-description");
-
-const cancelEdit =
-    document.getElementById("cancel-edit");
-
-
-// =========================
-// SAUVEGARDE
-// =========================
-
-function sauvegarderControles() {
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(controles)
-    );
-
-}
-
-
-// =========================
-// PROTECTION HTML
-// =========================
-
-function echapperHTML(texte) {
-
-    if (!texte) {
-        return "";
+        return `${year}-${month}-${day}`;
     }
 
-    return String(texte)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    function createId() {
+        if (window.crypto && typeof window.crypto.randomUUID === "function") {
+            return window.crypto.randomUUID();
+        }
 
-}
-
-
-// =========================
-// DATE LOCALE
-// =========================
-
-function obtenirDateLocale() {
-
-    const maintenant = new Date();
-
-    const annee =
-        maintenant.getFullYear();
-
-    const mois =
-        String(
-            maintenant.getMonth() + 1
-        ).padStart(2, "0");
-
-    const jour =
-        String(
-            maintenant.getDate()
-        ).padStart(2, "0");
-
-    return `${annee}-${mois}-${jour}`;
-
-}
-
-
-// =========================
-// STATUT DU CONTRÔLE
-// =========================
-
-function obtenirStatut(controle) {
-
-    const aujourdHui =
-        obtenirDateLocale();
-
-    if (controle.date < aujourdHui) {
-
-        return "passed";
-
+        return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     }
 
-    if (controle.date === aujourdHui) {
+    function loadControls() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
-        return "today";
+            if (!Array.isArray(saved)) {
+                return [];
+            }
 
+            return saved
+                .filter(item => item && typeof item === "object")
+                .map(item => ({
+                    id: String(item.id || createId()),
+                    matiere: String(item.matiere || item.subject || ""),
+                    titre: String(item.titre || item.title || ""),
+                    date: String(item.date || ""),
+                    time: String(item.time || item.heure || ""),
+                    room: String(item.room || item.salle || ""),
+                    chapter: String(item.chapter || item.chapitre || ""),
+                    description: String(item.description || "")
+                }))
+                .filter(item => item.matiere && item.titre && item.date);
+        } catch (error) {
+            console.error("Impossible de lire les contrôles enregistrés :", error);
+            return [];
+        }
     }
 
-    return "upcoming";
-
-}
-
-
-// =========================
-// TEXTE DU STATUT
-// =========================
-
-function obtenirTexteStatut(statut) {
-
-    if (statut === "today") {
-        return "🟠 Aujourd'hui";
+    function saveControls() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(controls));
+            return true;
+        } catch (error) {
+            console.error("Impossible d'enregistrer les contrôles :", error);
+            alert("L'enregistrement a échoué. Vérifie l'espace disponible dans ton navigateur.");
+            return false;
+        }
     }
 
-    if (statut === "passed") {
-        return "✅ Passé";
+    function escapeHTML(value) {
+        return String(value).replace(/[&<>"']/g, character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[character]);
     }
 
-    return "🔵 À venir";
+    function formatDate(dateString) {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString);
 
-}
+        if (!match) {
+            return dateString;
+        }
 
-
-// =========================
-// FORMATAGE DATE
-// =========================
-
-function formaterDate(date) {
-
-    if (!date) {
-        return "";
+        return `${match[3]}/${match[2]}/${match[1]}`;
     }
 
-    const morceaux =
-        date.split("-");
+    function getStatus(date) {
+        const today = localDateString();
 
-    if (morceaux.length !== 3) {
-        return date;
+        if (date < today) return "past";
+        if (date === today) return "today";
+        return "upcoming";
     }
 
-    return (
-        morceaux[2] +
-        "/" +
-        morceaux[1] +
-        "/" +
-        morceaux[0]
-    );
-
-}
-
-
-// =========================
-// DATE + HEURE POUR TRI
-// =========================
-
-function obtenirDateTri(controle) {
-
-    const heure =
-        controle.time || "00:00";
-
-    return new Date(
-        `${controle.date}T${heure}`
-    );
-
-}
-
-
-// =========================
-// AFFICHER LES STATISTIQUES
-// =========================
-
-function afficherStatistiques() {
-
-    const total =
-        controles.length;
-
-    const upcoming =
-        controles.filter(
-            controle =>
-                obtenirStatut(controle) === "upcoming"
-        ).length;
-
-    const today =
-        controles.filter(
-            controle =>
-                obtenirStatut(controle) === "today"
-        ).length;
-
-    const passed =
-        controles.filter(
-            controle =>
-                obtenirStatut(controle) === "passed"
-        ).length;
-
-
-    document.getElementById(
-        "total-controls"
-    ).textContent = total;
-
-    document.getElementById(
-        "upcoming-controls"
-    ).textContent = upcoming;
-
-    document.getElementById(
-        "today-controls"
-    ).textContent = today;
-
-    document.getElementById(
-        "passed-controls"
-    ).textContent = passed;
-
-}
-
-
-// =========================
-// AFFICHER LES CONTRÔLES
-// =========================
-
-function afficherControles() {
-
-    const recherche =
-        searchControl.value
-            .trim()
-            .toLowerCase();
-
-    const matiere =
-        subjectFilter.value;
-
-    const statutFiltre =
-        statusFilter.value;
-
-
-    let controlesFiltres =
-        controles.filter(controle => {
-
-            const texteRecherche = (
-
-                controle.titre +
-                " " +
-                controle.matiere +
-                " " +
-                controle.chapitre +
-                " " +
-                controle.description +
-                " " +
-                controle.salle
-
-            ).toLowerCase();
-
-
-            const correspondRecherche =
-                texteRecherche.includes(
-                    recherche
-                );
-
-
-            const correspondMatiere =
-                matiere === "all" ||
-                controle.matiere === matiere;
-
-
-            const statut =
-                obtenirStatut(controle);
-
-
-            const correspondStatut =
-                statutFiltre === "all" ||
-                statut === statutFiltre;
-
-
-            return (
-                correspondRecherche &&
-                correspondMatiere &&
-                correspondStatut
-            );
-
-        });
-
-
-    // =========================
-    // TRI PAR DATE
-    // =========================
-
-    controlesFiltres.sort(
-        (a, b) =>
-            obtenirDateTri(a) -
-            obtenirDateTri(b)
-    );
-
-
-    // =========================
-    // LISTE VIDE
-    // =========================
-
-    if (controlesFiltres.length === 0) {
-
-        controlsList.innerHTML = `
-            <div class="empty-message">
-                📭 Aucun contrôle ne correspond à ta recherche.
-            </div>
-        `;
-
-        return;
-
+    function getStatusLabel(status) {
+        if (status === "past") return "Passé";
+        if (status === "today") return "Aujourd’hui";
+        return "À venir";
     }
 
+    function resetForm() {
+        form.reset();
+        editingId = null;
 
-    // =========================
-    // AFFICHAGE
-    // =========================
+        if (submitButton) submitButton.textContent = "Ajouter le contrôle";
+        if (formHeading) formHeading.textContent = "Ajouter un contrôle";
+        if (cancelButton) cancelButton.hidden = true;
+    }
 
-    controlsList.innerHTML =
-        controlesFiltres.map(controle => {
+    function updateStatistics() {
+        const today = localDateString();
 
-            const statut =
-                obtenirStatut(controle);
+        if (totalElement) totalElement.textContent = controls.length;
+        if (upcomingElement) {
+            upcomingElement.textContent = controls.filter(item => item.date > today).length;
+        }
+        if (todayElement) {
+            todayElement.textContent = controls.filter(item => item.date === today).length;
+        }
+        if (pastElement) {
+            pastElement.textContent = controls.filter(item => item.date < today).length;
+        }
+    }
 
-            const classe =
-                statut === "today"
-                    ? "today"
-                    : statut === "passed"
-                        ? "passed"
-                        : "";
+    function renderControls() {
+        const search = (searchInput?.value || "").trim().toLocaleLowerCase("fr");
+        const filter = filterInput?.value || "all";
 
+        const filtered = controls
+            .filter(item => {
+                const searchableText = [
+                    item.matiere,
+                    item.titre,
+                    item.chapter,
+                    item.room,
+                    item.description
+                ].join(" ").toLocaleLowerCase("fr");
 
-            const texteStatut =
-                obtenirTexteStatut(
-                    statut
-                );
+                return searchableText.includes(search);
+            })
+            .filter(item => filter === "all" || getStatus(item.date) === filter)
+            .sort((a, b) => {
+                const dateComparison = a.date.localeCompare(b.date);
 
+                if (dateComparison !== 0) {
+                    return filter === "past" ? -dateComparison : dateComparison;
+                }
 
-            const heure =
-                controle.time
-                    ? `🕐 ${echapperHTML(controle.time)}`
-                    : "";
+                return (a.time || "").localeCompare(b.time || "");
+            });
 
+        if (countElement) {
+            countElement.textContent =
+                `${filtered.length} contrôle${filtered.length > 1 ? "s" : ""}`;
+        }
 
-            const salle =
-                controle.room
-                    ? `📍 ${echapperHTML(controle.room)}`
-                    : "";
+        if (emptyMessage) {
+            emptyMessage.hidden = filtered.length !== 0;
+        }
 
+        if (!controlsList) return;
 
-            const chapitre =
-                controle.chapitre
-                    ? `
-                        <div class="control-description">
-                            📖 <strong>Chapitre :</strong>
-                            ${echapperHTML(controle.chapitre)}
-                        </div>
-                    `
-                    : "";
+        controlsList.innerHTML = filtered.map(item => {
+            const status = getStatus(item.date);
+            const details = [];
 
-
-            const description =
-                controle.description
-                    ? `
-                        <div class="control-description">
-                            ${echapperHTML(controle.description)}
-                        </div>
-                    `
-                    : "";
-
+            if (item.time) details.push(`🕒 ${escapeHTML(item.time)}`);
+            if (item.room) details.push(`📍 ${escapeHTML(item.room)}`);
 
             return `
-
-                <article
-                    class="control-card ${classe}"
-                >
-
-                    <h3>
-                        ${echapperHTML(controle.titre)}
-                    </h3>
-
-
-                    <div class="control-meta">
-
-                        <span class="control-badge">
-                            📚 ${echapperHTML(controle.matiere)}
-                        </span>
-
-                        <span class="control-badge">
-                            📅 ${formaterDate(controle.date)}
-                        </span>
-
-                        ${
-                            heure
-                                ? `
-                                    <span class="control-badge">
-                                        ${heure}
-                                    </span>
-                                `
-                                : ""
-                        }
-
-                        ${
-                            salle
-                                ? `
-                                    <span class="control-badge">
-                                        ${salle}
-                                    </span>
-                                `
-                                : ""
-                        }
-
-                        <span class="control-badge ${classe}">
-                            ${texteStatut}
-                        </span>
-
+                <article class="control-card is-${status}">
+                    <div class="control-card-header">
+                        <div>
+                            <span class="control-status status-${status}">
+                                ${getStatusLabel(status)}
+                            </span>
+                            <h3>${escapeHTML(item.titre)}</h3>
+                            <p>${escapeHTML(item.matiere)}</p>
+                        </div>
+                        <strong>${escapeHTML(formatDate(item.date))}</strong>
                     </div>
 
+                    ${details.length
+                        ? `<p class="control-meta">${details.join(" · ")}</p>`
+                        : ""}
 
-                    ${chapitre}
+                    ${item.chapter
+                        ? `<p><strong>Chapitre :</strong> ${escapeHTML(item.chapter)}</p>`
+                        : ""}
 
-                    ${description}
-
+                    ${item.description
+                        ? `<p class="control-description">${escapeHTML(item.description)}</p>`
+                        : ""}
 
                     <div class="control-actions">
-
-                        <button
-                            type="button"
-                            class="edit-button"
-                            onclick="modifierControle('${controle.id}')"
-                        >
-                            ✏️ Modifier
+                        <button type="button"
+                            class="controls-button controls-secondary"
+                            data-action="edit"
+                            data-id="${escapeHTML(item.id)}">
+                            Modifier
                         </button>
 
-
-                        <button
-                            type="button"
-                            class="delete-button"
-                            onclick="supprimerControle('${controle.id}')"
-                        >
-                            🗑️ Supprimer
+                        <button type="button"
+                            class="controls-button controls-danger"
+                            data-action="delete"
+                            data-id="${escapeHTML(item.id)}">
+                            Supprimer
                         </button>
-
                     </div>
-
                 </article>
-
             `;
-
         }).join("");
 
-}
+        updateStatistics();
+    }
 
-
-// =========================
-// AJOUTER UN CONTRÔLE
-// =========================
-
-controlForm.addEventListener(
-    "submit",
-    function(event) {
-
+    form.addEventListener("submit", event => {
         event.preventDefault();
 
+        const matiere = subjectInput.value.trim();
+        const date = dateInput.value;
+        const titre = titleInput.value.trim();
 
-        const nouveauControle = {
+        if (!matiere || !date || !titre) {
+            alert("Remplis au minimum la matière, la date et le titre du contrôle.");
+            return;
+        }
 
-            id:
-                Date.now().toString(),
-
-            matiere:
-                controlSubject.value,
-
-            titre:
-                controlTitle.value.trim(),
-
-            date:
-                controlDate.value,
-
-            time:
-                controlTime.value,
-
-            room:
-                controlRoom.value.trim(),
-
-            chapitre:
-                controlChapter.value.trim(),
-
-            description:
-                controlDescription.value.trim()
-
+        const control = {
+            id: editingId || createId(),
+            matiere,
+            date,
+            titre,
+            time: timeInput.value.trim(),
+            room: roomInput.value.trim(),
+            chapter: chapterInput.value.trim(),
+            description: descriptionInput.value.trim()
         };
 
+        const previousControls = controls.map(item => ({ ...item }));
 
-        controles.push(
-            nouveauControle
-        );
+        if (editingId) {
+            controls = controls.map(item =>
+                item.id === editingId ? control : item
+            );
+        } else {
+            controls.push(control);
+        }
 
+        if (!saveControls()) {
+            controls = previousControls;
+            return;
+        }
 
-        sauvegarderControles();
-
-        controlForm.reset();
-
-        afficherControles();
-
-        afficherStatistiques();
-
-    }
-);
-
-
-// =========================
-// MODIFIER
-// =========================
-
-function modifierControle(id) {
-
-    const controle =
-        controles.find(
-            item => item.id === id
-        );
-
-
-    if (!controle) {
-        return;
-    }
-
-
-    controleEnModification =
-        id;
-
-
-    editSubject.innerHTML =
-        matieres.map(matiere => `
-
-            <option
-                value="${echapperHTML(matiere)}"
-                ${controle.matiere === matiere ? "selected" : ""}
-            >
-                ${echapperHTML(matiere)}
-            </option>
-
-        `).join("");
-
-
-    editTitle.value =
-        controle.titre || "";
-
-    editDate.value =
-        controle.date || "";
-
-    editTime.value =
-        controle.time || "";
-
-    editRoom.value =
-        controle.room || "";
-
-    editChapter.value =
-        controle.chapitre || "";
-
-    editDescription.value =
-        controle.description || "";
-
-
-    editSection.style.display =
-        "block";
-
-
-    editSection.scrollIntoView({
-        behavior: "smooth"
+        resetForm();
+        renderControls();
     });
 
-}
+    controlsList?.addEventListener("click", event => {
+        const button = event.target.closest("button[data-action]");
 
+        if (!button) return;
 
-// =========================
-// ENREGISTRER MODIFICATION
-// =========================
+        const id = button.dataset.id;
+        const action = button.dataset.action;
+        const control = controls.find(item => item.id === id);
 
-editForm.addEventListener(
-    "submit",
-    function(event) {
+        if (!control) return;
 
-        event.preventDefault();
+        if (action === "edit") {
+            editingId = id;
 
+            subjectInput.value = control.matiere;
+            dateInput.value = control.date;
+            titleInput.value = control.titre;
+            timeInput.value = control.time;
+            roomInput.value = control.room;
+            chapterInput.value = control.chapter;
+            descriptionInput.value = control.description;
 
-        if (!controleEnModification) {
-            return;
+            if (submitButton) submitButton.textContent = "Enregistrer les modifications";
+            if (formHeading) formHeading.textContent = "Modifier un contrôle";
+            if (cancelButton) cancelButton.hidden = false;
+
+            form.scrollIntoView({ behavior: "smooth", block: "start" });
+            titleInput.focus();
         }
 
+        if (action === "delete") {
+            if (!confirm(`Supprimer le contrôle « ${control.titre} » ?`)) {
+                return;
+            }
 
-        const index =
-            controles.findIndex(
-                item =>
-                    item.id ===
-                    controleEnModification
-            );
+            const previousControls = controls;
+            controls = controls.filter(item => item.id !== id);
 
+            if (!saveControls()) {
+                controls = previousControls;
+                return;
+            }
 
-        if (index === -1) {
-            return;
+            if (editingId === id) resetForm();
+
+            renderControls();
         }
+    });
 
+    cancelButton?.addEventListener("click", resetForm);
+    searchInput?.addEventListener("input", renderControls);
+    filterInput?.addEventListener("change", renderControls);
 
-        controles[index] = {
-
-            id:
-                controleEnModification,
-
-            matiere:
-                editSubject.value,
-
-            titre:
-                editTitle.value.trim(),
-
-            date:
-                editDate.value,
-
-            time:
-                editTime.value,
-
-            room:
-                editRoom.value.trim(),
-
-            chapitre:
-                editChapter.value.trim(),
-
-            description:
-                editDescription.value.trim()
-
-        };
-
-
-        sauvegarderControles();
-
-
-        controleEnModification =
-            null;
-
-
-        editForm.reset();
-
-        editSection.style.display =
-            "none";
-
-
-        afficherControles();
-
-        afficherStatistiques();
-
-    }
-);
-
-
-// =========================
-// ANNULER MODIFICATION
-// =========================
-
-cancelEdit.addEventListener(
-    "click",
-    function() {
-
-        controleEnModification =
-            null;
-
-        editForm.reset();
-
-        editSection.style.display =
-            "none";
-
-    }
-);
-
-
-// =========================
-// SUPPRIMER
-// =========================
-
-function supprimerControle(id) {
-
-    const controle =
-        controles.find(
-            item => item.id === id
-        );
-
-
-    if (!controle) {
-        return;
-    }
-
-
-    const confirmation =
-        confirm(
-            `Supprimer le contrôle "${controle.titre}" ?`
-        );
-
-
-    if (!confirmation) {
-        return;
-    }
-
-
-    controles =
-        controles.filter(
-            item => item.id !== id
-        );
-
-
-    sauvegarderControles();
-
-    afficherControles();
-
-    afficherStatistiques();
-
-}
-
-
-// =========================
-// RECHERCHE
-// =========================
-
-searchControl.addEventListener(
-    "input",
-    afficherControles
-);
-
-
-// =========================
-// FILTRE MATIÈRE
-// =========================
-
-subjectFilter.addEventListener(
-    "change",
-    afficherControles
-);
-
-
-// =========================
-// FILTRE STATUT
-// =========================
-
-statusFilter.addEventListener(
-    "change",
-    afficherControles
-);
-
-
-// =========================
-// INITIALISATION
-// =========================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        afficherControles();
-
-        afficherStatistiques();
-
-    }
-);
-
-
-// =========================
-// PAGESHOW
-// =========================
-
-window.addEventListener(
-    "pageshow",
-    function() {
-
-        controles =
-            JSON.parse(
-                localStorage.getItem(
-                    STORAGE_KEY
-                )
-            ) || [];
-
-
-        afficherControles();
-
-        afficherStatistiques();
-
-    }
-);
+    renderControls();
+});
