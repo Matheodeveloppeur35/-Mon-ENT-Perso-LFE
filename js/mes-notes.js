@@ -1,850 +1,360 @@
-// =========================
-// MES NOTES
-// =========================
 
-const STORAGE_KEY = "mes-notes";
-
-
-// =========================
-// MATIÈRES
-// =========================
-
-const matieres = [
-    "Français / Histoire-Géo / EMC",
-    "Mathématiques",
-    "Anglais LV1",
-    "Sciences physiques",
-    "Enseignement professionnel",
-    "Pratique professionnelle",
-    "Arts appliqués / Culture artistique",
-    "Soutien au parcours",
-    "Prévention-Santé-Environnement",
-    "Économie & Gestion",
-    "Réalisation projet",
-    "Éducation physique & sportive"
-];
-
-
-// =========================
-// RÉCUPÉRER LES NOTES
-// =========================
-
-let notes = JSON.parse(
-    localStorage.getItem(STORAGE_KEY)
-) || [];
-
-
-// Note actuellement modifiée
-let noteEnModification = null;
-
-
-// =========================
-// ÉLÉMENTS HTML
-// =========================
-
-const noteForm =
-    document.getElementById("note-form");
-
-const noteSubject =
-    document.getElementById("note-subject");
-
-const noteTitle =
-    document.getElementById("note-title");
-
-const noteValue =
-    document.getElementById("note-value");
-
-const noteCoefficient =
-    document.getElementById("note-coefficient");
-
-const noteDate =
-    document.getElementById("note-date");
-
-const cancelEdit =
-    document.getElementById("cancel-edit");
-
-const notesList =
-    document.getElementById("notes-list");
-
-const subjectsGrid =
-    document.getElementById("subjects-grid");
-
-const searchNote =
-    document.getElementById("search-note");
-
-const subjectFilter =
-    document.getElementById("subject-filter");
-
-const totalNotes =
-    document.getElementById("total-notes");
-
-const generalAverage =
-    document.getElementById("general-average");
-
-const bestNote =
-    document.getElementById("best-note");
-
-const subjectsCount =
-    document.getElementById("subjects-count");
-
-
-// =========================
-// SAUVEGARDE
-// =========================
-
-function sauvegarderNotes() {
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(notes)
-    );
-
-}
-
-
-// =========================
-// PROTECTION HTML
-// =========================
-
-function echapperHTML(texte) {
-
-    if (texte === null || texte === undefined) {
-        return "";
-    }
-
-    return String(texte)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-// =========================
-// FORMATER UNE NOTE
-// =========================
-
-function formaterNote(note) {
-
-    const valeur =
-        Number(note);
-
-    if (Number.isInteger(valeur)) {
-        return valeur.toString();
-    }
-
-    return valeur
-        .toFixed(2)
-        .replace(/0+$/, "")
-        .replace(/\.$/, "")
-        .replace(".", ",");
-
-}
-
-
-// =========================
-// FORMATER UNE DATE
-// =========================
-
-function formaterDate(date) {
-
-    if (!date) {
-        return "";
-    }
-
-    const parties =
-        date.split("-");
-
-    if (parties.length !== 3) {
-        return date;
-    }
-
-    return `${parties[2]}/${parties[1]}/${parties[0]}`;
-
-}
-
-
-// =========================
-// MOYENNE D'UNE MATIÈRE
-// =========================
-
-function calculerMoyenneMatiere(matiere) {
-
-    const notesMatiere =
-        notes.filter(
-            note => note.matiere === matiere
-        );
-
-    if (notesMatiere.length === 0) {
-        return null;
-    }
-
-    let total = 0;
-    let totalCoefficients = 0;
-
-    notesMatiere.forEach(note => {
-
-        const valeur =
-            Number(note.note);
-
-        const coefficient =
-            Number(note.coefficient) || 1;
-
-        total += valeur * coefficient;
-
-        totalCoefficients += coefficient;
-
-    });
-
-    if (totalCoefficients === 0) {
-        return null;
-    }
-
-    return total / totalCoefficients;
-
-}
-
-
-// =========================
-// MOYENNE GÉNÉRALE
-// =========================
-
-function calculerMoyenneGenerale() {
-
-    if (notes.length === 0) {
-        return null;
-    }
-
-    let total = 0;
-    let totalCoefficients = 0;
-
-    notes.forEach(note => {
-
-        const valeur =
-            Number(note.note);
-
-        const coefficient =
-            Number(note.coefficient) || 1;
-
-        total += valeur * coefficient;
-
-        totalCoefficients += coefficient;
-
-    });
-
-    if (totalCoefficients === 0) {
-        return null;
-    }
-
-    return total / totalCoefficients;
-
-}
-
-
-// =========================
-// AFFICHER LES STATISTIQUES
-// =========================
-
-function afficherStatistiques() {
-
-    totalNotes.textContent =
-        notes.length;
-
-
-    const moyenne =
-        calculerMoyenneGenerale();
-
-
-    if (moyenne === null) {
-
-        generalAverage.textContent =
-            "— /20";
-
-    } else {
-
-        generalAverage.textContent =
-            `${formaterNote(moyenne)} /20`;
-
-    }
-
-
-    if (notes.length === 0) {
-
-        bestNote.textContent =
-            "—";
-
-    } else {
-
-        const meilleure =
-            Math.max(
-                ...notes.map(
-                    note => Number(note.note)
-                )
-            );
-
-        bestNote.textContent =
-            `${formaterNote(meilleure)} /20`;
-
-    }
-
-
-    const matieresNotees =
-        matieres.filter(
-            matiere =>
-                notes.some(
-                    note => note.matiere === matiere
-                )
-        );
-
-    subjectsCount.textContent =
-        `${matieresNotees.length} / ${matieres.length}`;
-
-}
-
-
-// =========================
-// AFFICHER LES MOYENNES
-// =========================
-
-function afficherMoyennesMatieres() {
-
-    subjectsGrid.innerHTML = "";
-
-    matieres.forEach(matiere => {
-
-        const moyenne =
-            calculerMoyenneMatiere(matiere);
-
-        const nombreNotes =
-            notes.filter(
-                note => note.matiere === matiere
-            ).length;
-
-
-        const carte =
-            document.createElement("div");
-
-        carte.className =
-            "subject-card";
-
-
-        carte.innerHTML = `
-
-            <h3>
-                ${echapperHTML(matiere)}
-            </h3>
-
-            <div class="subject-average">
-
-                ${
-                    moyenne === null
-                        ? "—"
-                        : `${formaterNote(moyenne)} /20`
-                }
-
-            </div>
-
-            <div class="subject-count">
-
-                ${
-                    nombreNotes === 0
-                        ? "Aucune note"
-                        : `${nombreNotes} note${nombreNotes > 1 ? "s" : ""}`
-                }
-
-            </div>
-
-        `;
-
-
-        subjectsGrid.appendChild(carte);
-
-    });
-
-}
-
-
-// =========================
-// RÉCUPÉRER LES NOTES FILTRÉES
-// =========================
-
-function obtenirNotesFiltrees() {
-
-    const recherche =
-        searchNote.value
-            .trim()
-            .toLowerCase();
-
-    const matiere =
-        subjectFilter.value;
-
-
-    return notes
-        .filter(note => {
-
-            const correspondRecherche =
-                !recherche ||
-                note.titre
-                    .toLowerCase()
-                    .includes(recherche) ||
-                note.matiere
-                    .toLowerCase()
-                    .includes(recherche);
-
-
-            const correspondMatiere =
-                matiere === "all" ||
-                note.matiere === matiere;
-
-
-            return (
-                correspondRecherche &&
-                correspondMatiere
-            );
-
-        })
-        .sort(
-            (a, b) =>
-                new Date(b.date) -
-                new Date(a.date)
-        );
-
-}
-
-
-// =========================
-// AFFICHER LES NOTES
-// =========================
-
-function afficherNotes() {
-
-    const notesFiltrees =
-        obtenirNotesFiltrees();
-
-
-    notesList.innerHTML = "";
-
-
-    if (notesFiltrees.length === 0) {
-
-        notesList.innerHTML = `
-
-            <p class="empty-message">
-
-                ${
-                    notes.length === 0
-                        ? "Aucune note enregistrée pour le moment."
-                        : "Aucune note ne correspond à ta recherche."
-
-                }
-
-            </p>
-
-        `;
-
+document.addEventListener("DOMContentLoaded", () => {
+    const STORAGE_KEY = "mes-notes";
+
+    const form = document.getElementById("note-form");
+    const subjectInput = document.getElementById("note-subject");
+    const dateInput = document.getElementById("note-date");
+    const titleInput = document.getElementById("note-title");
+    const valueInput = document.getElementById("note-value");
+    const coefficientInput = document.getElementById("note-coefficient");
+    const submitButton = document.getElementById("note-submit");
+    const cancelButton = document.getElementById("note-cancel");
+    const formHeading = document.getElementById("note-form-heading");
+
+    const searchInput = document.getElementById("search-note");
+    const subjectFilter = document.getElementById("subject-note-filter");
+    const notesList = document.getElementById("notes-list");
+    const emptyMessage = document.getElementById("notes-empty");
+    const countElement = document.getElementById("notes-count");
+
+    const totalElement = document.getElementById("notes-total");
+    const averageElement = document.getElementById("notes-average");
+    const bestElement = document.getElementById("notes-best");
+    const subjectsElement = document.getElementById("notes-subjects");
+
+    if (
+        !form || !subjectInput || !dateInput || !titleInput || !valueInput ||
+        !coefficientInput || !submitButton || !cancelButton || !formHeading ||
+        !searchInput || !subjectFilter || !notesList || !emptyMessage ||
+        !countElement || !totalElement || !averageElement || !bestElement ||
+        !subjectsElement
+    ) {
+        console.error("Mon ENT : un élément de la page Mes notes est manquant.");
         return;
-
     }
 
+    let notes = chargerNotes();
+    let noteEnModification = null;
 
-    notesFiltrees.forEach(note => {
+    function chargerNotes() {
+        try {
+            const donnees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+            if (!Array.isArray(donnees)) return [];
 
-        const carte =
-            document.createElement("div");
+            return donnees
+                .filter((note) => note && typeof note === "object")
+                .map((note, index) => ({
+                    id: String(note.id ?? `note-${index}-${Date.now()}`),
+                    matiere: String(note.matiere ?? ""),
+                    titre: String(note.titre ?? ""),
+                    note: Number(note.note),
+                    coefficient: Number(note.coefficient ?? 1),
+                    date: String(note.date ?? "")
+                }))
+                .filter((note) =>
+                    note.matiere &&
+                    note.titre &&
+                    Number.isFinite(note.note) &&
+                    note.note >= 0 &&
+                    note.note <= 20 &&
+                    Number.isFinite(note.coefficient) &&
+                    note.coefficient > 0
+                );
+        } catch (erreur) {
+            console.error("Impossible de charger les notes.", erreur);
+            return [];
+        }
+    }
 
-        carte.className =
-            "note-card";
+    function sauvegarderNotes() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+            return true;
+        } catch (erreur) {
+            console.error(erreur);
+            alert("Impossible d'enregistrer les notes dans ce navigateur.");
+            return false;
+        }
+    }
 
+    function echapperHTML(texte) {
+        return String(texte).replace(/[&<>"']/g, (caractere) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[caractere]);
+    }
 
-        carte.innerHTML = `
+    function normaliser(texte) {
+        return String(texte)
+            .toLocaleLowerCase("fr")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
 
-            <div class="note-info">
+    function lireNombre(valeur) {
+        return Number(String(valeur).replace(",", "."));
+    }
 
-                <div class="note-title">
+    function formaterNombre(nombre) {
+        return Number(nombre).toLocaleString("fr-FR", {
+            maximumFractionDigits: 2
+        });
+    }
 
-                    ${echapperHTML(note.titre)}
+    function formaterDate(date) {
+        const resultat = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date || "");
+        if (!resultat) return "Date non renseignée";
+        return `${resultat[3]}/${resultat[2]}/${resultat[1]}`;
+    }
 
-                </div>
+    function calculerMoyenne(liste) {
+        const valides = liste.filter((note) =>
+            Number.isFinite(note.note) &&
+            Number.isFinite(note.coefficient) &&
+            note.coefficient > 0
+        );
 
-                <div class="note-details">
+        if (!valides.length) return null;
 
-                    📚 ${echapperHTML(note.matiere)}
-                    ·
-                    📅 ${formaterDate(note.date)}
+        const sommePonderee = valides.reduce(
+            (total, note) => total + note.note * note.coefficient,
+            0
+        );
+        const sommeCoefficients = valides.reduce(
+            (total, note) => total + note.coefficient,
+            0
+        );
 
-                </div>
+        return sommeCoefficients ? sommePonderee / sommeCoefficients : null;
+    }
 
+    function afficherStatistiques() {
+        totalElement.textContent = notes.length;
+
+        const moyenne = calculerMoyenne(notes);
+        averageElement.textContent =
+            moyenne === null ? "—" : `${formaterNombre(moyenne)}/20`;
+
+        const meilleureNote = notes.length
+            ? Math.max(...notes.map((note) => note.note))
+            : null;
+
+        bestElement.textContent =
+            meilleureNote === null
+                ? "—"
+                : `${formaterNombre(meilleureNote)}/20`;
+
+        subjectsElement.textContent = new Set(
+            notes.map((note) => note.matiere)
+        ).size;
+    }
+
+    function reinitialiserFormulaire() {
+        noteEnModification = null;
+        form.reset();
+        coefficientInput.value = "1";
+        formHeading.textContent = "➕ Ajouter une note";
+        submitButton.textContent = "Ajouter la note";
+        cancelButton.hidden = true;
+    }
+
+    function commencerModification(id) {
+        const note = notes.find((element) => element.id === id);
+        if (!note) return;
+
+        noteEnModification = id;
+        subjectInput.value = note.matiere;
+        dateInput.value = note.date;
+        titleInput.value = note.titre;
+        valueInput.value = note.note;
+        coefficientInput.value = note.coefficient;
+
+        formHeading.textContent = "✏️ Modifier la note";
+        submitButton.textContent = "Enregistrer les modifications";
+        cancelButton.hidden = false;
+
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
+        titleInput.focus();
+    }
+
+    function creerCarte(note) {
+        const carte = document.createElement("article");
+        carte.className = "note-card";
+
+        const informations = document.createElement("div");
+        informations.innerHTML = `
+            <h3>${echapperHTML(note.titre)}</h3>
+            <div class="note-meta">
+                ${echapperHTML(note.matiere)} · ${formaterDate(note.date)}
+                · Coefficient ${formaterNombre(note.coefficient)}
             </div>
-
-
-            <div class="note-value">
-
-                ${formaterNote(note.note)} /20
-
-                <div class="note-coefficient">
-
-                    Coef. ${formaterNote(note.coefficient)}
-
-                </div>
-
-            </div>
-
-
-            <div class="note-actions">
-
-                <button
-                    class="edit-button"
-                    onclick="modifierNote('${note.id}')"
-                >
-                    ✏️
-                </button>
-
-                <button
-                    class="delete-button"
-                    onclick="supprimerNote('${note.id}')"
-                >
-                    🗑️
-                </button>
-
-            </div>
-
         `;
 
+        const valeur = document.createElement("div");
+        valeur.className = "note-value";
+        valeur.textContent = `${formaterNombre(note.note)}/20`;
 
-        notesList.appendChild(carte);
+        const actions = document.createElement("div");
+        actions.className = "note-actions";
 
-    });
+        const modifier = document.createElement("button");
+        modifier.type = "button";
+        modifier.className = "notes-button notes-secondary";
+        modifier.dataset.action = "edit";
+        modifier.dataset.id = note.id;
+        modifier.textContent = "✏️ Modifier";
 
-}
+        const supprimer = document.createElement("button");
+        supprimer.type = "button";
+        supprimer.className = "notes-button notes-danger";
+        supprimer.dataset.action = "delete";
+        supprimer.dataset.id = note.id;
+        supprimer.textContent = "🗑️ Supprimer";
 
+        actions.append(modifier, supprimer);
+        carte.append(informations, valeur, actions);
 
-// =========================
-// AJOUTER UNE NOTE
-// =========================
+        return carte;
+    }
 
-noteForm.addEventListener(
-    "submit",
-    function(event) {
+    function afficherNotes() {
+        const recherche = normaliser(searchInput.value);
+        const matiere = subjectFilter.value;
 
-        event.preventDefault();
-
-
-        const matiere =
-            noteSubject.value;
-
-        const titre =
-            noteTitle.value.trim();
-
-        const valeur =
-            Number(noteValue.value);
-
-        const coefficient =
-            Number(noteCoefficient.value);
-
-        const date =
-            noteDate.value;
-
-
-        if (!matiere || !titre || !date) {
-
-            alert(
-                "Merci de remplir tous les champs obligatoires."
+        const notesFiltrees = notes.filter((note) => {
+            const texte = normaliser(
+                `${note.titre} ${note.matiere} ${note.date}`
             );
 
-            return;
+            return texte.includes(recherche) &&
+                (matiere === "all" || note.matiere === matiere);
+        });
 
-        }
+        notesFiltrees.sort((a, b) => {
+            if (!a.date) return 1;
+            if (!b.date) return -1;
+            return b.date.localeCompare(a.date);
+        });
 
+        notesList.replaceChildren(
+            ...notesFiltrees.map((note) => creerCarte(note))
+        );
+
+        countElement.textContent =
+            `${notesFiltrees.length} note${notesFiltrees.length > 1 ? "s" : ""} affichée${notesFiltrees.length > 1 ? "s" : ""}`;
+
+        emptyMessage.hidden = notesFiltrees.length !== 0;
+        afficherStatistiques();
+    }
+
+    form.addEventListener("submit", (evenement) => {
+        evenement.preventDefault();
+
+        const matiere = subjectInput.value.trim();
+        const date = dateInput.value;
+        const titre = titleInput.value.trim();
+        const noteValeur = lireNombre(valueInput.value);
+        const coefficient = lireNombre(coefficientInput.value);
 
         if (
-            Number.isNaN(valeur) ||
-            valeur < 0 ||
-            valeur > 20
-        ) {
-
-            alert(
-                "La note doit être comprise entre 0 et 20."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            Number.isNaN(coefficient) ||
+            !matiere || !date || !titre ||
+            !Number.isFinite(noteValeur) ||
+            noteValeur < 0 || noteValeur > 20 ||
+            !Number.isFinite(coefficient) ||
             coefficient <= 0
         ) {
+            alert("Vérifie la matière, la date, le titre, la note sur 20 et le coefficient.");
+            return;
+        }
 
-            alert(
-                "Le coefficient doit être supérieur à 0."
+        const donnees = {
+            matiere,
+            titre,
+            note: noteValeur,
+            coefficient,
+            date
+        };
+
+        if (noteEnModification !== null) {
+            const index = notes.findIndex(
+                (element) => element.id === noteEnModification
             );
 
-            return;
-
-        }
-
-
-        // =========================
-        // MODIFICATION
-        // =========================
-
-        if (noteEnModification) {
-
-            const index =
-                notes.findIndex(
-                    note =>
-                        note.id ===
-                        noteEnModification
-                );
-
-
-            if (index !== -1) {
-
-                notes[index] = {
-
-                    ...notes[index],
-
-                    matiere: matiere,
-
-                    titre: titre,
-
-                    note: valeur,
-
-                    coefficient: coefficient,
-
-                    date: date
-
-                };
-
+            if (index === -1) {
+                alert("Cette note n'a pas été retrouvée.");
+                reinitialiserFormulaire();
+                return;
             }
 
+            const ancienneNote = notes[index];
+            notes[index] = { ...ancienneNote, ...donnees };
 
-            noteEnModification = null;
+            if (!sauvegarderNotes()) {
+                notes[index] = ancienneNote;
+                return;
+            }
+        } else {
+            const nouvelleNote = {
+                id: (window.crypto && crypto.randomUUID)
+                    ? crypto.randomUUID()
+                    : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                ...donnees
+            };
 
-            cancelEdit.style.display =
-                "none";
+            notes.push(nouvelleNote);
 
-
-            noteForm.querySelector(
-                ".save-button"
-            ).textContent =
-                "💾 Enregistrer la note";
-
-
+            if (!sauvegarderNotes()) {
+                notes.pop();
+                return;
+            }
         }
 
-        // =========================
-        // NOUVELLE NOTE
-        // =========================
-
-        else {
-
-            notes.push({
-
-                id:
-                    Date.now().toString(),
-
-                matiere: matiere,
-
-                titre: titre,
-
-                note: valeur,
-
-                coefficient: coefficient,
-
-                date: date
-
-            });
-
-        }
-
-
-        sauvegarderNotes();
-
-        noteForm.reset();
-
-        noteCoefficient.value = "1";
-
-
-        afficherTout();
-
-    }
-);
-
-
-// =========================
-// MODIFIER UNE NOTE
-// =========================
-
-function modifierNote(id) {
-
-    const note =
-        notes.find(
-            element =>
-                element.id === id
-        );
-
-
-    if (!note) {
-        return;
-    }
-
-
-    noteEnModification =
-        id;
-
-
-    noteSubject.value =
-        note.matiere;
-
-    noteTitle.value =
-        note.titre;
-
-    noteValue.value =
-        note.note;
-
-    noteCoefficient.value =
-        note.coefficient;
-
-    noteDate.value =
-        note.date;
-
-
-    cancelEdit.style.display =
-        "inline-block";
-
-
-    noteForm.querySelector(
-        ".save-button"
-    ).textContent =
-        "💾 Enregistrer les modifications";
-
-
-    noteForm.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
+        reinitialiserFormulaire();
+        afficherNotes();
     });
 
-}
+    cancelButton.addEventListener("click", reinitialiserFormulaire);
+    searchInput.addEventListener("input", afficherNotes);
+    subjectFilter.addEventListener("change", afficherNotes);
 
+    notesList.addEventListener("click", (evenement) => {
+        const bouton = evenement.target.closest("button[data-action]");
+        if (!bouton) return;
 
-// =========================
-// ANNULER MODIFICATION
-// =========================
+        const id = bouton.dataset.id;
+        const action = bouton.dataset.action;
+        const index = notes.findIndex((note) => note.id === id);
 
-cancelEdit.addEventListener(
-    "click",
-    function() {
+        if (index === -1) return;
 
-        noteEnModification = null;
+        if (action === "edit") {
+            commencerModification(id);
+            return;
+        }
 
-        noteForm.reset();
+        if (action === "delete") {
+            const confirmation = confirm(
+                `Supprimer la note « ${notes[index].titre} » ?`
+            );
 
-        noteCoefficient.value = "1";
+            if (!confirmation) return;
 
-        cancelEdit.style.display =
-            "none";
+            const noteSupprimee = notes.splice(index, 1)[0];
 
+            if (!sauvegarderNotes()) {
+                notes.splice(index, 0, noteSupprimee);
+                return;
+            }
 
-        noteForm.querySelector(
-            ".save-button"
-        ).textContent =
-            "💾 Enregistrer la note";
-
-    }
-);
-
-
-// =========================
-// SUPPRIMER UNE NOTE
-// =========================
-
-function supprimerNote(id) {
-
-    const note =
-        notes.find(
-            element =>
-                element.id === id
-        );
-
-
-    if (!note) {
-        return;
-    }
-
-
-    const confirmation =
-        confirm(
-            `Supprimer la note "${note.titre}" ?`
-        );
-
-
-    if (!confirmation) {
-        return;
-    }
-
-
-    notes =
-        notes.filter(
-            element =>
-                element.id !== id
-        );
-
-
-    sauvegarderNotes();
-
-    afficherTout();
-
-}
-
-
-// =========================
-// RECHERCHE
-// =========================
-
-searchNote.addEventListener(
-    "input",
-    afficherNotes
-);
-
-
-// =========================
-// FILTRE MATIÈRE
-// =========================
-
-subjectFilter.addEventListener(
-    "change",
-    afficherNotes
-);
-
-
-// =========================
-// TOUT AFFICHER
-// =========================
-
-function afficherTout() {
-
-    afficherStatistiques();
-
-    afficherMoyennesMatieres();
+            if (noteEnModification === id) reinitialiserFormulaire();
+            afficherNotes();
+        }
+    });
 
     afficherNotes();
-
-}
-
-
-// =========================
-// INITIALISATION
-// =========================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        afficherTout();
-
-    }
-);
+});
