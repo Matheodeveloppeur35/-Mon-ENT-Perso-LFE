@@ -1,909 +1,162 @@
+
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Mes contrôles — Mon ENT Perso LFE</title>
-
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes contrôles - Mon ENT Perso LFE</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
-
-        /* =========================
-           PAGE MES CONTRÔLES
-        ========================= */
-
-        .page-header {
-            margin-bottom: 25px;
+        .controls-container { max-width: 1150px; margin: auto; padding: 24px; }
+        .controls-header { margin-bottom: 24px; }
+        .controls-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+        .controls-stat, .controls-panel { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; }
+        .controls-stat p { color: #64748b; margin: 0 0 8px; }
+        .controls-stat strong { font-size: 26px; }
+        .controls-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        .controls-form label { display: block; font-weight: 600; margin-bottom: 6px; }
+        .controls-form input, .controls-form select, .controls-form textarea,
+        .controls-tools input, .controls-tools select {
+            width: 100%; box-sizing: border-box; padding: 11px; border: 1px solid #cbd5e1;
+            border-radius: 8px; font: inherit; background: white;
         }
-
-        .page-header h1 {
-            margin-bottom: 8px;
-        }
-
-        .page-header p {
-            color: #64748b;
-        }
-
-
-        /* =========================
-           STATISTIQUES
-        ========================= */
-
-        .controls-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-            border: 1px solid #e5e7eb;
-        }
-
-        .stat-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1e293b;
-        }
-
-        .stat-label {
-            color: #64748b;
-            margin-top: 4px;
-        }
-
-
-        /* =========================
-           OUTILS
-        ========================= */
-
-        .controls-tools {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .search-box input,
-        .controls-tools select {
-            width: 100%;
-            padding: 13px 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            font-size: 15px;
-            background: white;
-        }
-
-        .controls-tools select {
-            width: auto;
-            min-width: 190px;
-        }
-
-
-        /* =========================
-           FORMULAIRE
-        ========================= */
-
-        .content-card {
-            background: white;
-            border-radius: 18px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-
-        .content-card h2 {
-            margin-bottom: 20px;
-        }
-
-        .control-form {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            color: #334155;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 9px;
-            font-size: 15px;
-            font-family: inherit;
-            resize: vertical;
-        }
-
-        .form-group textarea {
-            min-height: 90px;
-        }
-
-        .primary-button {
-            grid-column: 1 / -1;
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 13px 20px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .primary-button:hover {
-            background: #1d4ed8;
-        }
-
-        .secondary-button {
-            border: none;
-            background: #64748b;
-            color: white;
-            padding: 11px 18px;
-            border-radius: 9px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-
-        /* =========================
-           LISTE
-        ========================= */
-
-        .controls-list {
-            display: grid;
-            gap: 18px;
-        }
-
-        .control-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            border-left: 6px solid #2563eb;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.06);
-        }
-
-        .control-card.today {
-            border-left-color: #f59e0b;
-        }
-
-        .control-card.passed {
-            border-left-color: #94a3b8;
-            opacity: 0.85;
-        }
-
-        .control-card h3 {
-            margin-bottom: 10px;
-            color: #1e293b;
-        }
-
-        .control-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .control-badge {
-            display: inline-block;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: bold;
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        .control-badge.today {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .control-badge.passed {
-            background: #f1f5f9;
-            color: #64748b;
-        }
-
-        .control-description {
-            color: #475569;
-            white-space: pre-line;
-            margin: 12px 0;
-        }
-
-        .control-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-
-        .control-actions button {
-            border: none;
-            padding: 9px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-        }
-
-        .edit-button {
-            background: #2563eb;
-        }
-
-        .delete-button {
-            background: #dc2626;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 35px;
-            color: #64748b;
-            background: white;
-            border-radius: 16px;
-        }
-
-
-        /* =========================
-           MODIFICATION
-        ========================= */
-
-        #edit-control-section {
-            display: none;
-        }
-
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 900px) {
-
-            .controls-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-        }
-
-
+        .controls-form textarea { min-height: 90px; resize: vertical; }
+        .controls-tools { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 18px; }
+        .controls-full { grid-column: 1 / -1; }
+        .controls-button { border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font: inherit; font-weight: 600; }
+        .controls-primary { background: #2563eb; color: white; }
+        .controls-secondary { background: #e2e8f0; color: #1e293b; }
+        .controls-danger { background: #fee2e2; color: #991b1b; }
+        .controls-panel { margin-bottom: 22px; }
+        .controls-list { display: grid; gap: 14px; }
+        .control-card { background: white; border: 1px solid #e2e8f0; border-left: 5px solid #2563eb; border-radius: 10px; padding: 18px; }
+        .control-card.is-past { border-left-color: #94a3b8; }
+        .control-card.is-today { border-left-color: #ea580c; }
+        .control-card h3 { margin: 0 0 8px; }
+        .control-meta { color: #64748b; font-size: 14px; margin-bottom: 10px; }
+        .control-description { white-space: pre-wrap; overflow-wrap: anywhere; }
+        .control-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .controls-empty { padding: 28px; text-align: center; color: #64748b; background: white; border-radius: 10px; }
+        .controls-help { color: #64748b; font-size: 13px; }
         @media (max-width: 700px) {
-
-            .controls-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .control-form {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full-width {
-                grid-column: auto;
-            }
-
-            .primary-button {
-                grid-column: auto;
-            }
-
-            .controls-tools {
-                flex-direction: column;
-            }
-
-            .controls-tools select {
-                width: 100%;
-            }
-
+            .controls-container { padding: 16px; }
+            .controls-form, .controls-tools { grid-template-columns: 1fr; }
+            .controls-full { grid-column: auto; }
         }
-
     </style>
-
 </head>
-
-
 <body>
-
-
-    <!-- =========================
-         MENU
-    ========================= -->
-
+<div class="app-container">
     <aside class="sidebar">
-
-        <div class="logo">
-
-            🎓
-
-            <h2>Mon ENT</h2>
-
-            <span>Perso LFE</span>
-
-        </div>
-
-
+        <h2>🎓 Mon ENT</h2>
+        <p>Perso LFE</p>
         <nav>
-
-            <a href="index.html">
-                🏠 Accueil
-            </a>
-
-            <a href="emploi-du-temps.html">
-                📅 Emploi du temps
-            </a>
-
-            <a href="mes-cours.html">
-                📚 Mes cours
-            </a>
-
-            <a href="mes-devoirs.html">
-                📝 Mes devoirs
-            </a>
-
-            <a href="mes-notes.html">
-                📊 Mes notes
-            </a>
-
-            <a
-                href="mes-controles.html"
-                class="active"
-            >
-                📋 Mes contrôles
-            </a>
-
+            <a href="index.html">🏠 Accueil</a>
+            <a href="emploi-du-temps.html">📅 Emploi du temps</a>
+            <a href="mes-cours.html">📚 Mes cours</a>
+            <a href="mes-devoirs.html">📝 Mes devoirs</a>
+            <a href="mes-notes.html">📊 Mes notes</a>
+            <a href="mes-controles.html" aria-current="page">📋 Mes contrôles</a>
         </nav>
-
     </aside>
 
-
-    <!-- =========================
-         CONTENU
-    ========================= -->
-
     <main class="main-content">
-
-
-        <header class="page-header">
-
-            <h1>
-                📋 Mes contrôles
-            </h1>
-
-            <p>
-                Retrouve et organise tous tes contrôles et évaluations.
-            </p>
-
-        </header>
-
-
-        <!-- =========================
-             STATISTIQUES
-        ========================= -->
-
-        <section class="controls-stats">
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    📋
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="total-controls"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    Contrôles enregistrés
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    🔵
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="upcoming-controls"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    Contrôles à venir
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    🟠
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="today-controls"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    Aujourd'hui
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ✅
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="passed-controls"
-                >
-                    0
-                </div>
-
-                <div class="stat-label">
-                    Contrôles passés
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             OUTILS
-        ========================= -->
-
-        <section class="controls-tools">
-
-            <div class="search-box">
-
-                <input
-                    type="search"
-                    id="search-control"
-                    placeholder="🔎 Rechercher un contrôle..."
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <select id="subject-filter">
-
-                <option value="all">
-                    📚 Toutes les matières
-                </option>
-
-                <option value="Mathématiques">
-                    Mathématiques
-                </option>
-
-                <option value="Anglais LV1">
-                    Anglais LV1
-                </option>
-
-                <option value="Français / Histoire-Géo / EMC">
-                    Français / Histoire-Géo / EMC
-                </option>
-
-                <option value="Sciences physiques">
-                    Sciences physiques
-                </option>
-
-                <option value="Enseignement professionnel">
-                    Enseignement professionnel
-                </option>
-
-                <option value="Pratique professionnelle">
-                    Pratique professionnelle
-                </option>
-
-                <option value="Arts appliqués / Culture artistique">
-                    Arts appliqués / Culture artistique
-                </option>
-
-                <option value="Soutien au parcours">
-                    Soutien au parcours
-                </option>
-
-                <option value="Prévention-Santé-Environnement">
-                    Prévention-Santé-Environnement
-                </option>
-
-                <option value="Économie & Gestion">
-                    Économie & Gestion
-                </option>
-
-                <option value="Réalisation projet">
-                    Réalisation projet
-                </option>
-
-                <option value="Éducation physique & sportive">
-                    Éducation physique & sportive
-                </option>
-
-            </select>
-
-
-            <select id="status-filter">
-
-                <option value="all">
-                    📋 Tous
-                </option>
-
-                <option value="upcoming">
-                    🔵 À venir
-                </option>
-
-                <option value="today">
-                    🟠 Aujourd'hui
-                </option>
-
-                <option value="passed">
-                    ✅ Passés
-                </option>
-
-            </select>
-
-        </section>
-
-
-        <!-- =========================
-             AJOUT
-        ========================= -->
-
-        <section class="content-card">
-
-            <h2>
-                ➕ Ajouter un contrôle
-            </h2>
-
-            <form
-                id="control-form"
-                class="control-form"
-            >
-
-                <div class="form-group">
-
-                    <label for="control-subject">
-                        📚 Matière
-                    </label>
-
-                    <select
-                        id="control-subject"
-                        required
-                    >
-
-                        <option value="">
-                            Choisir une matière
-                        </option>
-
-                        <option>Mathématiques</option>
-                        <option>Anglais LV1</option>
-                        <option>Français / Histoire-Géo / EMC</option>
-                        <option>Sciences physiques</option>
-                        <option>Enseignement professionnel</option>
-                        <option>Pratique professionnelle</option>
-                        <option>Arts appliqués / Culture artistique</option>
-                        <option>Soutien au parcours</option>
-                        <option>Prévention-Santé-Environnement</option>
-                        <option>Économie & Gestion</option>
-                        <option>Réalisation projet</option>
-                        <option>Éducation physique & sportive</option>
-
+        <div class="controls-container">
+            <header class="controls-header">
+                <h1>📋 Mes contrôles</h1>
+                <p>Prépare tes évaluations et garde une trace des chapitres à réviser.</p>
+            </header>
+
+            <section class="controls-stats" aria-label="Résumé des contrôles">
+                <article class="controls-stat">
+                    <p>Total des contrôles</p>
+                    <strong id="controls-total">0</strong>
+                </article>
+                <article class="controls-stat">
+                    <p>À venir</p>
+                    <strong id="controls-upcoming">0</strong>
+                </article>
+                <article class="controls-stat">
+                    <p>Aujourd'hui</p>
+                    <strong id="controls-today">0</strong>
+                </article>
+                <article class="controls-stat">
+                    <p>Passés</p>
+                    <strong id="controls-past">0</strong>
+                </article>
+            </section>
+
+            <section class="controls-panel">
+                <h2 id="control-form-heading">➕ Ajouter un contrôle</h2>
+                <form id="control-form" class="controls-form">
+                    <div>
+                        <label for="control-subject">Matière</label>
+                        <select id="control-subject" required>
+                            <option value="">Choisir une matière</option>
+                            <option>Français / Histoire-Géo / EMC</option>
+                            <option>Mathématiques</option>
+                            <option>Anglais LV1</option>
+                            <option>Sciences physiques</option>
+                            <option>Enseignement professionnel</option>
+                            <option>Pratique professionnelle</option>
+                            <option>Arts appliqués / Culture artistique</option>
+                            <option>Soutien au parcours</option>
+                            <option>Prévention-Santé-Environnement</option>
+                            <option>Économie &amp; Gestion</option>
+                            <option>Réalisation projet</option>
+                            <option>Éducation physique &amp; sportive</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="control-date">Date</label>
+                        <input type="date" id="control-date" required>
+                    </div>
+                    <div class="controls-full">
+                        <label for="control-title">Nom du contrôle</label>
+                        <input type="text" id="control-title" maxlength="150" required placeholder="Ex. : contrôle sur les fractions">
+                    </div>
+                    <div>
+                        <label for="control-time">Heure (facultatif)</label>
+                        <input type="time" id="control-time">
+                    </div>
+                    <div>
+                        <label for="control-room">Salle (facultatif)</label>
+                        <input type="text" id="control-room" maxlength="100" placeholder="Ex. : E218">
+                    </div>
+                    <div class="controls-full">
+                        <label for="control-chapter">Chapitre à réviser</label>
+                        <input type="text" id="control-chapter" maxlength="250" placeholder="Ex. : chapitre 3">
+                    </div>
+                    <div class="controls-full">
+                        <label for="control-description">Consignes et révisions</label>
+                        <textarea id="control-description" maxlength="5000" placeholder="Pages à apprendre, exercices à refaire..."></textarea>
+                    </div>
+                    <div class="controls-full">
+                        <button class="controls-button controls-primary" id="control-submit" type="submit">Ajouter le contrôle</button>
+                        <button class="controls-button controls-secondary" id="control-cancel" type="button" hidden>Annuler</button>
+                        <p class="controls-help">Les contrôles sont enregistrés dans le stockage local de ce navigateur.</p>
+                    </div>
+                </form>
+            </section>
+
+            <section class="controls-panel">
+                <h2>🗓️ Mes évaluations</h2>
+                <div class="controls-tools">
+                    <input type="search" id="search-control" placeholder="🔎 Rechercher un contrôle..." aria-label="Rechercher un contrôle">
+                    <select id="control-filter" aria-label="Filtrer les contrôles">
+                        <option value="all">Tous les contrôles</option>
+                        <option value="upcoming">À venir</option>
+                        <option value="today">Aujourd'hui</option>
+                        <option value="past">Passés</option>
                     </select>
-
                 </div>
-
-
-                <div class="form-group">
-
-                    <label for="control-title">
-                        📝 Titre du contrôle
-                    </label>
-
-                    <input
-                        type="text"
-                        id="control-title"
-                        placeholder="Ex : Contrôle chapitre 2"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="control-date">
-                        📅 Date
-                    </label>
-
-                    <input
-                        type="date"
-                        id="control-date"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="control-time">
-                        🕐 Heure
-                    </label>
-
-                    <input
-                        type="time"
-                        id="control-time"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="control-room">
-                        📍 Salle
-                    </label>
-
-                    <input
-                        type="text"
-                        id="control-room"
-                        placeholder="Ex : E218"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="control-chapter">
-                        📖 Chapitre / thème
-                    </label>
-
-                    <input
-                        type="text"
-                        id="control-chapter"
-                        placeholder="Ex : Fonctions"
-                    >
-
-                </div>
-
-
-                <div class="form-group full-width">
-
-                    <label for="control-description">
-                        📄 Contenu / informations
-                    </label>
-
-                    <textarea
-                        id="control-description"
-                        placeholder="Ajoute les notions à réviser, les consignes, etc."
-                    ></textarea>
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="primary-button"
-                >
-                    ➕ Ajouter le contrôle
-                </button>
-
-            </form>
-
-        </section>
-
-
-        <!-- =========================
-             MODIFICATION
-        ========================= -->
-
-        <section
-            class="content-card"
-            id="edit-control-section"
-        >
-
-            <h2>
-                ✏️ Modifier le contrôle
-            </h2>
-
-            <form
-                id="edit-control-form"
-                class="control-form"
-            >
-
-                <div class="form-group">
-
-                    <label for="edit-control-subject">
-                        📚 Matière
-                    </label>
-
-                    <select
-                        id="edit-control-subject"
-                        required
-                    ></select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="edit-control-title">
-                        📝 Titre
-                    </label>
-
-                    <input
-                        type="text"
-                        id="edit-control-title"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="edit-control-date">
-                        📅 Date
-                    </label>
-
-                    <input
-                        type="date"
-                        id="edit-control-date"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="edit-control-time">
-                        🕐 Heure
-                    </label>
-
-                    <input
-                        type="time"
-                        id="edit-control-time"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="edit-control-room">
-                        📍 Salle
-                    </label>
-
-                    <input
-                        type="text"
-                        id="edit-control-room"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="edit-control-chapter">
-                        📖 Chapitre / thème
-                    </label>
-
-                    <input
-                        type="text"
-                        id="edit-control-chapter"
-                    >
-
-                </div>
-
-
-                <div class="form-group full-width">
-
-                    <label for="edit-control-description">
-                        📄 Contenu / informations
-                    </label>
-
-                    <textarea
-                        id="edit-control-description"
-                    ></textarea>
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="primary-button"
-                >
-                    💾 Enregistrer les modifications
-                </button>
-
-                <button
-                    type="button"
-                    id="cancel-edit"
-                    class="secondary-button"
-                >
-                    Annuler
-                </button>
-
-            </form>
-
-        </section>
-
-
-        <!-- =========================
-             LISTE
-        ========================= -->
-
-        <section class="content-card">
-
-            <h2>
-                📋 Contrôles enregistrés
-            </h2>
-
-            <div
-                id="controls-list"
-                class="controls-list"
-            ></div>
-
-        </section>
-
-
+                <p id="controls-count" aria-live="polite"></p>
+                <div id="controls-list" class="controls-list"></div>
+                <div id="controls-empty" class="controls-empty" hidden>Aucun contrôle à afficher.</div>
+            </section>
+        </div>
     </main>
-
-
-    <script src="js/mes-controles.js"></script>
-
+</div>
+<script src="js/mes-controles.js"></script>
 </body>
-
 </html>
