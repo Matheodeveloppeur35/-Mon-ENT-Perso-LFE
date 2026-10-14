@@ -4,101 +4,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2457a7">
+    <meta name="theme-color" content="#193e7c">
     <title>Emploi du temps — Mon ENT Perso LFE</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <header class="site-header">
-        <a class="site-brand" href="index.html">
-            <span aria-hidden="true">🎓</span>
-            <span>Mon ENT <strong>Perso LFE</strong></span>
+<body class="ent-layout">
+
+    <aside class="sidebar">
+        <a class="logo" href="index.html">
+            <span class="logo-icon">🎓</span>
+            <span class="logo-text">
+                <strong>Mon ENT</strong>
+                <small>Perso LFE</small>
+            </span>
         </a>
 
-        <nav aria-label="Navigation principale">
-            <a href="index.html">🏠 Accueil</a>
-            <a href="emploi-du-temps.html" aria-current="page">📅 Emploi du temps</a>
-            <a href="mes-cours.html">📚 Mes cours</a>
-            <a href="mes-devoirs.html">📝 Mes devoirs</a>
-            <a href="mes-notes.html">📊 Mes notes</a>
-            <a href="mes-controles.html">📋 Mes contrôles</a>
+        <nav class="sidebar-nav" aria-label="Navigation principale">
+            <a href="index.html"><span>🏠</span> Accueil</a>
+            <a href="emploi-du-temps.html" class="active" aria-current="page">
+                <span>📅</span> Emploi du temps
+            </a>
+            <a href="mes-cours.html"><span>📚</span> Mes cours</a>
+            <a href="mes-devoirs.html"><span>📝</span> Mes devoirs</a>
+            <a href="mes-notes.html"><span>📊</span> Mes notes</a>
+            <a href="mes-controles.html"><span>📋</span> Mes contrôles</a>
         </nav>
-    </header>
 
-    <main class="page-container">
-        <section class="page-heading">
-            <p class="eyebrow">MON ORGANISATION SCOLAIRE</p>
-            <h1>📅 Mon emploi du temps</h1>
-            <p>Retrouve tes cours, les horaires et les salles en un seul endroit.</p>
+        <div class="sidebar-footer">
+            <span>🎒</span>
+            <p>Mon espace scolaire personnel</p>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="main-header">
+            <div>
+                <p class="eyebrow">ORGANISATION SCOLAIRE</p>
+                <h1>📅 Mon emploi du temps</h1>
+                <p>Retrouve tes cours et organise ta semaine.</p>
+            </div>
+            <div class="header-badge">Planning scolaire</div>
+        </header>
+
+        <section class="welcome-card">
+            <div class="welcome-content">
+                <span class="welcome-icon">🗓️</span>
+                <div>
+                    <p class="eyebrow">MON PLANNING</p>
+                    <h2>Une semaine bien organisée</h2>
+                    <p>Choisis ta période et le jour à consulter.</p>
+                </div>
+            </div>
         </section>
 
-        <section class="timetable-toolbar" aria-label="Options de l'emploi du temps">
-            <div class="form-group">
-                <label for="periode">Période scolaire</label>
-                <select id="periode">
-                    <option value="Q1">Premier trimestre / Q1</option>
-                    <option value="Q2">Deuxième trimestre / Q2</option>
-                </select>
+        <section class="form-card">
+            <div class="section-heading">
+                <div>
+                    <h2>Afficher mon planning</h2>
+                    <p>Sélectionne les informations à afficher.</p>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="jour-filtre">Afficher</label>
-                <select id="jour-filtre">
-                    <option value="tous">Toute la semaine</option>
-                    <option value="Lundi">Lundi</option>
-                    <option value="Mardi">Mardi</option>
-                    <option value="Mercredi">Mercredi</option>
-                    <option value="Jeudi">Jeudi</option>
-                    <option value="Vendredi">Vendredi</option>
-                </select>
+            <div class="timetable-toolbar">
+                <div class="form-group">
+                    <label for="periode">Période scolaire</label>
+                    <select id="periode">
+                        <option value="T1">Trimestre 1</option>
+                        <option value="T2">Trimestre 2</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="jour-filtre">Jour</label>
+                    <select id="jour-filtre">
+                        <option value="tous">Toute la semaine</option>
+                        <option value="Lundi">Lundi</option>
+                        <option value="Mardi">Mardi</option>
+                        <option value="Mercredi">Mercredi</option>
+                        <option value="Jeudi">Jeudi</option>
+                        <option value="Vendredi">Vendredi</option>
+                    </select>
+                </div>
+
+                <button type="button" id="imprimer-edt">🖨️ Imprimer</button>
             </div>
 
-            <button type="button" id="imprimer-edt" class="controls-button controls-primary">
-                🖨️ Imprimer
-            </button>
+            <p id="edt-message" class="muted" role="status" aria-live="polite"></p>
         </section>
 
-        <section class="timetable-legend" aria-label="Légende">
-            <span>🔵 Cours</span>
-            <span>🟠 Récréation</span>
-            <span>🟢 Déjeuner</span>
+        <section class="form-card">
+            <div class="section-heading">
+                <div>
+                    <h2>Mon planning de cours</h2>
+                    <p>Les horaires et les cours de la période sélectionnée.</p>
+                </div>
+            </div>
+
+            <div class="timetable-wrapper">
+                <table class="timetable" id="edt-table">
+                    <thead>
+                        <tr>
+                            <th>Jour</th>
+                            <th>Horaire</th>
+                            <th>Matière</th>
+                            <th>Professeur</th>
+                            <th>Salle</th>
+                        </tr>
+                    </thead>
+                    <tbody id="edt-body">
+                        <tr>
+                            <td colspan="5">Chargement de l'emploi du temps…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <section class="timetable-wrapper" aria-label="Tableau des cours">
-            <div id="edt-message" role="status" aria-live="polite"></div>
+        <footer class="page-footer">
+            <p>🎓 Mon ENT Perso LFE</p>
+            <p>Mon planning scolaire personnel.</p>
+        </footer>
 
-            <table id="edt-table" class="timetable">
-                <thead>
-                    <tr>
-                        <th scope="col">Horaires</th>
-                        <th scope="col" data-day="Lundi">Lundi</th>
-                        <th scope="col" data-day="Mardi">Mardi</th>
-                        <th scope="col" data-day="Mercredi">Mercredi</th>
-                        <th scope="col" data-day="Jeudi">Jeudi</th>
-                        <th scope="col" data-day="Vendredi">Vendredi</th>
-                    </tr>
-                </thead>
-                <tbody id="edt-body">
-                    <tr>
-                        <td colspan="6">Chargement de l'emploi du temps…</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section class="timetable-notes">
-            <h2>ℹ️ À savoir</h2>
-            <ul>
-                <li>Vérifie la période sélectionnée avant de consulter tes cours.</li>
-                <li>Les salles et les horaires peuvent varier selon les séances.</li>
-                <li>Tu peux imprimer cette page depuis ton navigateur.</li>
-            </ul>
-        </section>
     </main>
-
-    <footer class="site-footer">
-        <p>🎓 Mon ENT Perso LFE — Mon espace scolaire personnel</p>
-    </footer>
 
     <script src="js/emploi-du-temps.js"></script>
 </body>
