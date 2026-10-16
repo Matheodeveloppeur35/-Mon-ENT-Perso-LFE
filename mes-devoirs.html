@@ -4,141 +4,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes devoirs - Mon ENT Perso LFE</title>
+    <meta name="theme-color" content="#193e7c">
+    <title>Mes devoirs — Mon ENT Perso LFE</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .homework-container { max-width: 1150px; margin: auto; padding: 24px; }
-        .homework-header { margin-bottom: 24px; }
-        .homework-panel { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 22px; }
-        .homework-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-        .homework-form label { display: block; font-weight: 600; margin-bottom: 6px; }
-        .homework-form input, .homework-form select, .homework-form textarea,
-        .homework-tools input, .homework-tools select {
-            width: 100%; box-sizing: border-box; padding: 11px; border: 1px solid #cbd5e1;
-            border-radius: 8px; font: inherit; background: white;
-        }
-        .homework-form textarea { min-height: 100px; resize: vertical; }
-        .full-width { grid-column: 1 / -1; }
-        .homework-button { border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font: inherit; font-weight: 600; }
-        .primary-button { background: #2563eb; color: white; }
-        .secondary-button { background: #e2e8f0; color: #1e293b; }
-        .danger-button { background: #fee2e2; color: #991b1b; }
-        .homework-tools { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
-        .homework-list { display: grid; gap: 14px; }
-        .homework-card { border: 1px solid #e2e8f0; border-left: 5px solid #2563eb; border-radius: 10px; padding: 18px; background: white; }
-        .homework-card.is-done { border-left-color: #16a34a; opacity: .85; }
-        .homework-card.is-late { border-left-color: #dc2626; }
-        .homework-card h3 { margin: 0 0 8px; }
-        .homework-meta { color: #64748b; font-size: 14px; margin-bottom: 10px; }
-        .homework-description { white-space: pre-wrap; overflow-wrap: anywhere; }
-        .homework-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-        .homework-empty { padding: 28px; text-align: center; color: #64748b; background: white; border-radius: 10px; }
-        .homework-notice { margin: 10px 0 0; color: #64748b; font-size: 13px; }
-        @media (max-width: 700px) {
-            .homework-container { padding: 16px; }
-            .homework-form, .homework-tools { grid-template-columns: 1fr; }
-            .full-width { grid-column: auto; }
-        }
-    </style>
 </head>
-<body>
-<div class="app-container">
+
+<body class="ent-layout">
+
     <aside class="sidebar">
-        <h2>🎓 Mon ENT</h2>
-        <p>Perso LFE</p>
-        <nav>
-            <a href="index.html">🏠 Accueil</a>
-            <a href="emploi-du-temps.html">📅 Emploi du temps</a>
-            <a href="mes-cours.html">📚 Mes cours</a>
-            <a href="mes-devoirs.html" aria-current="page">📝 Mes devoirs</a>
-            <a href="mes-notes.html">📊 Mes notes</a>
-            <a href="mes-controles.html">📋 Mes contrôles</a>
+        <a class="logo" href="index.html">
+            <span class="logo-icon">🎓</span>
+            <span class="logo-text">
+                <strong>Mon ENT</strong>
+                <small>Perso LFE</small>
+            </span>
+        </a>
+
+        <nav class="sidebar-nav" aria-label="Navigation principale">
+            <a href="index.html"><span>🏠</span> Accueil</a>
+            <a href="emploi-du-temps.html"><span>📅</span> Emploi du temps</a>
+            <a href="mes-cours.html"><span>📚</span> Mes cours</a>
+            <a href="mes-devoirs.html" class="active" aria-current="page">
+                <span>📝</span> Mes devoirs
+            </a>
+            <a href="mes-notes.html"><span>📊</span> Mes notes</a>
+            <a href="mes-controles.html"><span>📋</span> Mes contrôles</a>
         </nav>
+
+        <div class="sidebar-footer">
+            <span>🎒</span>
+            <p>Mon espace scolaire personnel</p>
+        </div>
     </aside>
 
     <main class="main-content">
-        <div class="homework-container">
-            <header class="homework-header">
-                <h1>📝 Mes devoirs</h1>
-                <p>Organise ton travail et suis les devoirs à faire.</p>
-            </header>
 
-            <section class="homework-panel">
-                <h2 id="homework-form-heading">➕ Ajouter un devoir</h2>
-                <form id="homework-form" class="homework-form">
-                    <div>
+        <header class="main-header">
+            <div>
+                <p class="eyebrow">ORGANISATION DU TRAVAIL</p>
+                <h1>📝 Mes devoirs</h1>
+                <p>Note tes devoirs, suis leur avancement et prépare les prochaines échéances.</p>
+            </div>
+            <div class="header-badge">Mon travail scolaire</div>
+        </header>
+
+        <section class="welcome-card">
+            <div class="welcome-content">
+                <span class="welcome-icon">✍️</span>
+                <div>
+                    <p class="eyebrow">MON ORGANISATION</p>
+                    <h2>Je prépare mes devoirs</h2>
+                    <p>Ajoute tes travaux à faire et coche-les lorsqu'ils sont terminés.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <span class="stat-label">Mes devoirs affichés</span>
+                <strong class="stat-value" id="homework-count">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">À faire</span>
+                <strong class="stat-value" id="homework-todo-count">—</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Terminés</span>
+                <strong class="stat-value" id="homework-done-count">—</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">En retard</span>
+                <strong class="stat-value" id="homework-late-count">—</strong>
+            </article>
+        </section>
+
+        <section class="form-card">
+            <div class="section-heading">
+                <div>
+                    <h2 id="homework-form-heading">➕ Ajouter un devoir</h2>
+                    <p>Enregistre la matière, l'échéance et les consignes.</p>
+                </div>
+            </div>
+
+            <form id="homework-form">
+                <div class="form-grid">
+
+                    <div class="form-group">
                         <label for="homework-subject">Matière</label>
-                        <select id="homework-subject" required>
-                            <option value="">Choisir une matière</option>
-                            <option>Français / Histoire-Géo / EMC</option>
-                            <option>Mathématiques</option>
-                            <option>Anglais LV1</option>
-                            <option>Sciences physiques</option>
-                            <option>Enseignement professionnel</option>
-                            <option>Pratique professionnelle</option>
-                            <option>Arts appliqués / Culture artistique</option>
-                            <option>Soutien au parcours</option>
-                            <option>Prévention-Santé-Environnement</option>
-                            <option>Économie &amp; Gestion</option>
-                            <option>Réalisation projet</option>
-                            <option>Éducation physique &amp; sportive</option>
-                        </select>
+                        <input
+                            type="text"
+                            id="homework-subject"
+                            required
+                            placeholder="Ex. : Mathématiques"
+                        >
                     </div>
-                    <div>
-                        <label for="homework-date">À rendre le</label>
+
+                    <div class="form-group">
+                        <label for="homework-date">Date à rendre</label>
                         <input type="date" id="homework-date" required>
                     </div>
-                    <div class="full-width">
-                        <label for="homework-title">Titre du devoir</label>
-                        <input type="text" id="homework-title" maxlength="150" required placeholder="Ex. : exercices du chapitre 2">
-                    </div>
-                    <div class="full-width">
-                        <label for="homework-description">Consignes et détails</label>
-                        <textarea id="homework-description" maxlength="5000" placeholder="Ajoute les consignes, les pages à réviser, le matériel..."></textarea>
-                    </div>
-                    <div class="full-width">
-                        <button class="homework-button primary-button" type="submit" id="homework-submit">Ajouter le devoir</button>
-                        <button class="homework-button secondary-button" type="button" id="cancel-homework-edit" hidden>Annuler la modification</button>
-                        <p class="homework-notice">Les devoirs sont enregistrés dans le stockage local de ce navigateur.</p>
-                    </div>
-                </form>
-            </section>
 
-            <section class="homework-panel">
-                <h2>📚 Ma liste de devoirs</h2>
-                <div class="homework-tools">
-                    <input type="search" id="search-homework" placeholder="🔎 Rechercher..." aria-label="Rechercher un devoir">
-                    <select id="status-filter" aria-label="Filtrer par état">
-                        <option value="all">Tous les devoirs</option>
-                        <option value="todo">À faire</option>
-                        <option value="done">Terminés</option>
-                        <option value="late">En retard</option>
-                    </select>
-                    <select id="subject-filter" aria-label="Filtrer par matière">
-                        <option value="all">Toutes les matières</option>
-                        <option>Français / Histoire-Géo / EMC</option>
-                        <option>Mathématiques</option>
-                        <option>Anglais LV1</option>
-                        <option>Sciences physiques</option>
-                        <option>Enseignement professionnel</option>
-                        <option>Pratique professionnelle</option>
-                        <option>Arts appliqués / Culture artistique</option>
-                        <option>Soutien au parcours</option>
-                        <option>Prévention-Santé-Environnement</option>
-                        <option>Économie &amp; Gestion</option>
-                        <option>Réalisation projet</option>
-                        <option>Éducation physique &amp; sportive</option>
-                    </select>
+                    <div class="form-group full-width">
+                        <label for="homework-title">Titre du devoir</label>
+                        <input
+                            type="text"
+                            id="homework-title"
+                            required
+                            placeholder="Ex. : Exercices du chapitre 2"
+                        >
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="homework-description">Consignes et détails</label>
+                        <textarea
+                            id="homework-description"
+                            placeholder="Pages à faire, exercices, documents à apporter…"
+                        ></textarea>
+                    </div>
+
                 </div>
-                <p id="homework-count" aria-live="polite"></p>
-                <div id="homework-list" class="homework-list"></div>
-                <div id="homework-empty" class="homework-empty" hidden>
-                    Aucun devoir à afficher. Ajoute un devoir ou modifie les filtres.
+
+                <div class="toolbar" style="margin-top: 18px; margin-bottom: 0;">
+                    <button type="submit" id="homework-submit">Enregistrer le devoir</button>
+                    <button type="button" id="cancel-homework-edit" class="secondary hidden">
+                        Annuler la modification
+                    </button>
                 </div>
-            </section>
-        </div>
+            </form>
+        </section>
+
+        <section class="form-card">
+            <div class="section-heading">
+                <div>
+                    <h2>📚 Mon suivi des devoirs</h2>
+                    <p>Recherche et filtre les devoirs enregistrés.</p>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <input
+                    type="search"
+                    id="search-homework"
+                    placeholder="🔎 Rechercher un devoir ou une matière…"
+                    aria-label="Rechercher un devoir"
+                >
+
+                <select id="status-filter" aria-label="Filtrer par état">
+                    <option value="all">Tous les devoirs</option>
+                    <option value="todo">À faire</option>
+                    <option value="done">Terminés</option>
+                    <option value="late">En retard</option>
+                </select>
+
+                <select id="subject-filter" aria-label="Filtrer par matière">
+                    <option value="all">Toutes les matières</option>
+                </select>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Liste des devoirs</h2>
+                    <p id="homework-list-summary" class="muted" aria-live="polite">
+                        Chargement des devoirs…
+                    </p>
+                </div>
+            </div>
+
+            <div class="homework-list" id="homework-list"></div>
+
+            <div id="homework-empty" class="empty-state hidden">
+                <p>📭 Aucun devoir à afficher.</p>
+                <p>Ajoute un devoir ou modifie les filtres de recherche.</p>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <p>🎓 Mon ENT Perso LFE</p>
+            <p>Un devoir à la fois, pour avancer sereinement.</p>
+        </footer>
+
     </main>
-</div>
-<script src="js/mes-devoirs.js"></script>
+
+    <script src="js/mes-devoirs.js"></script>
 </body>
 </html>
