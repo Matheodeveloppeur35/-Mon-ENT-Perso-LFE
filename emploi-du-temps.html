@@ -8,6 +8,7 @@
     <title>Emploi du temps — Mon ENT Perso LFE</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body class="ent-layout">
 
     <aside class="sidebar">
@@ -53,7 +54,7 @@
                 <div>
                     <p class="eyebrow">MON PLANNING</p>
                     <h2>Une semaine bien organisée</h2>
-                    <p>Choisis ta période et le jour à consulter.</p>
+                    <p>Choisis ton trimestre et consulte les cours de chaque jour.</p>
                 </div>
             </div>
         </section>
@@ -61,8 +62,8 @@
         <section class="form-card">
             <div class="section-heading">
                 <div>
-                    <h2>Afficher mon planning</h2>
-                    <p>Sélectionne les informations à afficher.</p>
+                    <h2>Mon planning</h2>
+                    <p>Sélectionne la période et le jour à afficher.</p>
                 </div>
             </div>
 
@@ -70,8 +71,8 @@
                 <div class="form-group">
                     <label for="periode">Période scolaire</label>
                     <select id="periode">
-                        <option value="T1">Trimestre 1</option>
-                        <option value="T2">Trimestre 2</option>
+                        <option value="Q1">Trimestre 1</option>
+                        <option value="Q2">Trimestre 2</option>
                     </select>
                 </div>
 
@@ -96,8 +97,8 @@
         <section class="form-card">
             <div class="section-heading">
                 <div>
-                    <h2>Mon planning de cours</h2>
-                    <p>Les horaires et les cours de la période sélectionnée.</p>
+                    <h2>Les cours de la semaine</h2>
+                    <p>Les horaires sont affichés à gauche et les jours en colonnes.</p>
                 </div>
             </div>
 
@@ -105,16 +106,18 @@
                 <table class="timetable" id="edt-table">
                     <thead>
                         <tr>
-                            <th>Jour</th>
                             <th>Horaire</th>
-                            <th>Matière</th>
-                            <th>Professeur</th>
-                            <th>Salle</th>
+                            <th data-day="Lundi">Lundi</th>
+                            <th data-day="Mardi">Mardi</th>
+                            <th data-day="Mercredi">Mercredi</th>
+                            <th data-day="Jeudi">Jeudi</th>
+                            <th data-day="Vendredi">Vendredi</th>
                         </tr>
                     </thead>
+
                     <tbody id="edt-body">
                         <tr>
-                            <td colspan="5">Chargement de l'emploi du temps…</td>
+                            <td colspan="6">Chargement de l'emploi du temps…</td>
                         </tr>
                     </tbody>
                 </table>
