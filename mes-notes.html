@@ -6,155 +6,211 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes notes - Mon ENT Perso LFE</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .notes-container { max-width: 1150px; margin: auto; padding: 24px; }
-        .notes-header { margin-bottom: 24px; }
-        .notes-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
-        .notes-stat, .notes-panel { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; }
-        .notes-stat p { color: #64748b; margin: 0 0 8px; }
-        .notes-stat strong { font-size: 27px; color: #1e293b; }
-        .notes-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-        .notes-form label { display: block; font-weight: 600; margin-bottom: 6px; }
-        .notes-form input, .notes-form select, .notes-tools input, .notes-tools select {
-            width: 100%; box-sizing: border-box; padding: 11px; border: 1px solid #cbd5e1;
-            border-radius: 8px; font: inherit; background: white;
-        }
-        .notes-tools { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 18px; }
-        .notes-full { grid-column: 1 / -1; }
-        .notes-button { border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font: inherit; font-weight: 600; }
-        .notes-primary { background: #2563eb; color: white; }
-        .notes-secondary { background: #e2e8f0; color: #1e293b; }
-        .notes-danger { background: #fee2e2; color: #991b1b; }
-        .notes-panel { margin-bottom: 22px; }
-        .notes-list { display: grid; gap: 12px; }
-        .note-card { padding: 16px; border: 1px solid #e2e8f0; border-radius: 10px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
-        .note-card h3 { margin: 0 0 6px; }
-        .note-meta { color: #64748b; font-size: 14px; }
-        .note-value { font-size: 24px; font-weight: 700; white-space: nowrap; }
-        .note-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .notes-empty { padding: 28px; text-align: center; color: #64748b; background: white; border-radius: 10px; }
-        .notes-help { color: #64748b; font-size: 13px; }
-        @media (max-width: 700px) {
-            .notes-container { padding: 16px; }
-            .notes-form, .notes-tools { grid-template-columns: 1fr; }
-            .notes-full { grid-column: auto; }
-        }
-    </style>
 </head>
-<body>
-<div class="app-container">
+
+<body class="ent-layout">
+
     <aside class="sidebar">
-        <h2>🎓 Mon ENT</h2>
-        <p>Perso LFE</p>
-        <nav>
-            <a href="index.html">🏠 Accueil</a>
-            <a href="emploi-du-temps.html">📅 Emploi du temps</a>
-            <a href="mes-cours.html">📚 Mes cours</a>
-            <a href="mes-devoirs.html">📝 Mes devoirs</a>
-            <a href="mes-notes.html" aria-current="page">📊 Mes notes</a>
-            <a href="mes-controles.html">📋 Mes contrôles</a>
+        <div class="logo">
+            <span>🎓</span>
+            <div>
+                <strong>Mon ENT</strong>
+                <small>Perso LFE</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html"><span>🏠</span> Accueil</a>
+            <a href="emploi-du-temps.html"><span>📅</span> Emploi du temps</a>
+            <a href="mes-cours.html"><span>📚</span> Mes cours</a>
+            <a href="mes-devoirs.html"><span>📝</span> Mes devoirs</a>
+            <a href="mes-notes.html" class="active"><span>📊</span> Mes notes</a>
+            <a href="mes-controles.html"><span>✏️</span> Mes contrôles</a>
         </nav>
+
+        <div class="sidebar-footer">
+            <span>💻</span>
+            <div>
+                <strong>Mon espace personnel</strong>
+                <small>Lycée La Fontaine des Eaux</small>
+            </div>
+        </div>
     </aside>
 
     <main class="main-content">
-        <div class="notes-container">
-            <header class="notes-header">
-                <h1>📊 Mes notes</h1>
-                <p>Consulte tes résultats et suis tes moyennes au fil de l'année.</p>
-            </header>
 
-            <section class="notes-stats" aria-label="Résumé des notes">
-                <article class="notes-stat">
-                    <p>Nombre de notes</p>
-                    <strong id="notes-total">0</strong>
-                </article>
-                <article class="notes-stat">
-                    <p>Moyenne générale</p>
-                    <strong id="notes-average">—</strong>
-                    <p class="notes-help">Calculée avec les coefficients.</p>
-                </article>
-                <article class="notes-stat">
-                    <p>Meilleure note</p>
-                    <strong id="notes-best">—</strong>
-                </article>
-                <article class="notes-stat">
-                    <p>Matières évaluées</p>
-                    <strong id="notes-subjects">0</strong>
-                </article>
-            </section>
+        <header class="main-header">
+            <div>
+                <p class="eyebrow">MON ESPACE SCOLAIRE</p>
+                <h1>Mes notes 📊</h1>
+                <p>Retrouve tes résultats et suis ta progression.</p>
+            </div>
+            <span class="header-badge">🎯 Mon suivi scolaire</span>
+        </header>
 
-            <section class="notes-panel">
-                <h2 id="note-form-heading">➕ Ajouter une note</h2>
-                <form id="note-form" class="notes-form">
-                    <div>
+        <section class="welcome-card">
+            <div class="welcome-content">
+                <div>
+                    <h2>Mon bilan scolaire</h2>
+                    <p>
+                        Consulte tes notes, retrouve tes évaluations
+                        et garde un œil sur tes résultats.
+                    </p>
+                </div>
+                <div class="welcome-icon">📈</div>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <span class="stat-label">Nombre de notes</span>
+                <strong class="stat-value" id="notes-total">0</strong>
+                <span>Évaluations enregistrées</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">Moyenne générale</span>
+                <strong class="stat-value" id="notes-average">—</strong>
+                <span>Sur 20</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">Meilleure note</span>
+                <strong class="stat-value" id="notes-best">—</strong>
+                <span>Sur 20</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">Matières suivies</span>
+                <strong class="stat-value" id="notes-subjects">0</strong>
+                <span>Matières différentes</span>
+            </article>
+        </section>
+
+        <section class="form-card">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">NOUVEAU RÉSULTAT</p>
+                    <h2 id="note-form-heading">Ajouter une note</h2>
+                </div>
+                <span>✍️</span>
+            </div>
+
+            <form id="note-form">
+                <div class="form-grid">
+
+                    <div class="form-group">
                         <label for="note-subject">Matière</label>
-                        <select id="note-subject" required>
-                            <option value="">Choisir une matière</option>
-                            <option>Français / Histoire-Géo / EMC</option>
-                            <option>Mathématiques</option>
-                            <option>Anglais LV1</option>
-                            <option>Sciences physiques</option>
-                            <option>Enseignement professionnel</option>
-                            <option>Pratique professionnelle</option>
-                            <option>Arts appliqués / Culture artistique</option>
-                            <option>Soutien au parcours</option>
-                            <option>Prévention-Santé-Environnement</option>
-                            <option>Économie &amp; Gestion</option>
-                            <option>Réalisation projet</option>
-                            <option>Éducation physique &amp; sportive</option>
-                        </select>
+                        <input
+                            type="text"
+                            id="note-subject"
+                            placeholder="Ex. Mathématiques"
+                            required
+                        >
                     </div>
-                    <div>
+
+                    <div class="form-group">
+                        <label for="note-title">Évaluation</label>
+                        <input
+                            type="text"
+                            id="note-title"
+                            placeholder="Ex. Contrôle du chapitre 1"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="note-value">Note sur 20</label>
+                        <input
+                            type="number"
+                            id="note-value"
+                            min="0"
+                            max="20"
+                            step="0.25"
+                            placeholder="Ex. 15"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="note-coefficient">Coefficient</label>
+                        <input
+                            type="number"
+                            id="note-coefficient"
+                            min="0.1"
+                            step="0.1"
+                            value="1"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
                         <label for="note-date">Date de l'évaluation</label>
                         <input type="date" id="note-date" required>
                     </div>
-                    <div class="notes-full">
-                        <label for="note-title">Nom de l'évaluation</label>
-                        <input type="text" id="note-title" maxlength="150" required placeholder="Ex. : contrôle du chapitre 3">
-                    </div>
-                    <div>
-                        <label for="note-value">Note obtenue</label>
-                        <input type="number" id="note-value" min="0" max="20" step="0.25" required placeholder="Ex. : 14,5">
-                    </div>
-                    <div>
-                        <label for="note-coefficient">Coefficient</label>
-                        <input type="number" id="note-coefficient" min="0.1" max="100" step="0.1" value="1" required>
-                    </div>
-                    <div class="notes-full">
-                        <button class="notes-button notes-primary" id="note-submit" type="submit">Ajouter la note</button>
-                        <button class="notes-button notes-secondary" id="note-cancel" type="button" hidden>Annuler</button>
-                        <p class="notes-help">Les notes sont enregistrées dans le stockage local de ce navigateur.</p>
-                    </div>
-                </form>
-            </section>
 
-            <section class="notes-panel">
-                <h2>📚 Historique des notes</h2>
-                <div class="notes-tools">
-                    <input type="search" id="search-note" placeholder="🔎 Rechercher une note..." aria-label="Rechercher une note">
-                    <select id="subject-note-filter" aria-label="Filtrer par matière">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="note-submit" class="btn-primary">
+                        Ajouter la note
+                    </button>
+                    <button
+                        type="button"
+                        id="note-cancel"
+                        class="btn-secondary"
+                        hidden
+                    >
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="content-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">MES RÉSULTATS</p>
+                    <h2>Historique des notes</h2>
+                </div>
+                <span>📋</span>
+            </div>
+
+            <div class="toolbar">
+                <div class="form-group">
+                    <label for="search-note">Rechercher</label>
+                    <input
+                        type="search"
+                        id="search-note"
+                        placeholder="Rechercher une évaluation..."
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="subject-note-filter">Filtrer par matière</label>
+                    <select id="subject-note-filter">
                         <option value="all">Toutes les matières</option>
-                        <option>Français / Histoire-Géo / EMC</option>
-                        <option>Mathématiques</option>
-                        <option>Anglais LV1</option>
-                        <option>Sciences physiques</option>
-                        <option>Enseignement professionnel</option>
-                        <option>Pratique professionnelle</option>
-                        <option>Arts appliqués / Culture artistique</option>
-                        <option>Soutien au parcours</option>
-                        <option>Prévention-Santé-Environnement</option>
-                        <option>Économie &amp; Gestion</option>
-                        <option>Réalisation projet</option>
-                        <option>Éducation physique &amp; sportive</option>
                     </select>
                 </div>
-                <p id="notes-count" aria-live="polite"></p>
-                <div id="notes-list" class="notes-list"></div>
-                <div id="notes-empty" class="notes-empty" hidden>Aucune note à afficher.</div>
-            </section>
-        </div>
+            </div>
+
+            <p id="notes-count">Mes notes enregistrées</p>
+
+            <div id="notes-list" class="notes-list"></div>
+
+            <div id="notes-empty" class="empty-state hidden">
+                <span>📚</span>
+                <h3>Aucune note pour le moment</h3>
+                <p>Ajoute ta première note grâce au formulaire ci-dessus.</p>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <p>🎓 Mon ENT Perso LFE — Mon espace scolaire personnel</p>
+        </footer>
+
     </main>
-</div>
-<script src="js/mes-notes.js"></script>
+
+    <script src="js/mes-notes.js"></script>
 </body>
 </html>
