@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     const STORAGE_KEY = "mes-notes";
 
@@ -7,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const dateInput = document.getElementById("note-date");
     const titleInput = document.getElementById("note-title");
     const valueInput = document.getElementById("note-value");
+    const maximumInput = document.getElementById("note-max");
     const coefficientInput = document.getElementById("note-coefficient");
     const submitButton = document.getElementById("note-submit");
     const cancelButton = document.getElementById("note-cancel");
@@ -22,6 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const averageElement = document.getElementById("notes-average");
     const bestElement = document.getElementById("notes-best");
     const subjectsElement = document.getElementById("notes-subjects");
+
+    // Convertisseur rapide
+    const convertObtained = document.getElementById("converter-obtained");
+    const convertMaximum = document.getElementById("converter-maximum");
+    const convertResult = document.getElementById("converter-result");
+    const convertReset = document.getElementById("converter-reset");
 
     if (
         !form || !subjectInput || !dateInput || !titleInput || !valueInput ||
@@ -44,20 +50,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
             return donnees
                 .filter((note) => note && typeof note === "object")
-                .map((note, index) => ({
-                    id: String(note.id ?? `note-${index}-${Date.now()}`),
-                    matiere: String(note.matiere ?? ""),
-                    titre: String(note.titre ?? ""),
-                    note: Number(note.note),
-                    coefficient: Number(note.coefficient ?? 1),
-                    date: String(note.date ?? "")
-                }))
+                .map((note, index) => {
+                    // Les anciennes notes étaient déjà enregistrées sur 20.
+                    const ancienneValeur = Number(note.note);
+                    const maximum = Number(note.maximum ?? 20);
+                    const obtenue = Number(
+                        note.noteObtenue ?? ancienneValeur
+                    );
+
+                    return {
+                        id: String(note.id ?? `note-${index}-${Date.now()}`),
+                        matiere: String(note.matiere ?? ""),
+                        titre: String(note.titre ?? ""),
+                        note: ancienneValeur,
+                        noteObtenue: obtenue,
+                        maximum: maximum,
+                        coefficient: Number(note.coefficient ?? 1),
+                        date: String(note.date ?? "")
+                    };
+                })
                 .filter((note) =>
                     note.matiere &&
                     note.titre &&
                     Number.isFinite(note.note) &&
                     note.note >= 0 &&
                     note.note <= 20 &&
+                    Number.isFinite(note.noteObtenue) &&
+                    note.noteObtenue >= 0 &&
+                    Number.isFinite(note.maximum) &&
+                    note.maximum > 0 &&
+                    note.noteObtenue <= note.maximum &&
                     Number.isFinite(note.coefficient) &&
                     note.coefficient > 0
                 );
@@ -112,6 +134,20 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${resultat[3]}/${resultat[2]}/${resultat[1]}`;
     }
 
+    function convertirSur20(obtenue, maximum) {
+        if (
+            !Number.isFinite(obtenue) ||
+            !Number.isFinite(maximum) ||
+            maximum <= 0 ||
+            obtenue < 0 ||
+            obtenue > maximum
+        ) {
+            return null;
+        }
+
+        return (obtenue / maximum) * 20;
+    }
+
     function calculerMoyenne(liste) {
         const valides = liste.filter((note) =>
             Number.isFinite(note.note) &&
@@ -125,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (total, note) => total + note.note * note.coefficient,
             0
         );
+
         const sommeCoefficients = valides.reduce(
             (total, note) => total + note.coefficient,
             0
@@ -157,6 +194,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function reinitialiserFormulaire() {
         noteEnModification = null;
         form.reset();
+
+        if (maximumInput) maximumInput.value = "20";
+
         coefficientInput.value = "1";
         formHeading.textContent = "➕ Ajouter une note";
         submitButton.textContent = "Ajouter la note";
@@ -171,7 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
         subjectInput.value = note.matiere;
         dateInput.value = note.date;
         titleInput.value = note.titre;
-        valueInput.value = note.note;
+        valueInput.value = note.noteObtenue;
+        if (maximumInput) maximumInput.value = note.maximum;
         coefficientInput.value = note.coefficient;
 
         formHeading.textContent = "✏️ Modifier la note";
@@ -193,6 +234,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${echapperHTML(note.matiere)} · ${formaterDate(note.date)}
                 · Coefficient ${formaterNombre(note.coefficient)}
             </div>
+            ${
+                note.maximum !== 20
+                    ? `<div class="note-meta">Note obtenue : ${formaterNombre(note.noteObtenue)}/${formaterNombre(note.maximum)}</div>`
+                    : ""
+            }
         `;
 
         const valeur = document.createElement("div");
@@ -258,24 +304,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const matiere = subjectInput.value.trim();
         const date = dateInput.value;
         const titre = titleInput.value.trim();
-        const noteValeur = lireNombre(valueInput.value);
+        const noteObtenue = lireNombre(valueInput.value);
+        const maximum = maximumInput
+            ? lireNombre(maximumInput.value)
+            : 20;
         const coefficient = lireNombre(coefficientInput.value);
+        const noteSur20 = convertirSur20(noteObtenue, maximum);
 
         if (
             !matiere || !date || !titre ||
-            !Number.isFinite(noteValeur) ||
-            noteValeur < 0 || noteValeur > 20 ||
+            noteSur20 === null ||
             !Number.isFinite(coefficient) ||
             coefficient <= 0
         ) {
-            alert("Vérifie la matière, la date, le titre, la note sur 20 et le coefficient.");
+            alert(
+                "Vérifie la matière, la date, le titre, la note obtenue, le maximum et le coefficient."
+            );
             return;
         }
 
         const donnees = {
             matiere,
             titre,
-            note: noteValeur,
+            note: Math.round(noteSur20 * 100) / 100,
+            noteObtenue,
+            maximum,
             coefficient,
             date
         };
@@ -318,6 +371,41 @@ document.addEventListener("DOMContentLoaded", () => {
         afficherNotes();
     });
 
+    // Mise à jour du convertisseur rapide.
+    function afficherConversion() {
+        if (!convertObtained || !convertMaximum || !convertResult) return;
+
+        const obtenue = lireNombre(convertObtained.value);
+        const maximum = lireNombre(convertMaximum.value);
+        const resultat = convertirSur20(obtenue, maximum);
+
+        if (
+            convertObtained.value.trim() === "" ||
+            convertMaximum.value.trim() === "" ||
+            resultat === null
+        ) {
+            convertResult.textContent =
+                "Saisis une note obtenue et un maximum valide.";
+            return;
+        }
+
+        convertResult.textContent =
+            `${formaterNombre(obtenue)}/${formaterNombre(maximum)} = ${formaterNombre(resultat)}/20`;
+    }
+
+    if (convertObtained && convertMaximum && convertResult) {
+        convertObtained.addEventListener("input", afficherConversion);
+        convertMaximum.addEventListener("input", afficherConversion);
+    }
+
+    if (convertReset) {
+        convertReset.addEventListener("click", () => {
+            if (convertObtained) convertObtained.value = "";
+            if (convertMaximum) convertMaximum.value = "";
+            afficherConversion();
+        });
+    }
+
     cancelButton.addEventListener("click", reinitialiserFormulaire);
     searchInput.addEventListener("input", afficherNotes);
     subjectFilter.addEventListener("change", afficherNotes);
@@ -356,5 +444,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    afficherConversion();
     afficherNotes();
 });
