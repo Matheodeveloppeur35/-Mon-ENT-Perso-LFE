@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Mes notes - Mon ENT Perso LFE</title>
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="ent-layout">
 
     <aside class="sidebar">
+
         <div class="logo">
             <span>🎓</span>
+
             <div>
                 <strong>Mon ENT</strong>
                 <small>Perso LFE</small>
@@ -19,185 +24,288 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="index.html"><span>🏠</span> Accueil</a>
-            <a href="emploi-du-temps.html"><span>📅</span> Emploi du temps</a>
-            <a href="mes-cours.html"><span>📚</span> Mes cours</a>
-            <a href="mes-devoirs.html"><span>📝</span> Mes devoirs</a>
-            <a href="mes-notes.html" class="active"><span>📊</span> Mes notes</a>
-            <a href="mes-controles.html"><span>✏️</span> Mes contrôles</a>
+
+            <a href="index.html">
+                <span>🏠</span>
+                Accueil
+            </a>
+
+            <a href="emploi-du-temps.html">
+                <span>📅</span>
+                Emploi du temps
+            </a>
+
+            <a href="mes-cours.html">
+                <span>📚</span>
+                Mes cours
+            </a>
+
+            <a href="mes-devoirs.html">
+                <span>📝</span>
+                Mes devoirs
+            </a>
+
+            <a href="mes-notes.html" class="active">
+                <span>📊</span>
+                Mes notes
+            </a>
+
+            <a href="mes-controles.html">
+                <span>✏️</span>
+                Mes contrôles
+            </a>
+
         </nav>
 
         <div class="sidebar-footer">
+
             <span>💻</span>
+
             <div>
                 <strong>Mon espace personnel</strong>
                 <small>Lycée La Fontaine des Eaux</small>
             </div>
+
         </div>
+
     </aside>
+
 
     <main class="main-content">
 
         <header class="main-header">
+
             <div>
                 <p class="eyebrow">MON ESPACE SCOLAIRE</p>
-                <h1>Mes notes 📊</h1>
-                <p>Retrouve tes résultats et suis ta progression.</p>
+
+                <h1>
+                    Mes notes 📊
+                </h1>
+
+                <p>
+                    Retrouve tes résultats et suis ta progression.
+                </p>
             </div>
-            <span class="header-badge">🎯 Mon suivi scolaire</span>
+
+            <span class="header-badge">
+                🎯 Mon suivi scolaire
+            </span>
+
         </header>
 
+
         <section class="welcome-card">
+
             <div class="welcome-content">
+
                 <div>
-                    <h2>Mon bilan scolaire</h2>
+
+                    <h2>
+                        Mon bilan scolaire
+                    </h2>
+
                     <p>
                         Consulte tes notes, retrouve tes évaluations
                         et garde un œil sur tes résultats.
                     </p>
+
                 </div>
-                <div class="welcome-icon">📈</div>
+
+                <div class="welcome-icon">
+                    📈
+                </div>
+
             </div>
+
         </section>
+
 
         <section class="stats-grid">
-            <article class="stat-card">
-                <span class="stat-label">Nombre de notes</span>
-                <strong class="stat-value" id="notes-total">0</strong>
-                <span>Évaluations enregistrées</span>
-            </article>
 
             <article class="stat-card">
-                <span class="stat-label">Moyenne générale</span>
-                <strong class="stat-value" id="notes-average">—</strong>
-                <span>Sur 20</span>
+
+                <span class="stat-label">
+                    Nombre de notes
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="notes-total"
+                >
+                    0
+                </strong>
+
+                <span>
+                    Évaluations enregistrées
+                </span>
+
             </article>
 
-            <article class="stat-card">
-                <span class="stat-label">Meilleure note</span>
-                <strong class="stat-value" id="notes-best">—</strong>
-                <span>Sur 20</span>
-            </article>
 
             <article class="stat-card">
-                <span class="stat-label">Matières suivies</span>
-                <strong class="stat-value" id="notes-subjects">0</strong>
-                <span>Matières différentes</span>
+
+                <span class="stat-label">
+                    Moyenne générale
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="notes-average"
+                >
+                    —
+                </strong>
+
+                <span>
+                    Sur 20
+                </span>
+
             </article>
+
+
+            <article class="stat-card">
+
+                <span class="stat-label">
+                    Meilleure note
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="notes-best"
+                >
+                    —
+                </strong>
+
+                <span>
+                    Sur 20
+                </span>
+
+            </article>
+
+
+            <article class="stat-card">
+
+                <span class="stat-label">
+                    Matières suivies
+                </span>
+
+                <strong
+                    class="stat-value"
+                    id="notes-subjects"
+                >
+                    0
+                </strong>
+
+                <span>
+                    Matières différentes
+                </span>
+
+            </article>
+
         </section>
 
-        <!-- Convertisseur de notes -->
-        <section class="content-card">
-            <div class="section-heading">
-                <div>
-                    <p class="eyebrow">OUTIL PRATIQUE</p>
-                    <h2>Convertisseur de notes 🧮</h2>
-                </div>
-                <span>🔄</span>
-            </div>
 
-            <p>
-                Entre les points obtenus et le nombre maximum de points
-                pour connaître automatiquement ta note sur 20.
-            </p>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="converter-obtained">Points obtenus</label>
-                    <input
-                        type="number"
-                        id="converter-obtained"
-                        min="0"
-                        step="any"
-                        placeholder="Ex. 15"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="converter-maximum">Maximum de points</label>
-                    <input
-                        type="number"
-                        id="converter-maximum"
-                        min="0.01"
-                        step="any"
-                        placeholder="Ex. 25"
-                    >
-                </div>
-            </div>
-
-            <p id="converter-result" aria-live="polite">
-                Saisis une note obtenue et un maximum valide.
-            </p>
-
-            <button
-                type="button"
-                id="converter-reset"
-                class="btn-secondary"
-            >
-                Réinitialiser le convertisseur
-            </button>
-        </section>
-
-        <!-- Formulaire d'ajout de note -->
         <section class="form-card">
+
             <div class="section-heading">
+
                 <div>
-                    <p class="eyebrow">NOUVEAU RÉSULTAT</p>
-                    <h2 id="note-form-heading">➕ Ajouter une note</h2>
+
+                    <p class="eyebrow">
+                        NOUVEAU RÉSULTAT
+                    </p>
+
+                    <h2 id="note-form-heading">
+                        Ajouter une note
+                    </h2>
+
                 </div>
-                <span>✍️</span>
+
+                <span>
+                    ✍️
+                </span>
+
             </div>
+
 
             <form id="note-form">
+
                 <div class="form-grid">
 
                     <div class="form-group">
-                        <label for="note-subject">Matière</label>
+
+                        <label for="note-subject">
+                            Matière
+                        </label>
+
                         <input
                             type="text"
                             id="note-subject"
                             placeholder="Ex. Mathématiques"
                             required
                         >
+
                     </div>
 
+
                     <div class="form-group">
-                        <label for="note-title">Évaluation</label>
+
+                        <label for="note-title">
+                            Évaluation
+                        </label>
+
                         <input
                             type="text"
                             id="note-title"
                             placeholder="Ex. Contrôle du chapitre 1"
                             required
                         >
+
                     </div>
 
+
                     <div class="form-group">
-                        <label for="note-value">Points obtenus</label>
+
+                        <label for="note-value">
+                            Note obtenue
+                        </label>
+
                         <input
                             type="number"
                             id="note-value"
                             min="0"
-                            step="any"
+                            step="0.01"
                             placeholder="Ex. 15"
                             required
                         >
+
                     </div>
 
+
                     <div class="form-group">
-                        <label for="note-max">Maximum de points</label>
+
+                        <label for="note-max">
+                            Note maximale
+                        </label>
+
                         <input
                             type="number"
                             id="note-max"
                             min="0.01"
-                            step="any"
+                            step="0.01"
                             value="20"
-                            placeholder="Ex. 25"
+                            placeholder="Ex. 20"
                             required
                         >
+
                     </div>
 
+
                     <div class="form-group">
-                        <label for="note-coefficient">Coefficient</label>
+
+                        <label for="note-coefficient">
+                            Coefficient
+                        </label>
+
                         <input
                             type="number"
                             id="note-coefficient"
@@ -206,17 +314,34 @@
                             value="1"
                             required
                         >
+
                     </div>
 
+
                     <div class="form-group">
-                        <label for="note-date">Date de l'évaluation</label>
-                        <input type="date" id="note-date" required>
+
+                        <label for="note-date">
+                            Date de l'évaluation
+                        </label>
+
+                        <input
+                            type="date"
+                            id="note-date"
+                            required
+                        >
+
                     </div>
 
                 </div>
 
+
                 <div class="form-actions">
-                    <button type="submit" id="note-submit" class="btn-primary">
+
+                    <button
+                        type="submit"
+                        id="note-submit"
+                        class="btn-primary"
+                    >
                         Ajouter la note
                     </button>
 
@@ -228,55 +353,131 @@
                     >
                         Annuler
                     </button>
+
                 </div>
+
             </form>
+
         </section>
 
-        <!-- Historique -->
+
         <section class="content-section">
+
             <div class="section-heading">
+
                 <div>
-                    <p class="eyebrow">MES RÉSULTATS</p>
-                    <h2>Historique des notes</h2>
+
+                    <p class="eyebrow">
+                        MES RÉSULTATS
+                    </p>
+
+                    <h2>
+                        Historique des notes
+                    </h2>
+
                 </div>
-                <span>📋</span>
+
+                <span>
+                    📋
+                </span>
+
             </div>
 
+
             <div class="toolbar">
+
                 <div class="form-group">
-                    <label for="search-note">Rechercher</label>
+
+                    <label for="search-note">
+                        Rechercher
+                    </label>
+
                     <input
                         type="search"
                         id="search-note"
                         placeholder="Rechercher une évaluation..."
                     >
+
                 </div>
+
 
                 <div class="form-group">
-                    <label for="subject-note-filter">Filtrer par matière</label>
+
+                    <label for="subject-note-filter">
+                        Filtrer par matière
+                    </label>
+
                     <select id="subject-note-filter">
-                        <option value="all">Toutes les matières</option>
+
+                        <option value="all">
+                            Toutes les matières
+                        </option>
+
                     </select>
+
                 </div>
+
             </div>
 
-            <p id="notes-count">Mes notes enregistrées</p>
 
-            <div id="notes-list" class="notes-list"></div>
+            <p id="notes-count">
+                Mes notes enregistrées
+            </p>
 
-            <div id="notes-empty" class="empty-state hidden">
-                <span>📚</span>
-                <h3>Aucune note pour le moment</h3>
-                <p>Ajoute ta première note grâce au formulaire ci-dessus.</p>
+
+            <div
+                id="notes-list"
+                class="notes-list"
+            ></div>
+
+
+            <div
+                id="notes-empty"
+                class="empty-state"
+                hidden
+            >
+
+                <span>
+                    📚
+                </span>
+
+                <h3>
+                    Aucune note pour le moment
+                </h3>
+
+                <p>
+                    Ajoute ta première note grâce au formulaire ci-dessus.
+                </p>
+
             </div>
+
         </section>
 
+
         <footer class="page-footer">
-            <p>🎓 Mon ENT Perso LFE — Mon espace scolaire personnel</p>
+
+            <p>
+                🎓 Mon ENT Perso LFE — Mon espace scolaire personnel
+            </p>
+
         </footer>
 
     </main>
 
+
+    <!-- Firebase -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <!-- JavaScript de la page -->
+
     <script src="js/mes-notes.js"></script>
+
 </body>
+
 </html>
