@@ -1,3 +1,5 @@
+"use script";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDtAvesNV_YOcZdjcDh-e8egATjOjudX9w",
   authDomain: "mon-ent-perso-lfe.firebaseapp.com",
