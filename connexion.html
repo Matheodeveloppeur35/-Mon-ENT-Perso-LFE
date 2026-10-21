@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563eb"
+    >
+
+    <title>Connexion - Mon ENT Perso LFE</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <style>
+
+        body.login-page {
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(59, 130, 246, 0.25),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #f8fafc
+                );
+        }
+
+        .login-container {
+            width: min(100%, 430px);
+        }
+
+        .login-card {
+            background: rgba(255,255,255,0.96);
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            box-shadow:
+                0 20px 50px rgba(15, 23, 42, 0.12);
+        }
+
+        .login-logo {
+            width: 74px;
+            height: 74px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            color: white;
+            font-size: 34px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #1d4ed8
+                );
+            box-shadow:
+                0 12px 25px rgba(37, 99, 235, 0.25);
+        }
+
+        .login-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            margin: 0 0 8px;
+            color: #0f172a;
+            font-size: 27px;
+        }
+
+        .login-header p {
+            margin: 0;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .login-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .login-field label {
+            display: block;
+            margin-bottom: 7px;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .login-field input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            background: white;
+            color: #0f172a;
+            font: inherit;
+            outline: none;
+            transition:
+                border-color 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .login-field input:focus {
+            border-color: #2563eb;
+            box-shadow:
+                0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
+
+        .login-password-wrapper {
+            position: relative;
+        }
+
+        .login-password-wrapper input {
+            padding-right: 54px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 9px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .password-toggle:hover {
+            background: #f1f5f9;
+        }
+
+        .login-button {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 13px 16px;
+            color: white;
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #1d4ed8
+                );
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow:
+                0 10px 20px rgba(37, 99, 235, 0.20);
+        }
+
+        .login-button:hover {
+            filter: brightness(0.97);
+        }
+
+        .login-button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
+        .login-message {
+            display: none;
+            margin: 0;
+            padding: 12px 14px;
+            border-radius: 11px;
+            line-height: 1.5;
+        }
+
+        .login-message.error {
+            display: block;
+            color: #b91c1c;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+        }
+
+        .login-message.success {
+            display: block;
+            color: #166534;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+        }
+
+        .login-help {
+            margin: 20px 0 0;
+            color: #64748b;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .login-offline {
+            display: none;
+            margin-bottom: 16px;
+            padding: 11px 13px;
+            color: #92400e;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            border-radius: 11px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .login-offline.visible {
+            display: block;
+        }
+
+        @media (max-width: 520px) {
+
+            body.login-page {
+                padding: 15px;
+            }
+
+            .login-card {
+                padding: 25px 20px;
+                border-radius: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body class="login-page">
+
+    <main class="login-container">
+
+        <div
+            id="login-offline"
+            class="login-offline"
+        >
+            📴 Tu es actuellement hors connexion.
+        </div>
+
+        <section class="login-card">
+
+            <div class="login-logo">
+                🎓
+            </div>
+
+            <header class="login-header">
+
+                <h1>
+                    Mon ENT Perso LFE
+                </h1>
+
+                <p>
+                    Connecte-toi pour retrouver tes notes,
+                    tes devoirs et tes informations scolaires.
+                </p>
+
+            </header>
+
+            <form
+                id="login-form"
+                class="login-form"
+            >
+
+                <div class="login-field">
+
+                    <label for="login-email">
+                        Adresse e-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="login-email"
+                        autocomplete="username"
+                        placeholder="mon-adresse@email.fr"
+                        required
+                    >
+
+                </div>
+
+                <div class="login-field">
+
+                    <label for="login-password">
+                        Mot de passe
+                    </label>
+
+                    <div class="login-password-wrapper">
+
+                        <input
+                            type="password"
+                            id="login-password"
+                            autocomplete="current-password"
+                            placeholder="Ton mot de passe"
+                            minlength="6"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="password-toggle"
+                            class="password-toggle"
+                            aria-label="Afficher le mot de passe"
+                            title="Afficher le mot de passe"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <p
+                    id="login-message"
+                    class="login-message"
+                    role="alert"
+                    aria-live="polite"
+                ></p>
+
+                <button
+                    type="submit"
+                    id="login-button"
+                    class="login-button"
+                >
+                    🔐 Se connecter
+                </button>
+
+            </form>
+
+            <p class="login-help">
+                Utilise le compte créé dans Firebase Authentication.
+                Ne partage jamais ton mot de passe.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/connexion.js"></script>
+
+</body>
+
+</html>
