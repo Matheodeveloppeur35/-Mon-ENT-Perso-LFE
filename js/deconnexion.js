@@ -4,31 +4,42 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        const logoutButton =
+        const boutonDeconnexion =
             document.getElementById(
                 "logout-button"
             );
 
-        const emailElement =
+        const emailUtilisateur =
             document.getElementById(
                 "connected-user-email"
             );
 
 
-        if (!logoutButton) {
+        if (
+            typeof auth === "undefined"
+        ) {
+
+            console.error(
+                "Firebase Authentication n'est pas initialisé."
+            );
+
             return;
         }
 
+
+        // ======================================
+        // AFFICHER L'ADRESSE E-MAIL
+        // ======================================
 
         auth.onAuthStateChanged(
             (utilisateur) => {
 
                 if (
                     utilisateur &&
-                    emailElement
+                    emailUtilisateur
                 ) {
 
-                    emailElement.textContent =
+                    emailUtilisateur.textContent =
                         utilisateur.email ||
                         "Compte connecté";
                 }
@@ -36,13 +47,26 @@ document.addEventListener(
         );
 
 
-        logoutButton.addEventListener(
+        // ======================================
+        // BOUTON ABSENT
+        // ======================================
+
+        if (!boutonDeconnexion) {
+            return;
+        }
+
+
+        // ======================================
+        // DÉCONNEXION
+        // ======================================
+
+        boutonDeconnexion.addEventListener(
             "click",
             async () => {
 
                 const confirmation =
-                    confirm(
-                        "Veux-tu vraiment te déconnecter ?"
+                    window.confirm(
+                        "Veux-tu vraiment te déconnecter de ton ENT ?"
                     );
 
 
@@ -51,10 +75,10 @@ document.addEventListener(
                 }
 
 
-                logoutButton.disabled =
+                boutonDeconnexion.disabled =
                     true;
 
-                logoutButton.textContent =
+                boutonDeconnexion.textContent =
                     "⏳ Déconnexion...";
 
 
@@ -69,18 +93,20 @@ document.addEventListener(
                 } catch (erreur) {
 
                     console.error(
-                        "Erreur de déconnexion :",
+                        "Erreur pendant la déconnexion :",
                         erreur
                     );
 
+
                     alert(
-                        "Impossible de se déconnecter."
+                        "Impossible de se déconnecter pour le moment."
                     );
 
-                    logoutButton.disabled =
+
+                    boutonDeconnexion.disabled =
                         false;
 
-                    logoutButton.textContent =
+                    boutonDeconnexion.textContent =
                         "🚪 Se déconnecter";
                 }
             }
