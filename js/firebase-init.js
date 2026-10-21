@@ -1,47 +1,82 @@
 "use strict";
 
+if (typeof firebase === "undefined") {
+    throw new Error("Firebase n'est pas chargé.");
+}
+
+if (typeof firebaseConfig === "undefined") {
+    throw new Error("La configuration Firebase est absente.");
+}
+
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-"use strict";
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
+/*
+ * Maintient la session sur le téléphone et le PC.
+ */
+auth.setPersistence(
+    firebase.auth.Auth.Persistence.LOCAL
+).catch((erreur) => {
+    console.error(
+        "Impossible de conserver la session :",
+        erreur
+    );
+});
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-
+/*
+ * Active le cache Firestore afin de pouvoir consulter et modifier
+ * les données lorsque la connexion Internet est temporairement absente.
+ */
 db.enablePersistence({
     synchronizeTabs: true
 }).catch((erreur) => {
+
     if (erreur.code === "failed-precondition") {
         console.warn(
-            "La persistance hors ligne ne peut être activée que dans un seul contexte."
+            "Le cache hors ligne est déjà utilisé dans un autre onglet."
         );
-    } else if (erreur.code === "unimplemented") {
+        return;
+    }
+
+    if (erreur.code === "unimplemented") {
         console.warn(
-            "Ce navigateur ne prend pas en charge le cache hors ligne."
+            "Ce navigateur ne prend pas en charge le cache Firestore."
         );
-    } else {
-        console.error(
-            "Erreur du cache hors ligne :",
-            erreur
-        );
+        return;
     }
+
+    console.error(
+        "Impossible d'activer le cache Firestore :",
+        erreur
+    );
 });
 
+/*
+ * Protège la page.
+ */
 auth.onAuthStateChanged((utilisateur) => {
-    if (!utilisateur) {
-        window.location.href = "connexion.html";
-    }
-});
 
-auth.onAuthStateChanged((utilisateur) => {
     if (!utilisateur) {
-        window.location.href = "connexion.html";
+        window.location.replace("connexion.html");
+        return;
     }
+
+    document.documentElement.classList.add(
+        "firebase-ready"
+    );
+
+    window.dispatchEvent(
+        new CustomEvent(
+            "ent-auth-ready",
+            {
+                detail: {
+                    utilisateur
+                }
+            }
+        )
+    );
 });
