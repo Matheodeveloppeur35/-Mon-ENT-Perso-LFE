@@ -1,325 +1,697 @@
-
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Mes cours - Mon ENT Perso LFE</title>
+
+    <meta
+        name="description"
+        content="Consulte toutes tes matières et tes fiches de cours."
+    >
+
+    <meta name="theme-color" content="#2563eb">
+
+    <meta
+        name="mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default"
+    >
+
+    <link rel="manifest" href="manifest.json">
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="192x192"
+        href="icons/icon-192.png"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="icons/icon-192.png"
+    >
+
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .courses-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        .courses-header {
-            margin-bottom: 24px;
-        }
-
-        .courses-header h1 {
-            margin-bottom: 8px;
-        }
-
-        .courses-tools {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .courses-tools input,
-        .courses-tools select {
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
-            font-size: 15px;
-        }
-
-        .courses-tools input {
-            flex: 1;
-            min-width: 220px;
-        }
-
-        .courses-count {
-            margin-bottom: 16px;
-            color: #64748b;
-        }
-
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 18px;
-        }
-
-        .course-card {
-            display: block;
-            padding: 20px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            color: #1e293b;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .course-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px #0f172a12;
-        }
-
-        .course-card .course-icon {
-            font-size: 28px;
-            margin-bottom: 12px;
-        }
-
-        .course-card h2 {
-            font-size: 18px;
-            margin: 0 0 10px;
-        }
-
-        .course-card p {
-            color: #64748b;
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .course-card .open-label {
-            display: inline-block;
-            margin-top: 16px;
-            color: #2563eb;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .no-results {
-            display: none;
-            padding: 30px;
-            text-align: center;
-            color: #64748b;
-            background: white;
-            border-radius: 12px;
-        }
-
-        @media (max-width: 600px) {
-            .courses-container {
-                padding: 16px;
-            }
-
-            .courses-tools {
-                flex-direction: column;
-            }
-
-            .courses-tools input,
-            .courses-tools select {
-                width: 100%;
-                box-sizing: border-box;
-            }
-        }
-    </style>
 </head>
-<body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <h2>🎓 Mon ENT</h2>
-            <p>Perso LFE</p>
 
-            <nav>
-                <a href="index.html">🏠 Accueil</a>
-                <a href="emploi-du-temps.html">📅 Emploi du temps</a>
-                <a href="mes-cours.html" aria-current="page">📚 Mes cours</a>
-                <a href="mes-devoirs.html">📝 Mes devoirs</a>
-                <a href="mes-notes.html">📊 Mes notes</a>
-                <a href="mes-controles.html">📋 Mes contrôles</a>
-            </nav>
-            <div class="sidebar-account">
+<body class="ent-layout">
 
-    <span
-        id="connected-user-email"
-        class="connected-user-email"
-    >
-        Compte connecté
-    </span>
+    <aside class="sidebar">
 
-    <button
-        type="button"
-        id="logout-button"
-        class="logout-button"
-    >
-        🚪 Se déconnecter
-    </button>
+        <div class="logo">
 
-</div>
-<div class="sidebar-account">
+            <span class="logo-icon">
+                🎓
+            </span>
 
-    <span
-        id="connected-user-email"
-        class="connected-user-email"
-    >
-        Connexion...
-    </span>
+            <div>
+                <strong>Mon ENT</strong>
+                <small>Perso LFE</small>
+            </div>
 
-    <button
-        type="button"
-        id="logout-button"
-        class="logout-button"
-    >
-        🚪 Se déconnecter
-    </button>
+        </div>
 
-</div>
+        <nav class="sidebar-nav">
 
-        </aside>
+            <a href="index.html">
+                <span>🏠</span>
+                Accueil
+            </a>
 
-        <main class="main-content">
-            <div class="courses-container">
-                <header class="courses-header">
-                    <h1>📚 Mes cours</h1>
-                    <p>Retrouve tes matières et accède à tes fiches de cours.</p>
-                </header>
+            <a href="emploi-du-temps.html">
+                <span>📅</span>
+                Emploi du temps
+            </a>
 
-                <section class="courses-tools" aria-label="Recherche et filtres">
+            <a
+                href="mes-cours.html"
+                class="active"
+            >
+                <span>📚</span>
+                Mes cours
+            </a>
+
+            <a href="mes-devoirs.html">
+                <span>📝</span>
+                Mes devoirs
+            </a>
+
+            <a href="mes-notes.html">
+                <span>📊</span>
+                Mes notes
+            </a>
+
+            <a href="mes-controles.html">
+                <span>✏️</span>
+                Mes contrôles
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            <span>💻</span>
+
+            <div>
+                <strong>Mon espace personnel</strong>
+                <small>Lycée La Fontaine des Eaux</small>
+            </div>
+
+            <button
+                type="button"
+                id="logout-button"
+                class="logout-button"
+            >
+                Déconnexion
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="main-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    MES MATIÈRES
+                </p>
+
+                <h1>
+                    Mes cours 📚
+                </h1>
+
+                <p>
+                    Retrouve toutes tes matières et leurs fiches.
+                </p>
+
+            </div>
+
+            <span class="header-badge">
+                📖 Mes apprentissages
+            </span>
+
+        </header>
+
+        <section class="welcome-card">
+
+            <div class="welcome-content">
+
+                <div>
+
+                    <p class="eyebrow">
+                        MA SCOLARITÉ
+                    </p>
+
+                    <h2>
+                        Mes matières
+                    </h2>
+
+                    <p>
+                        Accède rapidement à tes cours, tes documents
+                        et tes devoirs pour chaque matière.
+                    </p>
+
+                </div>
+
+                <div class="welcome-icon">
+                    📚
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="content-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        RECHERCHE ET FILTRES
+                    </p>
+
+                    <h2>
+                        Trouver une matière
+                    </h2>
+
+                </div>
+
+                <span>🔎</span>
+
+            </div>
+
+            <div class="courses-tools">
+
+                <div class="search-box">
+
+                    <span>🔎</span>
+
                     <input
                         type="search"
                         id="search-course"
-                        placeholder="🔎 Rechercher une matière..."
-                        aria-label="Rechercher une matière"
+                        placeholder="Rechercher une matière ou un professeur..."
+                        autocomplete="off"
                     >
 
-                    <select id="course-filter" aria-label="Filtrer les matières">
-                        <option value="all">Toutes les matières</option>
-                        <option value="general">Matières générales</option>
-                        <option value="professional">Matières professionnelles</option>
-                        <option value="other">Autres matières</option>
-                    </select>
-
-                    <select id="course-sort" aria-label="Trier les matières">
-                        <option value="default">Ordre par défaut</option>
-                        <option value="az">Nom : A à Z</option>
-                        <option value="za">Nom : Z à A</option>
-                    </select>
-                </section>
-
-                <p class="courses-count" id="courses-count" aria-live="polite">
-                    12 matières
-                </p>
-
-                <section class="courses-grid" id="courses-grid">
-                    <a class="course-card" href="fiche-cours/mathematiques.html"
-                       data-category="general" data-name="Mathématiques">
-                        <div class="course-icon">🔢</div>
-                        <h2>Mathématiques</h2>
-                        <p>Formules, exercices et notions importantes.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/anglais.html"
-                       data-category="general" data-name="Anglais LV1">
-                        <div class="course-icon">🇬🇧</div>
-                        <h2>Anglais LV1</h2>
-                        <p>Vocabulaire, grammaire et activités.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/francais-histoire-geo.html"
-                       data-category="general" data-name="Français Histoire-Géo EMC">
-                        <div class="course-icon">📖</div>
-                        <h2>Français / Histoire-Géo / EMC</h2>
-                        <p>Cours, documents et révisions.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/sciences-physiques.html"
-                       data-category="general" data-name="Sciences physiques">
-                        <div class="course-icon">🧪</div>
-                        <h2>Sciences physiques</h2>
-                        <p>Expériences, méthodes et exercices.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/enseignement-professionnel.html"
-                       data-category="professional" data-name="Enseignement professionnel">
-                        <div class="course-icon">🛠️</div>
-                        <h2>Enseignement professionnel</h2>
-                        <p>Notions et ressources professionnelles.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/pratique-professionnelle.html"
-                       data-category="professional" data-name="Pratique professionnelle">
-                        <div class="course-icon">🧰</div>
-                        <h2>Pratique professionnelle</h2>
-                        <p>Activités et suivi des travaux pratiques.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/arts-appliques.html"
-                       data-category="other" data-name="Arts appliqués Culture artistique">
-                        <div class="course-icon">🎨</div>
-                        <h2>Arts appliqués / Culture artistique</h2>
-                        <p>Créations, références et culture artistique.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/soutien-au-parcours.html"
-                       data-category="other" data-name="Soutien au parcours">
-                        <div class="course-icon">🧭</div>
-                        <h2>Soutien au parcours</h2>
-                        <p>Orientation et suivi du parcours scolaire.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/prevention-sante-environnement.html"
-                       data-category="professional" data-name="Prévention Santé Environnement PSE">
-                        <div class="course-icon">🌱</div>
-                        <h2>Prévention-Santé-Environnement</h2>
-                        <p>Santé, sécurité et environnement.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/economie-gestion.html"
-                       data-category="professional" data-name="Économie Gestion">
-                        <div class="course-icon">💼</div>
-                        <h2>Économie & Gestion</h2>
-                        <p>Gestion, économie et organisation.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/realisation-projet.html"
-                       data-category="professional" data-name="Réalisation projet">
-                        <div class="course-icon">💡</div>
-                        <h2>Réalisation projet</h2>
-                        <p>Idées, étapes et suivi du projet.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-
-                    <a class="course-card" href="fiche-cours/education-physique-sportive.html"
-                       data-category="other" data-name="Éducation physique sportive EPS">
-                        <div class="course-icon">🏃</div>
-                        <h2>Éducation physique & sportive</h2>
-                        <p>Activités sportives et suivi personnel.</p>
-                        <span class="open-label">Ouvrir la matière →</span>
-                    </a>
-                </section>
-
-                <div class="no-results" id="no-results">
-                    <h2>Aucune matière trouvée</h2>
-                    <p>Essaie un autre mot ou modifie les filtres.</p>
                 </div>
+
+                <div class="filter-box">
+
+                    <select id="course-filter">
+
+                        <option value="all">
+                            📚 Toutes les matières
+                        </option>
+
+                        <option value="general">
+                            📘 Enseignement général
+                        </option>
+
+                        <option value="professional">
+                            🛠️ Enseignement professionnel
+                        </option>
+
+                        <option value="other">
+                            🎨 Autres
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="filter-box">
+
+                    <select id="course-sort">
+
+                        <option value="default">
+                            ↕️ Ordre habituel
+                        </option>
+
+                        <option value="az">
+                            🔤 A → Z
+                        </option>
+
+                        <option value="za">
+                            🔤 Z → A
+                        </option>
+
+                    </select>
+
+                </div>
+
             </div>
-        </main>
-    </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+            <p
+                class="courses-count"
+                id="courses-count"
+            >
+                12 matières
+            </p>
 
-<script src="js/firebase-config.js"></script>
-<script src="js/firebase-init.js"></script>
-<script src="js/deconnexion.js"></script>
+        </section>
 
-<script src="js/mes-cours.js"></script>
+        <section
+            class="courses-grid"
+            id="courses-grid"
+        >
+
+            <article
+                class="course-card"
+                data-category="general"
+                data-subject="francais"
+            >
+
+                <div class="course-icon">
+                    📖
+                </div>
+
+                <h2>
+                    Français / Histoire-Géo / EMC
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 FREVILLE C.
+                </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
+
+                <a
+                    href="fiche-cours/francais-histoire-geo.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="general"
+                data-subject="mathematiques"
+            >
+
+                <div class="course-icon">
+                    ➗
+                </div>
+
+                <h2>
+                    Mathématiques
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 MESLARD S.
+                </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
+
+                <a
+                    href="fiche-cours/mathematiques.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="general"
+                data-subject="anglais"
+            >
+
+                <div class="course-icon">
+                    🇬🇧
+                </div>
+
+                <h2>
+                    Anglais LV1
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 COLOMBEL S.
+                </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
+
+                <a
+                    href="fiche-cours/anglais.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="general"
+                data-subject="sciences"
+            >
+
+                <div class="course-icon">
+                    ⚗️
+                </div>
+
+                <h2>
+                    Sciences physiques
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 MESLARD S.
+                </div>
+
+                <span class="course-category">
+                    Enseignement général
+                </span>
+
+                <a
+                    href="fiche-cours/sciences-physiques.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="professional"
+                data-subject="enseignement"
+            >
+
+                <div class="course-icon">
+                    🛠️
+                </div>
+
+                <h2>
+                    Enseignement professionnel
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LUCIEN E.
+                </div>
+
+                <span class="course-category">
+                    Enseignement professionnel
+                </span>
+
+                <a
+                    href="fiche-cours/enseignement-professionnel.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="professional"
+                data-subject="pratique"
+            >
+
+                <div class="course-icon">
+                    🔧
+                </div>
+
+                <h2>
+                    Pratique professionnelle
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LUCIEN E. / LETTELIER J. / LE PAPE D.
+                </div>
+
+                <span class="course-category">
+                    Enseignement professionnel
+                </span>
+
+                <a
+                    href="fiche-cours/pratique-professionnelle.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="other"
+                data-subject="arts"
+            >
+
+                <div class="course-icon">
+                    🎨
+                </div>
+
+                <h2>
+                    Arts appliqués / Culture artistique
+                </h2>
+
+                <div class="course-teacher">
+                    👩‍🏫 NIEDERGANG L.
+                </div>
+
+                <span class="course-category">
+                    Arts
+                </span>
+
+                <a
+                    href="fiche-cours/arts-appliques.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="other"
+                data-subject="soutien"
+            >
+
+                <div class="course-icon">
+                    🤝
+                </div>
+
+                <h2>
+                    Soutien au parcours
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LE PAPE D.
+                </div>
+
+                <span class="course-category">
+                    Accompagnement
+                </span>
+
+                <a
+                    href="fiche-cours/soutien-au-parcours.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="other"
+                data-subject="pse"
+            >
+
+                <div class="course-icon">
+                    🩺
+                </div>
+
+                <h2>
+                    Prévention-Santé-Environnement
+                </h2>
+
+                <div class="course-teacher">
+                    👩‍🏫 BASSO K.
+                </div>
+
+                <span class="course-category">
+                    Prévention / Santé
+                </span>
+
+                <a
+                    href="fiche-cours/prevention-sante-environnement.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="professional"
+                data-subject="economie"
+            >
+
+                <div class="course-icon">
+                    💼
+                </div>
+
+                <h2>
+                    Économie & Gestion
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LINDAUER A.
+                </div>
+
+                <span class="course-category">
+                    Enseignement professionnel
+                </span>
+
+                <a
+                    href="fiche-cours/economie-gestion.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="professional"
+                data-subject="projet"
+            >
+
+                <div class="course-icon">
+                    💡
+                </div>
+
+                <h2>
+                    Réalisation projet
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 LE PAPE D. / MESLARD S.
+                </div>
+
+                <span class="course-category">
+                    Projet
+                </span>
+
+                <a
+                    href="fiche-cours/realisation-projet.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+            <article
+                class="course-card"
+                data-category="other"
+                data-subject="eps"
+            >
+
+                <div class="course-icon">
+                    🏃
+                </div>
+
+                <h2>
+                    Éducation physique & sportive
+                </h2>
+
+                <div class="course-teacher">
+                    👨‍🏫 HAMON F.
+                </div>
+
+                <span class="course-category">
+                    Sport
+                </span>
+
+                <a
+                    href="fiche-cours/education-physique-sportive.html"
+                    class="course-card-button"
+                >
+                    Ouvrir la fiche →
+                </a>
+
+            </article>
+
+        </section>
+
+        <div
+            class="no-results"
+            id="no-results"
+        >
+
+            <span>🔎</span>
+
+            <h2>
+                Aucun cours trouvé
+            </h2>
+
+            <p>
+                Essaie avec un autre mot ou une autre catégorie.
+            </p>
+
+        </div>
+
+        <footer class="page-footer">
+
+            <p>
+                🎓 Mon ENT Perso LFE —
+                Mon espace scolaire personnel
+            </p>
+
+        </footer>
+
+    </main>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/deconnexion.js"></script>
+
+    <!-- Mes cours -->
+    <script src="js/mes-cours.js"></script>
+
+    <!-- Application hors ligne -->
+    <script src="js/pwa.js"></script>
 
 </body>
+
 </html>
