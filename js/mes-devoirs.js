@@ -2,12 +2,12 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const COLLECTION_NAME = "devoirs";
+    const STORAGE_KEY = "mes-devoirs";
 
-    let utilisateurConnecte = null;
     let devoirs = [];
     let devoirEnModification = null;
-    let arreterEcoute = null;
+    let utilisateurActuel = null;
+    let arreterSynchronisation = null;
 
 
     // ==========================================
@@ -91,21 +91,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ==========================================
-    // OUTILS
+    // IDENTIFIANT
     // ==========================================
 
-    function collectionDevoirs() {
+    function creerIdentifiant() {
 
-        if (!utilisateurConnecte) {
-            return null;
+        if (
+            window.crypto &&
+            typeof window.crypto.randomUUID === "function"
+        ) {
+
+            return window.crypto.randomUUID();
         }
 
-        return db
-            .collection("users")
-            .doc(utilisateurConnecte.uid)
-            .collection(COLLECTION_NAME);
+        return (
+            Date.now().toString(36) +
+            "-" +
+            Math.random().toString(36).slice(2)
+        );
     }
 
+
+    // ==========================================
+    // PROTECTION HTML
+    // ==========================================
+
+    function echapperHTML(texte) {
+
+        return String(texte || "").replace(
+            /[&<>"']/g,
+            caractere => ({
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            })[caractere]
+        );
+    }
+
+
+    // ==========================================
+    // NORMALISATION
+    // ==========================================
 
     function normaliser(texte) {
 
@@ -117,46 +147,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    // ==========================================
+    // FORMAT DATE
+    // ==========================================
+
     function formaterDate(date) {
 
         const resultat =
             /^(\d{4})-(\d{2})-(\d{2})$/.exec(
-                date || ""
+                String(date || "")
             );
 
         if (!resultat) {
+
             return "Date non renseignée";
         }
 
         return (
-            `${resultat[3]}/` +
-            `${resultat[2]}/` +
-            `${resultat[1]}`
+            resultat[3] +
+            "/" +
+            resultat[2] +
+            "/" +
+            resultat[1]
         );
     }
 
 
-    function dateLocaleISO() {
+    // ==========================================
+    // DATE EN TIMESTAMP
+    // ==========================================
 
-        const maintenant =
-            new Date();
+    function dateEnNombre(date) {
 
-        const annee =
-            maintenant.getFullYear();
+        if (!date) {
 
-        const mois =
-            String(
-                maintenant.getMonth() + 1
-            ).padStart(2, "0");
+            return Number.MAX_SAFE_INTEGER;
+        }
 
-        const jour =
-            String(
-                maintenant.getDate()
-            ).padStart(2, "0");
+        const valeur =
+            new Date(
+                date + "T00:00:00"
+            ).getTime();
 
-        return `${annee}-${mois}-${jour}`;
+        return Number.isFinite(valeur)
+            ? valeur
+            : Number.MAX_SAFE_INTEGER;
     }
 
+
+    // ==========================================
+    // VÉRIFIER RETARD
+    // ==========================================
 
     function devoirEnRetard(devoir) {
 
@@ -164,73 +205,430 @@ document.addEventListener("DOMContentLoaded", () => {
             devoir.done ||
             !devoir.date
         ) {
+
             return false;
         }
 
-        return devoir.date <
-            dateLocaleISO();
+        const aujourdHui =
+            new Date();
+
+        aujourdHui.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+        const dateDevoir =
+            new Date(
+                devoir.date + "T00:00:00"
+            );
+
+        return (
+            !Number.isNaN(
+                dateDevoir.getTime()
+            ) &&
+            dateDevoir < aujourdHui
+        );
     }
 
 
     // ==========================================
-    // STATUT DE SYNCHRONISATION
+    // CHARGER LE STOCKAGE LOCAL
     // ==========================================
 
-    function afficherEtat(
-        texte,
-        type = ""
-    ) {
+    function chargerDevoirsLocaux() {
 
-        let indicateur =
-            document.getElementById(
-                "homework-sync-status"
+        try {
+
+            const resultat =
+                JSON.parse(
+                    localStorage.getItem(
+                        STORAGE_KEY
+                    ) || "[]"
+                );
+
+            if (!Array.isArray(resultat)) {
+
+                return [];
+            }
+
+            return resultat
+                .filter(devoir =>
+                    devoir &&
+                    typeof devoir === "object"
+                )
+                .map((devoir, index) => ({
+
+                    id:
+                        String(
+                            devoir.id ||
+                            (
+                                "devoir-" +
+                                index +
+                                "-" +
+                                Date.now()
+                            )
+                        ),
+
+                    subject:
+                        String(
+                            devoir.subject ||
+                            devoir.matiere ||
+                            ""
+                        ),
+
+                    title:
+                        String(
+                            devoir.title ||
+                            devoir.titre ||
+                            ""
+                        ),
+
+                    date:
+                        String(
+                            devoir.date ||
+                            ""
+                        ),
+
+                    description:
+                        String(
+                            devoir.description ||
+                            ""
+                        ),
+
+                    done:
+                        Boolean(
+                            devoir.done ??
+                            devoir.termine
+                        )
+                }))
+                .filter(devoir =>
+                    devoir.subject &&
+                    devoir.title &&
+                    devoir.date
+                );
+
+        } catch (erreur) {
+
+            console.error(
+                "Impossible de charger les devoirs locaux.",
+                erreur
             );
 
+            return [];
+        }
+    }
 
-        if (!indicateur) {
 
-            indicateur =
-                document.createElement("p");
+    // ==========================================
+    // SAUVEGARDE LOCALE
+    // ==========================================
 
-            indicateur.id =
-                "homework-sync-status";
+    function sauvegarderLocalement() {
 
-            indicateur.style.margin =
-                "0 0 15px";
+        try {
 
-            indicateur.style.fontWeight =
-                "bold";
-
-            homeworkList.before(
-                indicateur
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(devoirs)
             );
+
+            return true;
+
+        } catch (erreur) {
+
+            console.error(
+                "Impossible d'enregistrer les devoirs localement.",
+                erreur
+            );
+
+            return false;
+        }
+    }
+
+
+    // ==========================================
+    // RÉFÉRENCE FIRESTORE
+    // ==========================================
+
+    function collectionDevoirs() {
+
+        if (
+            !window.db ||
+            !utilisateurActuel
+        ) {
+
+            return null;
         }
 
+        return window.db
+            .collection("users")
+            .doc(utilisateurActuel.uid)
+            .collection("devoirs");
+    }
 
-        indicateur.textContent =
-            texte;
+
+    // ==========================================
+    // DONNÉES FIRESTORE
+    // ==========================================
+
+    function devoirVersFirestore(devoir) {
+
+        return {
+
+            subject:
+                devoir.subject,
+
+            title:
+                devoir.title,
+
+            date:
+                devoir.date,
+
+            description:
+                devoir.description,
+
+            done:
+                devoir.done,
+
+            updatedAt:
+                window.firebase &&
+                firebase.firestore
+                    ? firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+                    : null
+        };
+    }
 
 
-        if (type === "online") {
+    // ==========================================
+    // ENREGISTRER DANS FIREBASE
+    // ==========================================
 
-            indicateur.style.color =
-                "#15803d";
+    async function enregistrerDansFirebase(
+        devoir
+    ) {
 
-        } else if (type === "offline") {
+        const collection =
+            collectionDevoirs();
 
-            indicateur.style.color =
-                "#b45309";
+        if (!collection) {
+
+            sauvegarderLocalement();
+
+            return;
+        }
+
+        try {
+
+            await collection
+                .doc(String(devoir.id))
+                .set(
+                    devoirVersFirestore(
+                        devoir
+                    ),
+                    {
+                        merge: true
+                    }
+                );
+
+        } catch (erreur) {
+
+            console.error(
+                "Impossible de synchroniser le devoir.",
+                erreur
+            );
+
+            sauvegarderLocalement();
+        }
+    }
+
+
+    // ==========================================
+    // SUPPRIMER DANS FIREBASE
+    // ==========================================
+
+    async function supprimerDansFirebase(id) {
+
+        const collection =
+            collectionDevoirs();
+
+        if (!collection) {
+
+            sauvegarderLocalement();
+
+            return;
+        }
+
+        try {
+
+            await collection
+                .doc(String(id))
+                .delete();
+
+        } catch (erreur) {
+
+            console.error(
+                "Impossible de supprimer le devoir dans Firebase.",
+                erreur
+            );
+
+            sauvegarderLocalement();
+        }
+    }
+
+
+    // ==========================================
+    // CRÉER UNE CARTE
+    // ==========================================
+
+    function creerCarteDevoir(devoir) {
+
+        const estEnRetard =
+            devoirEnRetard(devoir);
+
+        const carte =
+            document.createElement(
+                "article"
+            );
+
+        carte.className =
+            "homework-card" +
+            (
+                devoir.done
+                    ? " done"
+                    : ""
+            ) +
+            (
+                estEnRetard
+                    ? " overdue"
+                    : ""
+            );
+
+
+        let statutHTML = "";
+
+        if (devoir.done) {
+
+            statutHTML = `
+                <span class="badge badge-done">
+                    🟢 Terminé
+                </span>
+            `;
+
+        } else if (estEnRetard) {
+
+            statutHTML = `
+                <span class="badge badge-late">
+                    🚨 En retard
+                </span>
+            `;
 
         } else {
 
-            indicateur.style.color =
-                "#64748b";
+            statutHTML = `
+                <span class="badge badge-todo">
+                    🔴 À faire
+                </span>
+            `;
         }
+
+
+        carte.innerHTML = `
+
+            <h3>
+                ${echapperHTML(
+                    devoir.title
+                )}
+            </h3>
+
+            <div class="homework-info">
+
+                <span class="badge">
+                    📚
+                    ${echapperHTML(
+                        devoir.subject
+                    )}
+                </span>
+
+                <span class="badge badge-date">
+                    📅
+                    ${echapperHTML(
+                        formaterDate(
+                            devoir.date
+                        )
+                    )}
+                </span>
+
+                ${statutHTML}
+
+            </div>
+
+            ${
+                devoir.description
+                    ? `
+                        <p>
+                            ${echapperHTML(
+                                devoir.description
+                            ).replace(
+                                /\n/g,
+                                "<br>"
+                            )}
+                        </p>
+                    `
+                    : ""
+            }
+
+            <div class="homework-actions">
+
+                <button
+                    type="button"
+                    class="complete-button"
+                    data-action="toggle"
+                    data-id="${echapperHTML(
+                        devoir.id
+                    )}"
+                >
+                    ${
+                        devoir.done
+                            ? "↩️ À refaire"
+                            : "✅ Terminé"
+                    }
+                </button>
+
+                <button
+                    type="button"
+                    class="edit-button"
+                    data-action="edit"
+                    data-id="${echapperHTML(
+                        devoir.id
+                    )}"
+                >
+                    ✏️ Modifier
+                </button>
+
+                <button
+                    type="button"
+                    class="delete-button"
+                    data-action="delete"
+                    data-id="${echapperHTML(
+                        devoir.id
+                    )}"
+                >
+                    🗑️ Supprimer
+                </button>
+
+            </div>
+        `;
+
+        return carte;
     }
 
 
     // ==========================================
-    // AFFICHER LES DEVOIRS
+    // AFFICHER
     // ==========================================
 
     function afficherDevoirs() {
@@ -248,95 +646,96 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         const devoirsFiltres =
-            devoirs.filter((devoir) => {
+            devoirs
+                .filter(devoir => {
 
-                const texte =
-                    normaliser(
-                        `${devoir.title} ` +
-                        `${devoir.subject} ` +
-                        `${devoir.description}`
+                    const texte =
+                        normaliser(
+                            devoir.title +
+                            " " +
+                            devoir.subject +
+                            " " +
+                            devoir.description
+                        );
+
+                    const retard =
+                        devoirEnRetard(devoir);
+
+
+                    const correspondRecherche =
+                        texte.includes(
+                            recherche
+                        );
+
+
+                    const correspondStatut =
+                        statut === "all" ||
+                        (
+                            statut === "todo" &&
+                            !devoir.done &&
+                            !retard
+                        ) ||
+                        (
+                            statut === "done" &&
+                            devoir.done
+                        ) ||
+                        (
+                            statut === "late" &&
+                            retard
+                        );
+
+
+                    const correspondMatiere =
+                        matiere === "all" ||
+                        devoir.subject === matiere;
+
+
+                    return (
+                        correspondRecherche &&
+                        correspondStatut &&
+                        correspondMatiere
                     );
+                })
+                .sort((a, b) => {
 
+                    if (
+                        a.done !== b.done
+                    ) {
 
-                const correspondRecherche =
-                    texte.includes(
-                        recherche
+                        return a.done
+                            ? 1
+                            : -1;
+                    }
+
+                    return (
+                        dateEnNombre(
+                            a.date
+                        ) -
+                        dateEnNombre(
+                            b.date
+                        )
                     );
-
-
-                const retard =
-                    devoirEnRetard(
-                        devoir
-                    );
-
-
-                const correspondStatut =
-                    statut === "all" ||
-
-                    (
-                        statut === "todo" &&
-                        !devoir.done &&
-                        !retard
-                    ) ||
-
-                    (
-                        statut === "done" &&
-                        devoir.done
-                    ) ||
-
-                    (
-                        statut === "late" &&
-                        retard
-                    );
-
-
-                const correspondMatiere =
-                    matiere === "all" ||
-                    devoir.subject === matiere;
-
-
-                return (
-                    correspondRecherche &&
-                    correspondStatut &&
-                    correspondMatiere
-                );
-            });
-
-
-        devoirsFiltres.sort(
-            (a, b) => {
-
-                if (
-                    Boolean(a.done) !==
-                    Boolean(b.done)
-                ) {
-
-                    return a.done
-                        ? 1
-                        : -1;
-                }
-
-                return String(a.date)
-                    .localeCompare(
-                        String(b.date)
-                    );
-            }
-        );
+                });
 
 
         homeworkList.replaceChildren();
 
 
-        if (!devoirsFiltres.length) {
+        if (
+            devoirsFiltres.length === 0
+        ) {
 
             const message =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             message.className =
                 "empty-message";
 
             message.innerHTML = `
-                <div style="font-size:40px;">
+
+                <div class="empty-icon">
                     📭
                 </div>
 
@@ -358,290 +757,446 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
+        const fragment =
+            document.createDocumentFragment();
+
+
         devoirsFiltres.forEach(
-            (devoir) => {
+            devoir => {
 
-                const retard =
-                    devoirEnRetard(
+                fragment.appendChild(
+                    creerCarteDevoir(
                         devoir
-                    );
-
-
-                const card =
-                    document.createElement(
-                        "article"
-                    );
-
-
-                card.className =
-                    "homework-card" +
-                    (
-                        devoir.done
-                            ? " done"
-                            : ""
-                    ) +
-                    (
-                        retard
-                            ? " overdue"
-                            : ""
-                    );
-
-
-                // ==================================
-                // TITRE
-                // ==================================
-
-                const titre =
-                    document.createElement(
-                        "h3"
-                    );
-
-                titre.textContent =
-                    devoir.title;
-
-
-                // ==================================
-                // INFORMATIONS
-                // ==================================
-
-                const informations =
-                    document.createElement(
-                        "div"
-                    );
-
-                informations.className =
-                    "homework-info";
-
-
-                const badgeMatiere =
-                    document.createElement(
-                        "span"
-                    );
-
-                badgeMatiere.className =
-                    "badge";
-
-                badgeMatiere.textContent =
-                    `📚 ${devoir.subject}`;
-
-
-                const badgeDate =
-                    document.createElement(
-                        "span"
-                    );
-
-                badgeDate.className =
-                    "badge badge-date";
-
-                badgeDate.textContent =
-                    `📅 ${formaterDate(
-                        devoir.date
-                    )}`;
-
-
-                const badgeStatut =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                if (devoir.done) {
-
-                    badgeStatut.className =
-                        "badge badge-done";
-
-                    badgeStatut.textContent =
-                        "🟢 Terminé";
-
-                } else if (retard) {
-
-                    badgeStatut.className =
-                        "badge badge-late";
-
-                    badgeStatut.textContent =
-                        "🚨 En retard";
-
-                } else {
-
-                    badgeStatut.className =
-                        "badge badge-todo";
-
-                    badgeStatut.textContent =
-                        "🔴 À faire";
-                }
-
-
-                informations.append(
-                    badgeMatiere,
-                    badgeDate,
-                    badgeStatut
-                );
-
-
-                card.append(
-                    titre,
-                    informations
-                );
-
-
-                // ==================================
-                // DESCRIPTION
-                // ==================================
-
-                if (devoir.description) {
-
-                    const description =
-                        document.createElement(
-                            "p"
-                        );
-
-                    description.textContent =
-                        devoir.description;
-
-                    description.style.whiteSpace =
-                        "pre-wrap";
-
-                    card.appendChild(
-                        description
-                    );
-                }
-
-
-                // ==================================
-                // ACTIONS
-                // ==================================
-
-                const actions =
-                    document.createElement(
-                        "div"
-                    );
-
-                actions.className =
-                    "homework-actions";
-
-
-                const terminer =
-                    document.createElement(
-                        "button"
-                    );
-
-                terminer.type =
-                    "button";
-
-                terminer.className =
-                    "complete-button";
-
-                terminer.dataset.action =
-                    "toggle";
-
-                terminer.dataset.id =
-                    devoir.id;
-
-                terminer.textContent =
-                    devoir.done
-                        ? "↩️ À refaire"
-                        : "✅ Terminé";
-
-
-                const modifier =
-                    document.createElement(
-                        "button"
-                    );
-
-                modifier.type =
-                    "button";
-
-                modifier.className =
-                    "edit-button";
-
-                modifier.dataset.action =
-                    "edit";
-
-                modifier.dataset.id =
-                    devoir.id;
-
-                modifier.textContent =
-                    "✏️ Modifier";
-
-
-                const supprimer =
-                    document.createElement(
-                        "button"
-                    );
-
-                supprimer.type =
-                    "button";
-
-                supprimer.className =
-                    "delete-button";
-
-                supprimer.dataset.action =
-                    "delete";
-
-                supprimer.dataset.id =
-                    devoir.id;
-
-                supprimer.textContent =
-                    "🗑️ Supprimer";
-
-
-                actions.append(
-                    terminer,
-                    modifier,
-                    supprimer
-                );
-
-
-                card.appendChild(
-                    actions
-                );
-
-
-                homeworkList.appendChild(
-                    card
+                    )
                 );
             }
+        );
+
+
+        homeworkList.appendChild(
+            fragment
         );
     }
 
 
     // ==========================================
-    // SYNCHRONISATION FIRESTORE
+    // OUVRIR LA MODIFICATION
     // ==========================================
 
-    function demarrerSynchronisation() {
+    function ouvrirModification(id) {
+
+        const devoir =
+            devoirs.find(
+                element =>
+                    String(element.id) ===
+                    String(id)
+            );
+
+        if (!devoir) {
+
+            return;
+        }
+
+
+        devoirEnModification =
+            devoir.id;
+
+
+        editSubject.value =
+            devoir.subject;
+
+        editTitle.value =
+            devoir.title;
+
+        editDate.value =
+            devoir.date;
+
+        editDescription.value =
+            devoir.description;
+
+
+        editSection.hidden =
+            false;
+
+
+        editSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+
+        editTitle.focus();
+    }
+
+
+    // ==========================================
+    // FERMER LA MODIFICATION
+    // ==========================================
+
+    function fermerModification() {
+
+        devoirEnModification =
+            null;
+
+        editForm.reset();
+
+        editSection.hidden =
+            true;
+    }
+
+
+    // ==========================================
+    // AJOUT
+    // ==========================================
+
+    homeworkForm.addEventListener(
+        "submit",
+        async evenement => {
+
+            evenement.preventDefault();
+
+
+            const nouveauDevoir = {
+
+                id:
+                    creerIdentifiant(),
+
+                subject:
+                    homeworkSubject.value,
+
+                title:
+                    homeworkTitle.value.trim(),
+
+                date:
+                    homeworkDate.value,
+
+                description:
+                    homeworkDescription
+                        .value
+                        .trim(),
+
+                done:
+                    false
+            };
+
+
+            if (
+                !nouveauDevoir.subject ||
+                !nouveauDevoir.title ||
+                !nouveauDevoir.date
+            ) {
+
+                alert(
+                    "Merci de renseigner la matière, le titre et la date."
+                );
+
+                return;
+            }
+
+
+            devoirs.push(
+                nouveauDevoir
+            );
+
+
+            sauvegarderLocalement();
+
+            afficherDevoirs();
+
+            homeworkForm.reset();
+
+
+            await enregistrerDansFirebase(
+                nouveauDevoir
+            );
+        }
+    );
+
+
+    // ==========================================
+    // ENREGISTRER MODIFICATION
+    // ==========================================
+
+    editForm.addEventListener(
+        "submit",
+        async evenement => {
+
+            evenement.preventDefault();
+
+
+            if (
+                devoirEnModification === null
+            ) {
+
+                return;
+            }
+
+
+            const index =
+                devoirs.findIndex(
+                    devoir =>
+                        String(devoir.id) ===
+                        String(
+                            devoirEnModification
+                        )
+                );
+
+
+            if (index === -1) {
+
+                fermerModification();
+
+                return;
+            }
+
+
+            const ancienDevoir =
+                devoirs[index];
+
+
+            const devoirModifie = {
+
+                ...ancienDevoir,
+
+                subject:
+                    editSubject.value,
+
+                title:
+                    editTitle.value.trim(),
+
+                date:
+                    editDate.value,
+
+                description:
+                    editDescription
+                        .value
+                        .trim()
+            };
+
+
+            if (
+                !devoirModifie.subject ||
+                !devoirModifie.title ||
+                !devoirModifie.date
+            ) {
+
+                alert(
+                    "Merci de renseigner la matière, le titre et la date."
+                );
+
+                return;
+            }
+
+
+            devoirs[index] =
+                devoirModifie;
+
+
+            sauvegarderLocalement();
+
+            fermerModification();
+
+            afficherDevoirs();
+
+
+            await enregistrerDansFirebase(
+                devoirModifie
+            );
+        }
+    );
+
+
+    // ==========================================
+    // ANNULER MODIFICATION
+    // ==========================================
+
+    cancelEdit.addEventListener(
+        "click",
+        fermerModification
+    );
+
+
+    // ==========================================
+    // ACTIONS DE LA LISTE
+    // ==========================================
+
+    homeworkList.addEventListener(
+        "click",
+        async evenement => {
+
+            const bouton =
+                evenement.target.closest(
+                    "button[data-action]"
+                );
+
+
+            if (!bouton) {
+
+                return;
+            }
+
+
+            const id =
+                bouton.dataset.id;
+
+            const action =
+                bouton.dataset.action;
+
+
+            const index =
+                devoirs.findIndex(
+                    devoir =>
+                        String(devoir.id) ===
+                        String(id)
+                );
+
+
+            if (index === -1) {
+
+                return;
+            }
+
+
+            if (action === "edit") {
+
+                ouvrirModification(
+                    id
+                );
+
+                return;
+            }
+
+
+            if (action === "toggle") {
+
+                devoirs[index].done =
+                    !devoirs[index].done;
+
+
+                const devoirModifie =
+                    devoirs[index];
+
+
+                sauvegarderLocalement();
+
+                afficherDevoirs();
+
+
+                await enregistrerDansFirebase(
+                    devoirModifie
+                );
+
+                return;
+            }
+
+
+            if (action === "delete") {
+
+                const confirmation =
+                    confirm(
+                        `Supprimer le devoir « ${devoirs[index].title} » ?`
+                    );
+
+
+                if (!confirmation) {
+
+                    return;
+                }
+
+
+                const devoirSupprime =
+                    devoirs.splice(
+                        index,
+                        1
+                    )[0];
+
+
+                sauvegarderLocalement();
+
+                afficherDevoirs();
+
+
+                if (
+                    String(
+                        devoirEnModification
+                    ) === String(id)
+                ) {
+
+                    fermerModification();
+                }
+
+
+                await supprimerDansFirebase(
+                    devoirSupprime.id
+                );
+            }
+        }
+    );
+
+
+    // ==========================================
+    // FILTRES
+    // ==========================================
+
+    searchHomework.addEventListener(
+        "input",
+        afficherDevoirs
+    );
+
+    statusFilter.addEventListener(
+        "change",
+        afficherDevoirs
+    );
+
+    subjectFilter.addEventListener(
+        "change",
+        afficherDevoirs
+    );
+
+
+    // ==========================================
+    // SYNCHRONISATION FIREBASE
+    // ==========================================
+
+    function demarrerSynchronisation(
+        utilisateur
+    ) {
+
+        utilisateurActuel =
+            utilisateur;
+
 
         const collection =
             collectionDevoirs();
 
 
         if (!collection) {
+
+            devoirs =
+                chargerDevoirsLocaux();
+
+            afficherDevoirs();
+
             return;
         }
 
 
-        if (arreterEcoute) {
-            arreterEcoute();
+        if (
+            typeof arreterSynchronisation ===
+            "function"
+        ) {
+
+            arreterSynchronisation();
         }
 
 
-        afficherEtat(
-            "🔄 Synchronisation des devoirs...",
-            ""
-        );
-
-
-        arreterEcoute =
+        arreterSynchronisation =
             collection.onSnapshot(
-                {
-                    includeMetadataChanges: true
-                },
+                snapshot => {
 
-                (snapshot) => {
-
-                    devoirs =
+                    const devoirsFirebase =
                         snapshot.docs.map(
-                            (document) => {
+                            document => {
 
                                 const donnees =
                                     document.data();
@@ -681,570 +1236,102 @@ document.addEventListener("DOMContentLoaded", () => {
                                         )
                                 };
                             }
-                        )
-                        .filter(
-                            (devoir) =>
-                                devoir.subject &&
-                                devoir.title &&
-                                devoir.date
                         );
 
 
-                    afficherDevoirs();
-
+                    // Première utilisation :
+                    // envoyer les devoirs locaux
+                    // si Firebase est encore vide.
 
                     if (
-                        snapshot.metadata.fromCache
+                        snapshot.empty &&
+                        devoirs.length > 0
                     ) {
 
-                        afficherEtat(
-                            navigator.onLine
-                                ? "🟠 Données en cache — synchronisation en attente"
-                                : "📴 Hors ligne — les changements seront synchronisés plus tard",
-                            "offline"
-                        );
-
-                    } else {
-
-                        afficherEtat(
-                            "🟢 Devoirs synchronisés",
-                            "online"
-                        );
-                    }
-                },
-
-                (erreur) => {
-
-                    console.error(
-                        "Erreur de synchronisation des devoirs :",
-                        erreur
-                    );
-
-
-                    afficherEtat(
-                        "🔴 Erreur de synchronisation",
-                        "offline"
-                    );
-                }
-            );
-    }
-
-
-    // ==========================================
-    // AJOUTER UN DEVOIR
-    // ==========================================
-
-    homeworkForm.addEventListener(
-        "submit",
-        async (evenement) => {
-
-            evenement.preventDefault();
-
-
-            if (!utilisateurConnecte) {
-
-                alert(
-                    "Tu dois être connecté pour ajouter un devoir."
-                );
-
-                return;
-            }
-
-
-            const subject =
-                homeworkSubject.value;
-
-            const title =
-                homeworkTitle.value.trim();
-
-            const date =
-                homeworkDate.value;
-
-            const description =
-                homeworkDescription.value.trim();
-
-
-            if (
-                !subject ||
-                !title ||
-                !date
-            ) {
-
-                alert(
-                    "Merci de renseigner la matière, le titre et la date."
-                );
-
-                return;
-            }
-
-
-            const bouton =
-                homeworkForm.querySelector(
-                    'button[type="submit"]'
-                );
-
-
-            if (bouton) {
-                bouton.disabled = true;
-            }
-
-
-            try {
-
-                await collectionDevoirs().add({
-
-                    subject,
-                    title,
-                    date,
-                    description,
-
-                    done: false,
-
-                    createdAt:
-                        firebase.firestore
-                            .FieldValue
-                            .serverTimestamp(),
-
-                    updatedAt:
-                        firebase.firestore
-                            .FieldValue
-                            .serverTimestamp()
-                });
-
-
-                homeworkForm.reset();
-
-
-            } catch (erreur) {
-
-                console.error(
-                    "Erreur d'ajout du devoir :",
-                    erreur
-                );
-
-
-                alert(
-                    "Le devoir n'a pas pu être enregistré."
-                );
-
-            } finally {
-
-                if (bouton) {
-                    bouton.disabled = false;
-                }
-            }
-        }
-    );
-
-
-    // ==========================================
-    // OUVRIR LA MODIFICATION
-    // ==========================================
-
-    function modifierDevoir(id) {
-
-        const devoir =
-            devoirs.find(
-                (element) =>
-                    element.id === id
-            );
-
-
-        if (!devoir) {
-            return;
-        }
-
-
-        devoirEnModification =
-            id;
-
-
-        editSubject.value =
-            devoir.subject;
-
-        editTitle.value =
-            devoir.title;
-
-        editDate.value =
-            devoir.date;
-
-        editDescription.value =
-            devoir.description;
-
-
-        editSection.style.display =
-            "block";
-
-
-        editSection.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-
-        editTitle.focus();
-    }
-
-
-    // ==========================================
-    // ENREGISTRER LA MODIFICATION
-    // ==========================================
-
-    editForm.addEventListener(
-        "submit",
-        async (evenement) => {
-
-            evenement.preventDefault();
-
-
-            if (
-                !utilisateurConnecte ||
-                devoirEnModification === null
-            ) {
-                return;
-            }
-
-
-            const subject =
-                editSubject.value;
-
-            const title =
-                editTitle.value.trim();
-
-            const date =
-                editDate.value;
-
-            const description =
-                editDescription.value.trim();
-
-
-            if (
-                !subject ||
-                !title ||
-                !date
-            ) {
-
-                alert(
-                    "Merci de renseigner la matière, le titre et la date."
-                );
-
-                return;
-            }
-
-
-            const bouton =
-                editForm.querySelector(
-                    'button[type="submit"]'
-                );
-
-
-            if (bouton) {
-                bouton.disabled = true;
-            }
-
-
-            try {
-
-                await collectionDevoirs()
-                    .doc(
-                        devoirEnModification
-                    )
-                    .set(
-                        {
-                            subject,
-                            title,
-                            date,
-                            description,
-
-                            updatedAt:
-                                firebase.firestore
-                                    .FieldValue
-                                    .serverTimestamp()
-                        },
-
-                        {
-                            merge: true
-                        }
-                    );
-
-
-                devoirEnModification =
-                    null;
-
-
-                editForm.reset();
-
-                editSection.style.display =
-                    "none";
-
-
-            } catch (erreur) {
-
-                console.error(
-                    "Erreur de modification du devoir :",
-                    erreur
-                );
-
-
-                alert(
-                    "Le devoir n'a pas pu être modifié."
-                );
-
-            } finally {
-
-                if (bouton) {
-                    bouton.disabled = false;
-                }
-            }
-        }
-    );
-
-
-    // ==========================================
-    // ANNULER LA MODIFICATION
-    // ==========================================
-
-    cancelEdit.addEventListener(
-        "click",
-        () => {
-
-            devoirEnModification =
-                null;
-
-            editForm.reset();
-
-            editSection.style.display =
-                "none";
-        }
-    );
-
-
-    // ==========================================
-    // ACTIONS DES DEVOIRS
-    // ==========================================
-
-    homeworkList.addEventListener(
-        "click",
-        async (evenement) => {
-
-            const bouton =
-                evenement.target.closest(
-                    "button[data-action]"
-                );
-
-
-            if (
-                !bouton ||
-                !utilisateurConnecte
-            ) {
-                return;
-            }
-
-
-            const id =
-                bouton.dataset.id;
-
-            const action =
-                bouton.dataset.action;
-
-
-            const devoir =
-                devoirs.find(
-                    (element) =>
-                        element.id === id
-                );
-
-
-            if (!devoir) {
-                return;
-            }
-
-
-            // ==================================
-            // MODIFIER
-            // ==================================
-
-            if (action === "edit") {
-
-                modifierDevoir(id);
-
-                return;
-            }
-
-
-            bouton.disabled = true;
-
-
-            try {
-
-                // ==============================
-                // TERMINER / ROUVRIR
-                // ==============================
-
-                if (action === "toggle") {
-
-                    await collectionDevoirs()
-                        .doc(id)
-                        .set(
-                            {
-                                done:
-                                    !devoir.done,
-
-                                updatedAt:
-                                    firebase.firestore
-                                        .FieldValue
-                                        .serverTimestamp()
-                            },
-
-                            {
-                                merge: true
+                        devoirs.forEach(
+                            devoir => {
+
+                                enregistrerDansFirebase(
+                                    devoir
+                                );
                             }
                         );
-                }
-
-
-                // ==============================
-                // SUPPRIMER
-                // ==============================
-
-                if (action === "delete") {
-
-                    const confirmation =
-                        confirm(
-                            `Supprimer le devoir « ${devoir.title} » ?`
-                        );
-
-
-                    if (!confirmation) {
-
-                        bouton.disabled =
-                            false;
 
                         return;
                     }
 
 
-                    await collectionDevoirs()
-                        .doc(id)
-                        .delete();
+                    devoirs =
+                        devoirsFirebase;
 
 
-                    if (
-                        devoirEnModification === id
-                    ) {
+                    sauvegarderLocalement();
 
-                        devoirEnModification =
-                            null;
+                    afficherDevoirs();
+                },
+                erreur => {
 
-                        editForm.reset();
+                    console.error(
+                        "Erreur de synchronisation des devoirs.",
+                        erreur
+                    );
 
-                        editSection.style.display =
-                            "none";
-                    }
+
+                    devoirs =
+                        chargerDevoirsLocaux();
+
+
+                    afficherDevoirs();
+                }
+            );
+    }
+
+
+    // ==========================================
+    // INITIALISATION
+    // ==========================================
+
+    devoirs =
+        chargerDevoirsLocaux();
+
+
+    afficherDevoirs();
+
+
+    editSection.hidden =
+        true;
+
+
+    if (
+        window.auth &&
+        typeof window.auth
+            .onAuthStateChanged ===
+            "function"
+    ) {
+
+        window.auth.onAuthStateChanged(
+            utilisateur => {
+
+                if (!utilisateur) {
+
+                    utilisateurActuel =
+                        null;
+
+                    return;
                 }
 
 
-            } catch (erreur) {
-
-                console.error(
-                    "Erreur pendant l'action sur le devoir :",
-                    erreur
+                demarrerSynchronisation(
+                    utilisateur
                 );
-
-
-                alert(
-                    "L'action n'a pas pu être enregistrée."
-                );
-
-
-                bouton.disabled = false;
             }
-        }
-    );
+        );
 
+    } else {
 
-    // ==========================================
-    // FILTRES
-    // ==========================================
-
-    searchHomework.addEventListener(
-        "input",
-        afficherDevoirs
-    );
-
-
-    statusFilter.addEventListener(
-        "change",
-        afficherDevoirs
-    );
-
-
-    subjectFilter.addEventListener(
-        "change",
-        afficherDevoirs
-    );
-
-
-    // ==========================================
-    // ÉTAT INTERNET
-    // ==========================================
-
-    window.addEventListener(
-        "offline",
-        () => {
-
-            afficherEtat(
-                "📴 Hors ligne — les changements seront synchronisés plus tard",
-                "offline"
-            );
-        }
-    );
-
-
-    window.addEventListener(
-        "online",
-        () => {
-
-            afficherEtat(
-                "🔄 Connexion rétablie — synchronisation...",
-                ""
-            );
-        }
-    );
-
-
-    // ==========================================
-    // AUTHENTIFICATION
-    // ==========================================
-
-    auth.onAuthStateChanged(
-        (utilisateur) => {
-
-            utilisateurConnecte =
-                utilisateur;
-
-
-            if (!utilisateur) {
-
-                if (arreterEcoute) {
-                    arreterEcoute();
-                }
-
-                devoirs = [];
-
-                afficherDevoirs();
-
-                afficherEtat(
-                    "🔒 Connexion nécessaire",
-                    "offline"
-                );
-
-                return;
-            }
-
-
-            demarrerSynchronisation();
-        }
-    );
+        console.warn(
+            "Firebase Auth n'est pas disponible. Les devoirs restent enregistrés localement."
+        );
+    }
 
 });
