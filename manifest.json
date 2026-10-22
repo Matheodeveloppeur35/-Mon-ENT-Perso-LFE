@@ -1,16 +1,26 @@
 {
   "name": "Mon ENT Perso LFE",
   "short_name": "Mon ENT",
-  "description": "Espace scolaire personnel",
-  "start_url": "index.html",
+  "description": "Mon espace scolaire personnel",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f4f7fb",
   "theme_color": "#2563eb",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "icons": [
     {
-      "src": "icons/logo.png",
+      "src": "./icons/logo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
+    {
+      "src": "./icons/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }
