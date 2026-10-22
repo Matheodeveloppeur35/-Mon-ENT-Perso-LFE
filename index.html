@@ -1,198 +1,446 @@
-
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#193e7c">
-    <title>Accueil — Mon ENT Perso LFE</title>
-    <link rel="stylesheet" href="css/style.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Accueil - Mon ENT Perso LFE</title>
+
+    <meta
+        name="description"
+        content="Mon espace scolaire personnel."
+    >
+
+    <meta name="theme-color" content="#2563eb">
+
+    <meta
+        name="mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default"
+    >
+
+    <link
+        rel="manifest"
+        href="manifest.json"
+    >
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="192x192"
+        href="icons/icon-192.png"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="icons/icon-192.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 </head>
 
 <body class="ent-layout">
 
     <aside class="sidebar">
-        <a class="logo" href="index.html">
-            <span class="logo-icon">🎓</span>
-            <span class="logo-text">
+
+        <div class="logo">
+
+            <span class="logo-icon">
+                🎓
+            </span>
+
+            <div>
                 <strong>Mon ENT</strong>
                 <small>Perso LFE</small>
-            </span>
-        </a>
+            </div>
 
-        <nav class="sidebar-nav" aria-label="Navigation principale">
-            <a href="index.html" class="active" aria-current="page">
-                <span>🏠</span> Accueil
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="index.html"
+                class="active"
+            >
+                <span>🏠</span>
+                Accueil
             </a>
+
             <a href="emploi-du-temps.html">
-                <span>📅</span> Emploi du temps
+                <span>📅</span>
+                Emploi du temps
             </a>
+
             <a href="mes-cours.html">
-                <span>📚</span> Mes cours
+                <span>📚</span>
+                Mes cours
             </a>
+
             <a href="mes-devoirs.html">
-                <span>📝</span> Mes devoirs
+                <span>📝</span>
+                Mes devoirs
             </a>
+
             <a href="mes-notes.html">
-                <span>📊</span> Mes notes
+                <span>📊</span>
+                Mes notes
             </a>
+
             <a href="mes-controles.html">
-                <span>📋</span> Mes contrôles
+                <span>✏️</span>
+                Mes contrôles
             </a>
+
         </nav>
 
         <div class="sidebar-footer">
-            <span>🎒</span>
-            <p>Mon espace scolaire personnel</p>
+
+            <span>💻</span>
+
+            <div>
+                <strong>Mon espace personnel</strong>
+                <small>Lycée La Fontaine des Eaux</small>
+            </div>
+
+            <button
+                type="button"
+                id="logout-button"
+                class="logout-button"
+            >
+                Déconnexion
+            </button>
+
         </div>
-        <div class="sidebar-account">
-
-    <span
-        id="connected-user-email"
-        class="connected-user-email"
-    >
-        Compte connecté
-    </span>
-
-    <button
-        type="button"
-        id="logout-button"
-        class="logout-button"
-    >
-        🚪 Se déconnecter
-    </button>
-
-</div>
-        <div class="sidebar-account">
-
-    <span
-        id="connected-user-email"
-        class="connected-user-email"
-    >
-        Connexion...
-    </span>
-
-    <button
-        type="button"
-        id="logout-button"
-        class="logout-button"
-    >
-        🚪 Se déconnecter
-    </button>
-
-</div>
 
     </aside>
 
     <main class="main-content">
 
         <header class="main-header">
+
             <div>
-                <p class="eyebrow">MON ESPACE SCOLAIRE</p>
-                <h1>🎓 Mon ENT Perso LFE</h1>
-                <p>Retrouve toutes tes informations scolaires au même endroit.</p>
+
+                <p class="eyebrow">
+                    MON ESPACE SCOLAIRE
+                </p>
+
+                <h1>
+                    Bonjour 👋
+                </h1>
+
+                <p>
+                    Bienvenue sur ton espace scolaire personnel.
+                </p>
+
             </div>
-            <div class="header-badge">Mon espace privé</div>
+
+            <span class="header-badge">
+                🎓 Mon ENT Perso LFE
+            </span>
+
         </header>
 
         <section class="welcome-card">
+
             <div class="welcome-content">
-                <span class="welcome-icon">👋</span>
+
                 <div>
-                    <p class="eyebrow">TON TABLEAU DE BORD</p>
-                    <h2>Bienvenue !</h2>
-                    <p>Organise tes cours, tes devoirs, tes notes et tes contrôles.</p>
-                    <p id="current-date" class="muted"></p>
+
+                    <p class="eyebrow">
+                        TABLEAU DE BORD
+                    </p>
+
+                    <h2>
+                        Mon ENT Perso LFE
+                    </h2>
+
+                    <p>
+                        Retrouve ton emploi du temps, tes cours,
+                        tes devoirs, tes notes et tes contrôles.
+                    </p>
+
+                    <p
+                        id="current-date"
+                        class="muted"
+                    ></p>
+
                 </div>
+
+                <div class="welcome-icon">
+                    🎓
+                </div>
+
             </div>
 
-            <div class="quick-actions">
-                <a href="emploi-du-temps.html">📅 Mon emploi du temps</a>
-                <a href="mes-cours.html">📚 Mes cours</a>
-                <a href="mes-devoirs.html">📝 Mes devoirs</a>
-                <a href="mes-notes.html">📊 Mes notes</a>
-                <a href="mes-controles.html">📋 Mes contrôles</a>
-            </div>
         </section>
 
-        <section class="section-heading">
-            <div>
-                <h2>Mon suivi scolaire</h2>
-                <p>Les informations importantes à retrouver rapidement.</p>
-            </div>
+        <section
+            class="quick-actions"
+            aria-label="Accès rapides"
+        >
+
+            <a href="emploi-du-temps.html">
+                📅 Emploi du temps
+            </a>
+
+            <a href="mes-cours.html">
+                📚 Mes cours
+            </a>
+
+            <a href="mes-devoirs.html">
+                📝 Mes devoirs
+            </a>
+
+            <a href="mes-notes.html">
+                📊 Mes notes
+            </a>
+
+            <a href="mes-controles.html">
+                📋 Mes contrôles
+            </a>
+
         </section>
 
         <section class="dashboard-grid">
 
             <article class="dashboard-card">
-                <div class="dashboard-card-icon blue">📅</div>
-                <h2>Prochain cours</h2>
-                <div id="next-course">Consulte ton emploi du temps.</div>
-                <a class="card-link" href="emploi-du-temps.html">
-                    Voir mon emploi du temps →
+
+                <div class="section-heading">
+
+                    <div>
+                        <p class="eyebrow">
+                            AUJOURD'HUI
+                        </p>
+
+                        <h2>
+                            📅 Prochain cours
+                        </h2>
+                    </div>
+
+                    <span>🕐</span>
+
+                </div>
+
+                <div id="next-course">
+                    Consulte ton emploi du temps.
+                </div>
+
+                <a
+                    href="emploi-du-temps.html"
+                    class="card-link"
+                >
+                    Voir l'emploi du temps →
                 </a>
+
             </article>
 
             <article class="dashboard-card">
-                <div class="dashboard-card-icon orange">📝</div>
-                <h2>Devoirs à venir</h2>
-                <div id="next-homework">Chargement...</div>
-                <a class="card-link" href="mes-devoirs.html">
+
+                <div class="section-heading">
+
+                    <div>
+                        <p class="eyebrow">
+                            À FAIRE
+                        </p>
+
+                        <h2>
+                            📝 Devoirs à venir
+                        </h2>
+                    </div>
+
+                    <span>📚</span>
+
+                </div>
+
+                <div id="next-homework">
+                    Chargement...
+                </div>
+
+                <a
+                    href="mes-devoirs.html"
+                    class="card-link"
+                >
                     Gérer mes devoirs →
                 </a>
+
             </article>
 
             <article class="dashboard-card">
-                <div class="dashboard-card-icon purple">📋</div>
-                <h2>Prochain contrôle</h2>
-                <div id="next-control">Chargement...</div>
-                <a class="card-link" href="mes-controles.html">
+
+                <div class="section-heading">
+
+                    <div>
+                        <p class="eyebrow">
+                            PROCHAINE ÉVALUATION
+                        </p>
+
+                        <h2>
+                            📋 Prochain contrôle
+                        </h2>
+                    </div>
+
+                    <span>✍️</span>
+
+                </div>
+
+                <div id="next-control">
+                    Chargement...
+                </div>
+
+                <a
+                    href="mes-controles.html"
+                    class="card-link"
+                >
                     Gérer mes contrôles →
                 </a>
+
             </article>
 
             <article class="dashboard-card">
-                <div class="dashboard-card-icon green">📊</div>
-                <h2>Mes notes</h2>
-                <div id="notes-summary">Chargement...</div>
-                <a class="card-link" href="mes-notes.html">
-                    Consulter mes notes →
+
+                <div class="section-heading">
+
+                    <div>
+                        <p class="eyebrow">
+                            RÉSULTATS
+                        </p>
+
+                        <h2>
+                            📊 Mes notes
+                        </h2>
+                    </div>
+
+                    <span>📈</span>
+
+                </div>
+
+                <div id="notes-summary">
+                    Chargement...
+                </div>
+
+                <a
+                    href="mes-notes.html"
+                    class="card-link"
+                >
+                    Voir mes notes →
                 </a>
+
             </article>
 
             <article class="dashboard-card">
-                <div class="dashboard-card-icon cyan">📚</div>
-                <h2>Derniers cours</h2>
-                <div id="recent-courses">Chargement...</div>
-                <a class="card-link" href="mes-cours.html">
-                    Parcourir mes cours →
+
+                <div class="section-heading">
+
+                    <div>
+                        <p class="eyebrow">
+                            DERNIÈRES FICHES
+                        </p>
+
+                        <h2>
+                            📚 Mes cours
+                        </h2>
+                    </div>
+
+                    <span>📖</span>
+
+                </div>
+
+                <div id="recent-courses">
+                    Consulte tes différentes matières.
+                </div>
+
+                <a
+                    href="mes-cours.html"
+                    class="card-link"
+                >
+                    Accéder à mes cours →
                 </a>
+
             </article>
 
             <article class="dashboard-card">
-                <div class="dashboard-card-icon red">🔔</div>
-                <h2>Absences des professeurs</h2>
-                <div id="absence-summary">Chargement...</div>
+
+                <div class="section-heading">
+
+                    <div>
+                        <p class="eyebrow">
+                            INFORMATIONS
+                        </p>
+
+                        <h2>
+                            🔔 Absences des professeurs
+                        </h2>
+                    </div>
+
+                    <span>🧑‍🏫</span>
+
+                </div>
+
+                <div id="absence-summary">
+                    Aucune information pour le moment.
+                </div>
+
+                <a
+                    href="emploi-du-temps.html"
+                    class="card-link"
+                >
+                    Consulter la semaine →
+                </a>
+
             </article>
 
         </section>
 
         <footer class="page-footer">
-            <p>🎓 Mon ENT Perso LFE</p>
-            <p>Ton espace scolaire, organisé à ta façon.</p>
+
+            <p>
+                🎓 Mon ENT Perso LFE —
+                Mon espace scolaire personnel
+            </p>
+
+            <p
+                id="network-status"
+                class="network-status"
+            >
+                Vérification de la connexion...
+            </p>
+
         </footer>
 
     </main>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<script src="js/firebase-config.js"></script>
-<script src="js/firebase-init.js"></script>
-<script src="js/deconnexion.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/deconnexion.js"></script>
 
-<script src="js/accueil.js"></script>
+    <!-- Page d'accueil -->
+    <script src="js/accueil.js"></script>
+
+    <!-- Application hors ligne -->
+    <script src="js/pwa.js"></script>
 
 </body>
+
 </html>
