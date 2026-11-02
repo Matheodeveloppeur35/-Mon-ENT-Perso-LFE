@@ -7,104 +7,104 @@ document.addEventListener("DOMContentLoaded", () => {
     const networkStatus =
         document.getElementById("network-status");
 
-    const pwaMessage =
-        document.getElementById("pwa-message");
+    let installationEvent = null;
 
-    let deferredPrompt = null;
+    /* ========================================
+       CONNEXION
+    ======================================== */
 
-    function afficherMessage(message, type = "info") {
-        if (!pwaMessage) {
-            console.log(message);
-            return;
-        }
-
-        pwaMessage.textContent = message;
-        pwaMessage.dataset.type = type;
-        pwaMessage.hidden = false;
-    }
-
-    function actualiserConnexion() {
+    function afficherConnexion() {
         if (!networkStatus) {
             return;
         }
 
         if (navigator.onLine) {
             networkStatus.textContent =
-                "🟢 Connexion Internet disponible";
+                "🟢 Connecté à Internet";
 
             networkStatus.classList.add("online");
             networkStatus.classList.remove("offline");
         } else {
             networkStatus.textContent =
-                "🟠 Application en mode hors ligne";
+                "🟠 Mode hors ligne";
 
             networkStatus.classList.add("offline");
             networkStatus.classList.remove("online");
         }
     }
 
-    actualiserConnexion();
+    afficherConnexion();
 
-    window.addEventListener("online", actualiserConnexion);
-    window.addEventListener("offline", actualiserConnexion);
+    window.addEventListener("online", afficherConnexion);
+    window.addEventListener("offline", afficherConnexion);
 
-    async function enregistrerServiceWorker() {
+    /* ========================================
+       SERVICE WORKER
+    ======================================== */
+
+    async function demarrerPWA() {
         if (!("serviceWorker" in navigator)) {
-            afficherMessage(
-                "Ce navigateur ne prend pas en charge le mode hors ligne.",
-                "error"
+            console.error(
+                "Les service workers ne sont pas compatibles."
             );
 
             return;
         }
 
         try {
-            const registration =
+            const inscription =
                 await navigator.serviceWorker.register(
-                    "./service-worker.js",
+                    "/-Mon-ENT-Perso-LFE/service-worker.js",
                     {
-                        scope: "./"
+                        scope: "/-Mon-ENT-Perso-LFE/",
+                        updateViaCache: "none"
                     }
                 );
 
+            console.log(
+                "Service worker enregistré :",
+                inscription.scope
+            );
+
+            await inscription.update();
             await navigator.serviceWorker.ready;
 
             console.log(
-                "Service worker actif :",
-                registration.scope
+                "Service worker actif."
             );
-        } catch (error) {
+        } catch (erreur) {
             console.error(
-                "Erreur du service worker :",
-                error
+                "Échec de la PWA :",
+                erreur
             );
 
-            afficherMessage(
-                `Erreur PWA : ${error.message}`,
-                "error"
-            );
+            if (networkStatus) {
+                networkStatus.textContent =
+                    `🔴 Erreur PWA : ${erreur.message}`;
+            }
         }
     }
 
-    window.addEventListener(
-        "load",
-        enregistrerServiceWorker
-    );
+    window.addEventListener("load", demarrerPWA);
+
+    /* ========================================
+       INSTALLATION ANDROID
+    ======================================== */
 
     window.addEventListener(
         "beforeinstallprompt",
         (event) => {
             event.preventDefault();
 
-            deferredPrompt = event;
+            installationEvent = event;
 
             if (installButton) {
                 installButton.hidden = false;
+                installButton.disabled = false;
             }
 
-            afficherMessage(
-                "📲 L'application peut maintenant être installée.",
-                "success"
+            console.log(
+                "La PWA est prête à être installée."
             );
         }
     );
@@ -112,49 +112,62 @@ document.addEventListener("DOMContentLoaded", () => {
     installButton?.addEventListener(
         "click",
         async () => {
-            if (!deferredPrompt) {
+            if (!installationEvent) {
                 alert(
-                    "La PWA n'est pas encore validée par Chrome. " +
-                    "Vérifie les icônes puis recharge la page."
+                    "Chrome ne propose pas encore l'installation. " +
+                    "Recharge simplement la page puis attends quelques secondes."
                 );
 
                 return;
             }
 
-            deferredPrompt.prompt();
+            installButton.disabled = true;
 
-            const result =
-                await deferredPrompt.userChoice;
+            try {
+                await installationEvent.prompt();
 
-            console.log(
-                "Résultat de l'installation :",
-                result.outcome
-            );
+                const choix =
+                    await installationEvent.userChoice;
 
-            deferredPrompt = null;
-            installButton.hidden = true;
+                console.log(
+                    "Choix d'installation :",
+                    choix.outcome
+                );
+
+                installationEvent = null;
+                installButton.hidden = true;
+            } catch (erreur) {
+                console.error(
+                    "Erreur d'installation :",
+                    erreur
+                );
+
+                installButton.disabled = false;
+            }
         }
     );
 
     window.addEventListener("appinstalled", () => {
-        deferredPrompt = null;
+        installationEvent = null;
 
         if (installButton) {
             installButton.hidden = true;
         }
 
-        afficherMessage(
-            "✅ Mon ENT a bien été installé.",
-            "success"
+        alert(
+            "✅ Mon ENT Perso LFE est installé."
         );
     });
 
-    const standalone =
+    /* Masquer le bouton si l'application est déjà ouverte comme PWA */
+
+    const dejaInstallee =
         window.matchMedia(
             "(display-mode: standalone)"
-        ).matches;
+        ).matches ||
+        window.navigator.standalone === true;
 
-    if (standalone && installButton) {
+    if (dejaInstallee && installButton) {
         installButton.hidden = true;
     }
 });
