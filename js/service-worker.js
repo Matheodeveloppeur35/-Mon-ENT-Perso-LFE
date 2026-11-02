@@ -1,39 +1,57 @@
 "use strict";
 
-const CACHE_NAME = "mon-ent-perso-lfe-v1";
+const VERSION = "mon-ent-v10";
 
-const BASE_PATH = "/-Mon-ENT-Perso-LFE/";
+const BASE = "/-Mon-ENT-Perso-LFE/";
 
-const APP_FILES = [
-    BASE_PATH,
-    `${BASE_PATH}index.html`,
-    `${BASE_PATH}manifest.json`,
-    `${BASE_PATH}css/style.css`,
+const FICHIERS_ESSENTIELS = [
+    BASE,
+    `${BASE}index.html`,
+    `${BASE}manifest.json`,
+    `${BASE}css/style.css`,
 
-    `${BASE_PATH}emploi-du-temps.html`,
-    `${BASE_PATH}mes-cours.html`,
-    `${BASE_PATH}mes-devoirs.html`,
-    `${BASE_PATH}mes-notes.html`,
-    `${BASE_PATH}mes-controles.html`,
+    `${BASE}emploi-du-temps.html`,
+    `${BASE}mes-cours.html`,
+    `${BASE}mes-devoirs.html`,
+    `${BASE}mes-notes.html`,
+    `${BASE}mes-controles.html`,
 
-    `${BASE_PATH}js/pwa.js`,
-    `${BASE_PATH}js/accueil.js`,
+    `${BASE}js/accueil.js`,
+    `${BASE}js/pwa.js`,
 
-    `${BASE_PATH}icons/icon-192.png`,
-    `${BASE_PATH}icons/icon-512.png`,
-    `${BASE_PATH}icons/icon-maskable-512.png`
+    `${BASE}icons/icon-192.png`,
+    `${BASE}icons/icon-512.png`,
+    `${BASE}icons/icon-maskable-512.png`
 ];
 
 /* Installation */
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(async (cache) => {
-            await Promise.allSettled(
-                APP_FILES.map((file) =>
-                    cache.add(file)
-                )
-            );
+        caches.open(VERSION).then(async (cache) => {
+            for (const fichier of FICHIERS_ESSENTIELS) {
+                try {
+                    const reponse = await fetch(fichier, {
+                        cache: "reload"
+                    });
+
+                    if (reponse.ok) {
+                        await cache.put(fichier, reponse);
+                    } else {
+                        console.warn(
+                            "Fichier non mis en cache :",
+                            fichier,
+                            reponse.status
+                        );
+                    }
+                } catch (erreur) {
+                    console.warn(
+                        "Impossible de mettre en cache :",
+                        fichier,
+                        erreur
+                    );
+                }
+            }
         })
     );
 
@@ -44,11 +62,11 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
     event.waitUntil(
-        caches.keys().then((cacheNames) =>
+        caches.keys().then((noms) =>
             Promise.all(
-                cacheNames
-                    .filter((cacheName) => cacheName !== CACHE_NAME)
-                    .map((cacheName) => caches.delete(cacheName))
+                noms
+                    .filter((nom) => nom !== VERSION)
+                    .map((nom) => caches.delete(nom))
             )
         )
     );
@@ -56,38 +74,47 @@ self.addEventListener("activate", (event) => {
     self.clients.claim();
 });
 
-/* Requêtes */
+/* Gestion des requêtes */
 
 self.addEventListener("fetch", (event) => {
-    if (event.request.method !== "GET") {
+    const requete = event.request;
+
+    if (requete.method !== "GET") {
         return;
     }
 
-    const requestURL = new URL(event.request.url);
+    const url = new URL(requete.url);
 
-    if (requestURL.origin !== self.location.origin) {
+    if (url.origin !== self.location.origin) {
         return;
     }
 
-    if (event.request.mode === "navigate") {
+    /* Pour les pages HTML : réseau, puis cache */
+
+    if (requete.mode === "navigate") {
         event.respondWith(
-            fetch(event.request)
-                .then((response) => {
-                    const copie = response.clone();
+            fetch(requete)
+                .then((reponse) => {
+                    if (reponse.ok) {
+                        const copie = reponse.clone();
 
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, copie);
-                    });
+                        caches.open(VERSION).then((cache) => {
+                            cache.put(requete, copie);
+                        });
+                    }
 
-                    return response;
+                    return reponse;
                 })
                 .catch(async () => {
-                    return (
-                        await caches.match(event.request)
-                    ) || (
-                        await caches.match(
-                            `${BASE_PATH}index.html`
-                        )
+                    const pageDemandee =
+                        await caches.match(requete);
+
+                    if (pageDemandee) {
+                        return pageDemandee;
+                    }
+
+                    return caches.match(
+                        `${BASE}index.html`
                     );
                 })
         );
@@ -95,28 +122,37 @@ self.addEventListener("fetch", (event) => {
         return;
     }
 
+    /* Pour CSS, JS et images : cache, puis réseau */
+
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
+        caches.match(requete).then(async (reponseCache) => {
+            if (reponseCache) {
+                return reponseCache;
             }
 
-            return fetch(event.request).then((networkResponse) => {
-                if (
-                    !networkResponse ||
-                    networkResponse.status !== 200
-                ) {
-                    return networkResponse;
+            try {
+                const reponseReseau = await fetch(requete);
+
+                if (reponseReseau.ok) {
+                    const copie = reponseReseau.clone();
+
+                    const cache = await caches.open(VERSION);
+                    await cache.put(requete, copie);
                 }
 
-                const copie = networkResponse.clone();
-
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, copie);
-                });
-
-                return networkResponse;
-            });
+                return reponseReseau;
+            } catch (erreur) {
+                return new Response(
+                    "Ressource indisponible hors ligne.",
+                    {
+                        status: 503,
+                        headers: {
+                            "Content-Type":
+                                "text/plain; charset=utf-8"
+                        }
+                    }
+                );
+            }
         })
     );
 });
