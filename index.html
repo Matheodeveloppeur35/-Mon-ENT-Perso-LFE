@@ -6,7 +6,7 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
     >
 
     <title>Accueil - Mon ENT Perso LFE</title>
@@ -16,63 +16,55 @@
         content="Mon espace scolaire personnel du Lycée La Fontaine des Eaux."
     >
 
-    <!-- Couleur de la PWA sur Android -->
-    <meta
-        name="theme-color"
-        content="#2563eb"
-    >
+    <meta name="application-name" content="Mon ENT Perso LFE">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="color-scheme" content="light">
 
-    <!-- Activation de l'affichage application -->
-    <meta
-        name="mobile-web-app-capable"
-        content="yes"
-    >
+    <!-- Installation sur Android -->
+    <meta name="mobile-web-app-capable" content="yes">
 
-    <!-- Compatibilité supplémentaire -->
-    <meta
-        name="apple-mobile-web-app-capable"
-        content="yes"
-    >
-
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="default"
-    >
+    <!-- Compatibilité iPhone et iPad -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Mon ENT">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
     <!-- Manifeste PWA -->
-    <link
-        rel="manifest"
-        href="manifest.json"
-    >
+    <link rel="manifest" href="./manifest.json">
 
     <!-- Icônes -->
     <link
         rel="icon"
         type="image/png"
         sizes="192x192"
-        href="icons/icon-192.png"
+        href="./icons/icon-192.png"
     >
 
     <link
         rel="icon"
         type="image/png"
         sizes="512x512"
-        href="icons/icon-512.png"
+        href="./icons/icon-512.png"
     >
 
     <link
         rel="apple-touch-icon"
-        href="icons/icon-192.png"
+        href="./icons/icon-192.png"
     >
 
     <!-- Feuille de style -->
     <link
         rel="stylesheet"
-        href="css/style.css"
+        href="./css/style.css"
     >
 </head>
 
 <body class="ent-layout">
+
+    <noscript>
+        <div class="noscript-message">
+            JavaScript doit être activé pour utiliser Mon ENT Perso LFE.
+        </div>
+    </noscript>
 
     <!-- ========================================
          MENU LATÉRAL
@@ -83,8 +75,8 @@
         <div class="logo">
 
             <img
-                src="icons/icon-192.png"
-                alt="Logo de Mon ENT"
+                src="./icons/icon-192.png"
+                alt=""
                 class="logo-image"
                 width="48"
                 height="48"
@@ -103,7 +95,7 @@
         >
 
             <a
-                href="index.html"
+                href="./index.html"
                 class="active"
                 aria-current="page"
             >
@@ -111,27 +103,27 @@
                 Accueil
             </a>
 
-            <a href="emploi-du-temps.html">
+            <a href="./emploi-du-temps.html">
                 <span aria-hidden="true">📅</span>
                 Emploi du temps
             </a>
 
-            <a href="mes-cours.html">
+            <a href="./mes-cours.html">
                 <span aria-hidden="true">📚</span>
                 Mes cours
             </a>
 
-            <a href="mes-devoirs.html">
+            <a href="./mes-devoirs.html">
                 <span aria-hidden="true">📝</span>
                 Mes devoirs
             </a>
 
-            <a href="mes-notes.html">
+            <a href="./mes-notes.html">
                 <span aria-hidden="true">📊</span>
                 Mes notes
             </a>
 
-            <a href="mes-controles.html">
+            <a href="./mes-controles.html">
                 <span aria-hidden="true">✏️</span>
                 Mes contrôles
             </a>
@@ -197,12 +189,22 @@
                     class="install-pwa-button"
                     hidden
                 >
-                    📲 Installer l'application
+                    📲 Installer Mon ENT
                 </button>
 
             </div>
 
         </header>
+
+        <!-- ÉTAT DE L’APPLICATION -->
+
+        <div
+            id="pwa-message"
+            class="pwa-message"
+            role="status"
+            aria-live="polite"
+            hidden
+        ></div>
 
         <!-- BIENVENUE -->
 
@@ -232,7 +234,10 @@
 
                 </div>
 
-                <div class="welcome-icon">
+                <div
+                    class="welcome-icon"
+                    aria-hidden="true"
+                >
                     🎓
                 </div>
 
@@ -247,23 +252,23 @@
             aria-label="Accès rapides"
         >
 
-            <a href="emploi-du-temps.html">
+            <a href="./emploi-du-temps.html">
                 📅 Emploi du temps
             </a>
 
-            <a href="mes-cours.html">
+            <a href="./mes-cours.html">
                 📚 Mes cours
             </a>
 
-            <a href="mes-devoirs.html">
+            <a href="./mes-devoirs.html">
                 📝 Mes devoirs
             </a>
 
-            <a href="mes-notes.html">
+            <a href="./mes-notes.html">
                 📊 Mes notes
             </a>
 
-            <a href="mes-controles.html">
+            <a href="./mes-controles.html">
                 📋 Mes contrôles
             </a>
 
@@ -272,8 +277,6 @@
         <!-- TABLEAU DE BORD -->
 
         <section class="dashboard-grid">
-
-            <!-- PROCHAIN COURS -->
 
             <article class="dashboard-card">
 
@@ -298,15 +301,13 @@
                 </div>
 
                 <a
-                    href="emploi-du-temps.html"
+                    href="./emploi-du-temps.html"
                     class="card-link"
                 >
                     Voir l'emploi du temps →
                 </a>
 
             </article>
-
-            <!-- DEVOIRS -->
 
             <article class="dashboard-card">
 
@@ -331,15 +332,13 @@
                 </div>
 
                 <a
-                    href="mes-devoirs.html"
+                    href="./mes-devoirs.html"
                     class="card-link"
                 >
                     Gérer mes devoirs →
                 </a>
 
             </article>
-
-            <!-- CONTRÔLES -->
 
             <article class="dashboard-card">
 
@@ -364,15 +363,13 @@
                 </div>
 
                 <a
-                    href="mes-controles.html"
+                    href="./mes-controles.html"
                     class="card-link"
                 >
                     Gérer mes contrôles →
                 </a>
 
             </article>
-
-            <!-- NOTES -->
 
             <article class="dashboard-card">
 
@@ -397,15 +394,13 @@
                 </div>
 
                 <a
-                    href="mes-notes.html"
+                    href="./mes-notes.html"
                     class="card-link"
                 >
                     Voir mes notes →
                 </a>
 
             </article>
-
-            <!-- COURS -->
 
             <article class="dashboard-card">
 
@@ -430,15 +425,13 @@
                 </div>
 
                 <a
-                    href="mes-cours.html"
+                    href="./mes-cours.html"
                     class="card-link"
                 >
                     Accéder à mes cours →
                 </a>
 
             </article>
-
-            <!-- ABSENCES -->
 
             <article class="dashboard-card">
 
@@ -463,7 +456,7 @@
                 </div>
 
                 <a
-                    href="emploi-du-temps.html"
+                    href="./emploi-du-temps.html"
                     class="card-link"
                 >
                     Consulter la semaine →
@@ -500,24 +493,19 @@
     ======================================== -->
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-    <script src="js/firebase-config.js"></script>
-
-    <script src="js/firebase-init.js"></script>
-
-    <script src="js/deconnexion.js"></script>
+    <script src="./js/firebase-config.js"></script>
+    <script src="./js/firebase-init.js"></script>
+    <script src="./js/deconnexion.js"></script>
 
     <!-- ========================================
          APPLICATION
     ======================================== -->
 
-    <script src="js/accueil.js"></script>
-
-    <script src="js/pwa.js"></script>
+    <script src="./js/accueil.js"></script>
+    <script src="./js/pwa.js"></script>
 
 </body>
 
