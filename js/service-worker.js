@@ -1,38 +1,14 @@
 "use strict";
 
-/* ========================================
-   MON ENT PERSO LFE — SERVICE WORKER
-======================================== */
+const CACHE_NAME = "mon-ent-perso-lfe-v2";
 
-const CACHE_VERSION = "mon-ent-v1";
-
-const OFFLINE_URL = "./index.html";
-
-/*
- * Fichiers essentiels enregistrés dès
- * l'installation de l'application.
- */
-const FICHIERS_ESSENTIELS = [
+const APP_SHELL = [
     "./",
     "./index.html",
-    "./emploi-du-temps.html",
-    "./mes-cours.html",
-    "./mes-devoirs.html",
-    "./mes-notes.html",
-    "./mes-controles.html",
-
     "./manifest.json",
-
     "./css/style.css",
-
     "./js/pwa.js",
     "./js/accueil.js",
-    "./js/emploi-du-temps.js",
-    "./js/mes-cours.js",
-    "./js/mes-devoirs.js",
-    "./js/mes-notes.js",
-    "./js/mes-controles.js",
-
     "./icons/icon-192.png",
     "./icons/icon-512.png",
     "./icons/icon-maskable-512.png"
@@ -46,15 +22,31 @@ const FICHIERS_ESSENTIELS = [
 self.addEventListener("install", (event) => {
 
     event.waitUntil(
-        caches.open(CACHE_VERSION)
-            .then((cache) => {
-                return cache.addAll(FICHIERS_ESSENTIELS);
-            })
-            .then(() => {
-                return self.skipWaiting();
-            })
-    );
+        caches
+            .open(CACHE_NAME)
+            .then(async (cache) => {
 
+                const resultats =
+                    await Promise.allSettled(
+                        APP_SHELL.map((fichier) =>
+                            cache.add(fichier)
+                        )
+                    );
+
+                resultats.forEach((resultat, index) => {
+
+                    if (resultat.status === "rejected") {
+
+                        console.warn(
+                            "Fichier non mis en cache :",
+                            APP_SHELL[index],
+                            resultat.reason
+                        );
+                    }
+                });
+            })
+            .then(() => self.skipWaiting())
+    );
 });
 
 
@@ -65,24 +57,25 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
 
     event.waitUntil(
-        caches.keys()
-            .then((nomsCaches) => {
-                return Promise.all(
+        caches
+            .keys()
+            .then((nomsCaches) =>
+                Promise.all(
                     nomsCaches.map((nomCache) => {
 
-                        if (nomCache !== CACHE_VERSION) {
-                            return caches.delete(nomCache);
+                        if (nomCache !== CACHE_NAME) {
+
+                            return caches.delete(
+                                nomCache
+                            );
                         }
 
                         return Promise.resolve();
                     })
-                );
-            })
-            .then(() => {
-                return self.clients.claim();
-            })
+                )
+            )
+            .then(() => self.clients.claim())
     );
-
 });
 
 
@@ -98,87 +91,87 @@ self.addEventListener("fetch", (event) => {
         return;
     }
 
-    const url = new URL(requete.url);
 
-    /*
-     * Ne pas intercepter les services externes,
-     * par exemple Firebase.
-     */
+    const url =
+        new URL(requete.url);
+
+
+    // Ne pas mettre Firebase en cache.
     if (url.origin !== self.location.origin) {
         return;
     }
 
-    /*
-     * Navigation HTML :
-     * Internet en priorité, cache en secours.
-     */
+
+    // Pages HTML : réseau puis cache.
     if (requete.mode === "navigate") {
 
         event.respondWith(
             fetch(requete)
                 .then((reponse) => {
 
-                    if (reponse && reponse.ok) {
+                    if (reponse.ok) {
 
-                        const copie = reponse.clone();
+                        const copie =
+                            reponse.clone();
 
-                        caches.open(CACHE_VERSION)
-                            .then((cache) => {
-                                cache.put(requete, copie);
-                            });
+                        caches
+                            .open(CACHE_NAME)
+                            .then((cache) =>
+                                cache.put(
+                                    requete,
+                                    copie
+                                )
+                            );
                     }
 
                     return reponse;
                 })
                 .catch(async () => {
 
-                    const pageEnCache =
-                        await caches.match(requete);
-
-                    return pageEnCache ||
-                        caches.match(OFFLINE_URL);
+                    return (
+                        await caches.match(requete)
+                    ) || (
+                        await caches.match(
+                            "./index.html"
+                        )
+                    );
                 })
         );
 
         return;
     }
 
-    /*
-     * CSS, JavaScript et images :
-     * cache en priorité, Internet en secours.
-     */
+
+    // CSS, JavaScript et images.
     event.respondWith(
-        caches.match(requete)
-            .then((reponseEnCache) => {
+        caches
+            .match(requete)
+            .then(async (reponseEnCache) => {
 
                 if (reponseEnCache) {
                     return reponseEnCache;
                 }
 
-                return fetch(requete)
-                    .then((reponseReseau) => {
 
-                        if (
-                            !reponseReseau ||
-                            !reponseReseau.ok
-                        ) {
-                            return reponseReseau;
-                        }
+                const reponseReseau =
+                    await fetch(requete);
 
-                        const copie =
-                            reponseReseau.clone();
 
-                        caches.open(CACHE_VERSION)
-                            .then((cache) => {
-                                cache.put(
-                                    requete,
-                                    copie
-                                );
-                            });
+                if (reponseReseau.ok) {
 
-                        return reponseReseau;
-                    });
+                    const cache =
+                        await caches.open(
+                            CACHE_NAME
+                        );
+
+                    await cache.put(
+                        requete,
+                        reponseReseau.clone()
+                    );
+                }
+
+
+                return reponseReseau;
             })
     );
-
 });
