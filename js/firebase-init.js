@@ -1,133 +1,309 @@
 "use strict";
 
-(function initialiserFirebase() {
+/* ========================================
+   MON ENT PERSO LFE
+   INITIALISATION FIREBASE
+======================================== */
 
+(() => {
+
+    /*
+     * Vérification de la présence de Firebase.
+     */
     if (typeof firebase === "undefined") {
-        console.error(
-            "Firebase n'est pas chargé. Vérifie les scripts Firebase dans la page."
-        );
 
-        return;
-    }
-
-    if (typeof firebaseConfig === "undefined") {
         console.error(
-            "firebaseConfig est introuvable. Vérifie js/firebase-config.js."
+            "Firebase n'a pas été chargé. Vérifie les scripts Firebase dans le HTML."
         );
 
         return;
     }
 
 
-    // ==========================================
-    // INITIALISATION
-    // ==========================================
+    /*
+     * Vérification de la configuration.
+     *
+     * Le fichier js/firebase-config.js doit
+     * définir window.firebaseConfig.
+     */
+    if (
+        !window.firebaseConfig ||
+        typeof window.firebaseConfig !== "object"
+    ) {
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
+        console.error(
+            "La configuration Firebase est introuvable. Vérifie js/firebase-config.js."
+        );
+
+        return;
     }
 
 
-    window.auth =
+    /* ====================================
+       INITIALISATION DE L'APPLICATION
+    ==================================== */
+
+    try {
+
+        if (!firebase.apps.length) {
+
+            firebase.initializeApp(
+                window.firebaseConfig
+            );
+        }
+
+    } catch (erreur) {
+
+        console.error(
+            "Impossible d'initialiser Firebase :",
+            erreur
+        );
+
+        return;
+    }
+
+
+    /* ====================================
+       SERVICES FIREBASE
+    ==================================== */
+
+    const auth =
         firebase.auth();
 
-    window.db =
+    const db =
         firebase.firestore();
 
 
-    // ==========================================
-    // SESSION LOCALE
-    // ==========================================
+    /*
+     * Rendre les services accessibles dans
+     * les autres fichiers JavaScript :
+     *
+     * window.entAuth
+     * window.entDB
+     */
+    window.entAuth =
+        auth;
 
-    window.auth
-        .setPersistence(
-            firebase.auth.Auth.Persistence.LOCAL
-        )
-        .catch((erreur) => {
+    window.entDB =
+        db;
 
-            console.error(
-                "Impossible de conserver la session :",
-                erreur
+
+    /* ====================================
+       PERSISTANCE FIRESTORE HORS LIGNE
+    ==================================== */
+
+    async function activerPersistance() {
+
+        try {
+
+            /*
+             * synchronizeTabs permet de partager
+             * Firestore entre plusieurs onglets
+             * du même navigateur.
+             */
+            await db.enablePersistence({
+                synchronizeTabs: true
+            });
+
+
+            console.log(
+                "Persistance Firestore hors ligne activée."
             );
-        });
 
+            document.dispatchEvent(
+                new CustomEvent(
+                    "ent-firestore-ready",
+                    {
+                        detail: {
+                            persistence: true
+                        }
+                    }
+                )
+            );
 
-    // ==========================================
-    // CACHE HORS LIGNE
-    // ==========================================
+        } catch (erreur) {
 
-    window.db
-        .enablePersistence({
-            synchronizeTabs: true
-        })
-        .catch((erreur) => {
-
+            /*
+             * failed-precondition :
+             * plusieurs onglets ou une autre
+             * instance Firestore empêche
+             * l'activation.
+             */
             if (
                 erreur.code ===
                 "failed-precondition"
             ) {
 
                 console.warn(
-                    "Le cache hors ligne est déjà utilisé dans un autre onglet."
+                    "La persistance Firestore n'a pas pu être activée : plusieurs onglets utilisent peut-être l'application."
                 );
 
-                return;
             }
 
-
-            if (
+            /*
+             * unimplemented :
+             * navigateur incompatible.
+             */
+            else if (
                 erreur.code ===
                 "unimplemented"
             ) {
 
                 console.warn(
-                    "Le navigateur ne prend pas en charge le cache Firestore."
+                    "Ce navigateur ne prend pas en charge la persistance hors ligne de Firestore."
                 );
 
-                return;
+            }
+
+            else {
+
+                console.error(
+                    "Erreur pendant l'activation de la persistance Firestore :",
+                    erreur
+                );
             }
 
 
-            console.error(
-                "Impossible d'activer le cache Firestore :",
-                erreur
-            );
-        });
-
-
-    // ==========================================
-    // PROTECTION DE LA PAGE
-    // ==========================================
-
-    window.auth.onAuthStateChanged(
-        (utilisateur) => {
-
-            if (!utilisateur) {
-
-                window.location.replace(
-                    "connexion.html"
-                );
-
-                return;
-            }
-
-
-            document.documentElement.classList.add(
-                "firebase-ready"
-            );
-
-
-            window.dispatchEvent(
+            /*
+             * Firestore reste utilisable même
+             * si la persistance ne s'active pas.
+             */
+            document.dispatchEvent(
                 new CustomEvent(
-                    "ent-auth-ready",
+                    "ent-firestore-ready",
                     {
                         detail: {
-                            utilisateur
+                            persistence: false,
+                            error: erreur
                         }
                     }
                 )
             );
         }
+    }
+
+
+    activerPersistance();
+
+
+    /* ====================================
+       SUIVI DE L'AUTHENTIFICATION
+    ==================================== */
+
+    auth.onAuthStateChanged(
+        (utilisateur) => {
+
+            if (utilisateur) {
+
+                /*
+                 * Informations accessibles dans
+                 * les autres scripts.
+                 */
+                window.entUtilisateur =
+                    utilisateur;
+
+
+                console.log(
+                    "Utilisateur connecté :",
+                    utilisateur.email ||
+                    utilisateur.uid
+                );
+
+
+                document.dispatchEvent(
+                    new CustomEvent(
+                        "ent-user-connected",
+                        {
+                            detail: {
+                                user: utilisateur
+                            }
+                        }
+                    )
+                );
+
+            } else {
+
+                window.entUtilisateur =
+                    null;
+
+
+                console.log(
+                    "Aucun utilisateur connecté."
+                );
+
+
+                document.dispatchEvent(
+                    new CustomEvent(
+                        "ent-user-disconnected"
+                    )
+                );
+            }
+        },
+        (erreur) => {
+
+            console.error(
+                "Erreur de vérification de l'authentification :",
+                erreur
+            );
+        }
+    );
+
+
+    /* ====================================
+       ÉTAT DE LA CONNEXION
+    ==================================== */
+
+    function notifierConnexion() {
+
+        document.dispatchEvent(
+            new CustomEvent(
+                "ent-network-change",
+                {
+                    detail: {
+                        online:
+                            navigator.onLine
+                    }
+                }
+            )
+        );
+    }
+
+
+    window.addEventListener(
+        "online",
+        notifierConnexion
+    );
+
+
+    window.addEventListener(
+        "offline",
+        notifierConnexion
+    );
+
+
+    /* ====================================
+       FIREBASE PRÊT
+    ==================================== */
+
+    window.entFirebaseReady =
+        true;
+
+
+    document.dispatchEvent(
+        new CustomEvent(
+            "ent-firebase-ready",
+            {
+                detail: {
+                    auth,
+                    db
+                }
+            }
+        )
+    );
+
+
+    console.log(
+        "Firebase est initialisé pour Mon ENT Perso LFE."
     );
 
 })();
