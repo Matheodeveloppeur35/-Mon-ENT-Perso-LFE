@@ -1,67 +1,238 @@
 "use strict";
 
+/* ========================================
+   MON ENT PERSO LFE — PWA
+======================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
-    const statusElement =
+
+    const networkStatus =
         document.getElementById("network-status");
 
-    function mettreAJourEtatConnexion() {
-        const estEnLigne = navigator.onLine;
+    const installButton =
+        document.getElementById("install-pwa-button");
 
-        if (statusElement) {
-            statusElement.textContent = estEnLigne
-                ? "🟢 En ligne — synchronisation disponible"
-                : "🟠 Hors ligne — les changements seront synchronisés plus tard";
+    let installationEvent = null;
 
-            statusElement.classList.toggle(
-                "is-offline",
-                !estEnLigne
-            );
+
+    /* ====================================
+       ÉTAT DE LA CONNEXION
+    ==================================== */
+
+    function mettreAJourConnexion() {
+
+        if (!networkStatus) {
+            return;
         }
 
-        document.body.classList.toggle(
-            "offline",
-            !estEnLigne
-        );
+        if (navigator.onLine) {
+
+            networkStatus.textContent =
+                "🟢 Connexion Internet disponible";
+
+            networkStatus.classList.add("online");
+            networkStatus.classList.remove("offline");
+
+        } else {
+
+            networkStatus.textContent =
+                "🟠 Mode hors ligne";
+
+            networkStatus.classList.add("offline");
+            networkStatus.classList.remove("online");
+
+        }
     }
 
-    mettreAJourEtatConnexion();
+
+    mettreAJourConnexion();
 
     window.addEventListener(
         "online",
-        mettreAJourEtatConnexion
+        mettreAJourConnexion
     );
 
     window.addEventListener(
         "offline",
-        mettreAJourEtatConnexion
+        mettreAJourConnexion
     );
 
-    if (!("serviceWorker" in navigator)) {
-        console.warn(
-            "Les service workers ne sont pas disponibles."
-        );
 
-        return;
-    }
+    /* ====================================
+       ENREGISTREMENT DU SERVICE WORKER
+    ==================================== */
 
-    window.addEventListener("load", async () => {
-        try {
-            const registration =
-                await navigator.serviceWorker.register(
-                    "./service-worker.js"
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener("load", async () => {
+
+            try {
+
+                const registration =
+                    await navigator.serviceWorker.register(
+                        "./service-worker.js",
+                        {
+                            scope: "./"
+                        }
+                    );
+
+                console.log(
+                    "Service worker enregistré :",
+                    registration.scope
                 );
 
-            console.log(
-                "Service worker enregistré :",
-                registration.scope
-            );
 
-            registration.update();
-        } catch (erreur) {
-            console.error(
-                "Impossible d'enregistrer le service worker.",
-                erreur
+                /*
+                 * Vérifier immédiatement si une
+                 * nouvelle version existe.
+                 */
+                registration.update();
+
+            } catch (erreur) {
+
+                console.error(
+                    "Erreur d'enregistrement du service worker :",
+                    erreur
+                );
+            }
+        });
+
+    } else {
+
+        console.warn(
+            "Ce navigateur ne prend pas en charge les service workers."
+        );
+    }
+
+
+    /* ====================================
+       DÉTECTION DE L'INSTALLATION
+    ==================================== */
+
+    window.addEventListener(
+        "beforeinstallprompt",
+        (event) => {
+
+            /*
+             * Empêcher Chrome d'afficher son
+             * invitation automatiquement.
+             */
+            event.preventDefault();
+
+            installationEvent =
+                event;
+
+
+            /*
+             * Si le bouton existe déjà dans le
+             * HTML, on l'affiche.
+             */
+            if (installButton) {
+
+                installButton.hidden =
+                    false;
+            }
+        }
+    );
+
+
+    /* ====================================
+       CLIC SUR LE BOUTON D'INSTALLATION
+    ==================================== */
+
+    if (installButton) {
+
+        installButton.addEventListener(
+            "click",
+            async () => {
+
+                if (!installationEvent) {
+
+                    alert(
+                        "Pour installer Mon ENT, ouvre le menu de Chrome puis choisis « Installer l'application » ou « Ajouter à l'écran d'accueil »."
+                    );
+
+                    return;
+                }
+
+
+                installationEvent.prompt();
+
+
+                const choix =
+                    await installationEvent.userChoice;
+
+
+                if (
+                    choix.outcome === "accepted"
+                ) {
+
+                    console.log(
+                        "Installation acceptée."
+                    );
+
+                } else {
+
+                    console.log(
+                        "Installation refusée."
+                    );
+                }
+
+
+                installationEvent =
+                    null;
+
+                installButton.hidden =
+                    true;
+            }
+        );
+    }
+
+
+    /* ====================================
+       APPLICATION INSTALLÉE
+    ==================================== */
+
+    window.addEventListener(
+        "appinstalled",
+        () => {
+
+            installationEvent =
+                null;
+
+
+            if (installButton) {
+
+                installButton.hidden =
+                    true;
+            }
+
+
+            console.log(
+                "Mon ENT Perso LFE est installé."
             );
         }
-    });
+    );
+
+
+    /* ====================================
+       DÉTECTION DU MODE APPLICATION
+    ==================================== */
+
+    const applicationInstallee =
+        window.matchMedia(
+            "(display-mode: standalone)"
+        ).matches ||
+        window.navigator.standalone === true;
+
+
+    if (
+        applicationInstallee &&
+        installButton
+    ) {
+
+        installButton.hidden =
+            true;
+    }
+
 });
