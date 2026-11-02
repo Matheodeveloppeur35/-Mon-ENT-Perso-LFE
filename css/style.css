@@ -1948,3 +1948,68 @@ img {
     }
 
 }
+/* ========================================
+   PWA
+======================================== */
+
+.header-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.install-pwa-button {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    font: inherit;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(22, 163, 74, 0.22);
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.install-pwa-button:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+}
+
+.install-pwa-button:active {
+    transform: translateY(0);
+}
+
+.network-status {
+    margin-top: 8px;
+    font-weight: 700;
+}
+
+.network-status.online {
+    color: #15803d;
+}
+
+.network-status.offline {
+    color: #c2410c;
+}
+
+@media (max-width: 700px) {
+
+    .header-actions {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .install-pwa-button {
+        width: 100%;
+    }
+}
