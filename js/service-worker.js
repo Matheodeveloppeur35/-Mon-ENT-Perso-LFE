@@ -1,139 +1,88 @@
 "use strict";
 
-const CACHE_NAME = "mon-ent-perso-lfe-v2";
+const CACHE_VERSION = "mon-ent-pwa-v1";
 
 const APP_SHELL = [
     "./",
     "./index.html",
+    "./emploi-du-temps.html",
+    "./mes-cours.html",
+    "./mes-devoirs.html",
+    "./mes-notes.html",
+    "./mes-controles.html",
     "./manifest.json",
     "./css/style.css",
     "./js/pwa.js",
     "./js/accueil.js",
+    "./js/emploi-du-temps.js",
+    "./js/mes-cours.js",
+    "./js/mes-devoirs.js",
+    "./js/mes-notes.js",
+    "./js/mes-controles.js",
     "./icons/icon-192.png",
     "./icons/icon-512.png",
     "./icons/icon-maskable-512.png"
 ];
 
-
-/* ========================================
-   INSTALLATION
-======================================== */
-
 self.addEventListener("install", (event) => {
-
     event.waitUntil(
-        caches
-            .open(CACHE_NAME)
+        caches.open(CACHE_VERSION)
             .then(async (cache) => {
-
-                const resultats =
-                    await Promise.allSettled(
-                        APP_SHELL.map((fichier) =>
-                            cache.add(fichier)
-                        )
-                    );
-
-                resultats.forEach((resultat, index) => {
-
-                    if (resultat.status === "rejected") {
-
-                        console.warn(
-                            "Fichier non mis en cache :",
-                            APP_SHELL[index],
-                            resultat.reason
-                        );
-                    }
-                });
+                await Promise.allSettled(
+                    APP_SHELL.map((url) => cache.add(url))
+                );
             })
             .then(() => self.skipWaiting())
     );
 });
 
-
-/* ========================================
-   ACTIVATION
-======================================== */
-
 self.addEventListener("activate", (event) => {
-
     event.waitUntil(
-        caches
-            .keys()
-            .then((nomsCaches) =>
+        caches.keys()
+            .then((cacheNames) =>
                 Promise.all(
-                    nomsCaches.map((nomCache) => {
-
-                        if (nomCache !== CACHE_NAME) {
-
-                            return caches.delete(
-                                nomCache
-                            );
-                        }
-
-                        return Promise.resolve();
-                    })
+                    cacheNames
+                        .filter((cacheName) => cacheName !== CACHE_VERSION)
+                        .map((cacheName) => caches.delete(cacheName))
                 )
             )
             .then(() => self.clients.claim())
     );
 });
 
-
-/* ========================================
-   REQUÊTES
-======================================== */
-
 self.addEventListener("fetch", (event) => {
+    const request = event.request;
 
-    const requete = event.request;
-
-    if (requete.method !== "GET") {
+    if (request.method !== "GET") {
         return;
     }
 
+    const url = new URL(request.url);
 
-    const url =
-        new URL(requete.url);
-
-
-    // Ne pas mettre Firebase en cache.
     if (url.origin !== self.location.origin) {
         return;
     }
 
-
-    // Pages HTML : réseau puis cache.
-    if (requete.mode === "navigate") {
-
+    if (request.mode === "navigate") {
         event.respondWith(
-            fetch(requete)
-                .then((reponse) => {
+            fetch(request)
+                .then((response) => {
+                    if (response && response.ok) {
+                        const copy = response.clone();
 
-                    if (reponse.ok) {
-
-                        const copie =
-                            reponse.clone();
-
-                        caches
-                            .open(CACHE_NAME)
-                            .then((cache) =>
-                                cache.put(
-                                    requete,
-                                    copie
-                                )
-                            );
+                        caches.open(CACHE_VERSION)
+                            .then((cache) => {
+                                cache.put(request, copy);
+                            });
                     }
 
-                    return reponse;
+                    return response;
                 })
                 .catch(async () => {
-
                     return (
-                        await caches.match(requete)
+                        await caches.match(request)
                     ) || (
-                        await caches.match(
-                            "./index.html"
-                        )
+                        await caches.match("./index.html")
                     );
                 })
         );
@@ -141,37 +90,21 @@ self.addEventListener("fetch", (event) => {
         return;
     }
 
-
-    // CSS, JavaScript et images.
     event.respondWith(
-        caches
-            .match(requete)
-            .then(async (reponseEnCache) => {
-
-                if (reponseEnCache) {
-                    return reponseEnCache;
+        caches.match(request)
+            .then(async (cachedResponse) => {
+                if (cachedResponse) {
+                    return cachedResponse;
                 }
 
+                const networkResponse = await fetch(request);
 
-                const reponseReseau =
-                    await fetch(requete);
-
-
-                if (reponseReseau.ok) {
-
-                    const cache =
-                        await caches.open(
-                            CACHE_NAME
-                        );
-
-                    await cache.put(
-                        requete,
-                        reponseReseau.clone()
-                    );
+                if (networkResponse && networkResponse.ok) {
+                    const cache = await caches.open(CACHE_VERSION);
+                    await cache.put(request, networkResponse.clone());
                 }
 
-
-                return reponseReseau;
+                return networkResponse;
             })
     );
 });
