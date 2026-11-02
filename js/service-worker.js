@@ -1,8 +1,18 @@
 "use strict";
 
-const CACHE_NAME = "mon-ent-perso-lfe-v4";
+/* ========================================
+   MON ENT PERSO LFE — SERVICE WORKER
+======================================== */
 
-const APP_SHELL = [
+const CACHE_VERSION = "mon-ent-v1";
+
+const OFFLINE_URL = "./index.html";
+
+/*
+ * Fichiers essentiels enregistrés dès
+ * l'installation de l'application.
+ */
+const FICHIERS_ESSENTIELS = [
     "./",
     "./index.html",
     "./emploi-du-temps.html",
@@ -10,129 +20,165 @@ const APP_SHELL = [
     "./mes-devoirs.html",
     "./mes-notes.html",
     "./mes-controles.html",
-    "./connexion.html",
 
     "./manifest.json",
-    "./css/style.css",
-    "./icons/logo.png",
 
+    "./css/style.css",
+
+    "./js/pwa.js",
     "./js/accueil.js",
     "./js/emploi-du-temps.js",
     "./js/mes-cours.js",
     "./js/mes-devoirs.js",
     "./js/mes-notes.js",
     "./js/mes-controles.js",
-    "./js/firebase-config.js",
-    "./js/firebase-init.js",
-    "./js/connexion.js",
-    "./js/deconnexion.js",
-    "./js/pwa.js",
 
-    "./fiche-cours/francais-histoire-geo.html",
-    "./fiche-cours/mathematiques.html",
-    "./fiche-cours/anglais.html",
-    "./fiche-cours/sciences-physiques.html",
-    "./fiche-cours/enseignement-professionnel.html",
-    "./fiche-cours/pratique-professionnelle.html",
-    "./fiche-cours/arts-appliques.html",
-    "./fiche-cours/soutien-au-parcours.html",
-    "./fiche-cours/prevention-sante-environnement.html",
-    "./fiche-cours/economie-gestion.html",
-    "./fiche-cours/realisation-projet.html",
-    "./fiche-cours/education-physique-sportive.html"
+    "./icons/icon-192.png",
+    "./icons/icon-512.png",
+    "./icons/icon-maskable-512.png"
 ];
 
-self.addEventListener("install", event => {
+
+/* ========================================
+   INSTALLATION
+======================================== */
+
+self.addEventListener("install", (event) => {
+
     event.waitUntil(
-        caches
-            .open(CACHE_NAME)
-            .then(cache => cache.addAll(APP_SHELL))
-            .then(() => self.skipWaiting())
+        caches.open(CACHE_VERSION)
+            .then((cache) => {
+                return cache.addAll(FICHIERS_ESSENTIELS);
+            })
+            .then(() => {
+                return self.skipWaiting();
+            })
     );
+
 });
 
-self.addEventListener("activate", event => {
+
+/* ========================================
+   ACTIVATION
+======================================== */
+
+self.addEventListener("activate", (event) => {
+
     event.waitUntil(
-        caches
-            .keys()
-            .then(cacheNames => {
+        caches.keys()
+            .then((nomsCaches) => {
                 return Promise.all(
-                    cacheNames
-                        .filter(name => name !== CACHE_NAME)
-                        .map(name => caches.delete(name))
+                    nomsCaches.map((nomCache) => {
+
+                        if (nomCache !== CACHE_VERSION) {
+                            return caches.delete(nomCache);
+                        }
+
+                        return Promise.resolve();
+                    })
                 );
             })
-            .then(() => self.clients.claim())
+            .then(() => {
+                return self.clients.claim();
+            })
     );
+
 });
 
-self.addEventListener("fetch", event => {
-    const request = event.request;
 
-    if (request.method !== "GET") {
+/* ========================================
+   REQUÊTES
+======================================== */
+
+self.addEventListener("fetch", (event) => {
+
+    const requete = event.request;
+
+    if (requete.method !== "GET") {
         return;
     }
 
-    const url = new URL(request.url);
+    const url = new URL(requete.url);
 
-    const estFirebase =
-        url.hostname.includes("googleapis.com") ||
-        url.hostname.includes("gstatic.com") ||
-        url.hostname.includes("firebaseapp.com") ||
-        url.hostname.includes("firebaseio.com");
-
-    if (estFirebase) {
-        event.respondWith(
-            fetch(request).catch(() => caches.match(request))
-        );
-
+    /*
+     * Ne pas intercepter les services externes,
+     * par exemple Firebase.
+     */
+    if (url.origin !== self.location.origin) {
         return;
     }
 
-    if (request.mode === "navigate") {
+    /*
+     * Navigation HTML :
+     * Internet en priorité, cache en secours.
+     */
+    if (requete.mode === "navigate") {
+
         event.respondWith(
-            fetch(request)
-                .then(response => {
-                    const copie = response.clone();
+            fetch(requete)
+                .then((reponse) => {
 
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(request, copie);
-                    });
+                    if (reponse && reponse.ok) {
 
-                    return response;
+                        const copie = reponse.clone();
+
+                        caches.open(CACHE_VERSION)
+                            .then((cache) => {
+                                cache.put(requete, copie);
+                            });
+                    }
+
+                    return reponse;
                 })
                 .catch(async () => {
-                    return (
-                        await caches.match(request) ||
-                        await caches.match("./index.html")
-                    );
+
+                    const pageEnCache =
+                        await caches.match(requete);
+
+                    return pageEnCache ||
+                        caches.match(OFFLINE_URL);
                 })
         );
 
         return;
     }
 
+    /*
+     * CSS, JavaScript et images :
+     * cache en priorité, Internet en secours.
+     */
     event.respondWith(
-        caches.match(request).then(cachedResponse => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
+        caches.match(requete)
+            .then((reponseEnCache) => {
 
-            return fetch(request).then(response => {
-                if (
-                    response &&
-                    response.status === 200 &&
-                    response.type !== "opaque"
-                ) {
-                    const copie = response.clone();
-
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(request, copie);
-                    });
+                if (reponseEnCache) {
+                    return reponseEnCache;
                 }
 
-                return response;
-            });
-        })
+                return fetch(requete)
+                    .then((reponseReseau) => {
+
+                        if (
+                            !reponseReseau ||
+                            !reponseReseau.ok
+                        ) {
+                            return reponseReseau;
+                        }
+
+                        const copie =
+                            reponseReseau.clone();
+
+                        caches.open(CACHE_VERSION)
+                            .then((cache) => {
+                                cache.put(
+                                    requete,
+                                    copie
+                                );
+                            });
+
+                        return reponseReseau;
+                    });
+            })
     );
+
 });
