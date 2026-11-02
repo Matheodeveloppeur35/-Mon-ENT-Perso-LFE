@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION = "mon-ent-pwa-v1";
+const CACHE_VERSION = "mon-ent-pwa-v2";
 
 const APP_SHELL = [
     "./",
