@@ -1,20 +1,16 @@
 {
-    "id": "./index.html",
+    "id": "./",
     "name": "Mon ENT Perso LFE",
     "short_name": "Mon ENT",
-    "description": "Mon espace scolaire personnel du Lycée La Fontaine des Eaux",
+    "description": "Mon espace scolaire personnel",
     "lang": "fr-FR",
     "start_url": "./index.html",
     "scope": "./",
     "display": "standalone",
     "background_color": "#f4f7fb",
     "theme_color": "#2563eb",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
-    "categories": [
-        "education",
-        "productivity"
-    ],
     "icons": [
         {
             "src": "./icons/icon-192.png",
